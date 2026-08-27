@@ -16,16 +16,23 @@ import yaml
 
 sys.path.insert(0, ".")
 
-from armor_fl.data.preprocessing import load_cicids2017, train_test_split_stratified
+from armor_fl.data.preprocessing import (
+    load_cicids2017, load_ciciot2023, train_test_split_stratified,
+)
 from armor_fl.fl.armor import ArmorConfig
 from armor_fl.fl.simulate import SimulationConfig, run_simulation
 from armor_fl.models.dds_backbone import SE1DSqueezeNet
 
+DATASET_LOADERS = {
+    "cicids2017": load_cicids2017,
+    "ciciot2023": load_ciciot2023,
+}
+
 
 def load_dataset(name: str, raw_dir: str, sample_frac: float | None, seed: int):
-    if name == "cicids2017":
-        return load_cicids2017(raw_dir, sample_frac=sample_frac, seed=seed)
-    raise ValueError(f"Unsupported dataset '{name}' (only cicids2017 wired up so far)")
+    if name not in DATASET_LOADERS:
+        raise ValueError(f"Unsupported dataset '{name}', choices: {list(DATASET_LOADERS)}")
+    return DATASET_LOADERS[name](raw_dir, sample_frac=sample_frac, seed=seed)
 
 
 def build_sim_config(base: dict, aggregator: str, attack_type: str | None,
