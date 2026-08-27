@@ -4,6 +4,142 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-08-27 (latest 4)
+
+**Found and fixed a real, previously-unexercised CUDA bug while running the
+wall-clock benchmark**, then got the actual GPU numbers -- headline finding:
+**the full experiment grid as currently specified is infeasible on this
+machine (~102+ days of continuous GPU compute), even after the bug fix.**
+Blocked on the user for how to trim it -- see below.
+
+### The bug
+
+Every existing config/test used `device: cpu`, so a real device-consistency
+bug had zero coverage: `global_vector` (the running aggregate, built once
+outside the per-round loop from a freshly-constructed, CPU-resident
+`model_factory()`) was never moved to `cfg.device`, while each round's local
+training moved its own model to `cfg.device` inside `local_train`. First
+crash: `honest_delta = local_vector - global_vector` in
+`armor_fl/fl/simulate.py` ("Expected all tensors to be on the same device").
+Chasing it down surfaced the same class of bug in three more places, all
+fixed together (see `armor_fl/fl/simulate.py`, `robust_stats.py`,
+`attacks.py`, `client.py`):
+- `simulate.py`: `global_model = model_factory().to(cfg.device)` (was
+  missing `.to()` entirely).
+- `robust_stats.py`: `weighted_average` and `geometric_median` built their
+  weights tensor with `torch.tensor(weights, dtype=torch.float32)` --
+  defaults to CPU regardless of the vectors being combined; now derives the
+  device from the (already-device-consistent) stacked vectors.
+  `krum_select`'s `dist_matrix` got the same treatment for consistency.
+- `attacks.py`: `gaussian_noise` and `free_rider` called `torch.randn(...)`
+  without a `device=` kwarg, so the injected noise was always CPU-resident;
+  fixed to inherit the delta's device.
+- `client.py::evaluate`: didn't move `model` to `device` at all (only `X`/
+  `y`) -- added `model = model.to(device)` for defense-in-depth, since it
+  had been silently relying on the caller already having placed the model
+  correctly.
+
+Added `tests/test_device_consistency.py` (6 tests, `skipif(not
+torch.cuda.is_available())`) covering the exact crash path
+(`run_simulation` end-to-end on cuda for fedavg/krum/foolsgold/armor) plus
+the lower-level helpers directly. All 17 tests (11 original + 6 new) pass.
+This is exactly the kind of bug that stays invisible indefinitely on a
+CPU-only machine -- worth remembering: CPU is also PyTorch's default
+device, so a missing `.to(device)` is silent until a second device enters
+the picture.
+
+### The wall-clock finding
+
+`scripts/benchmark_fl.py` (new): one representative run_id (aggregator=
+armor, gaussian_noise attack, non_iid_alpha=0.5, num_clients=10,
+client_fraction=0.6, **local_epochs=20, patience=5** -- i.e. real settings,
+not smoke-test-reduced), on a 10% CICIDS2017 sample (226k train rows), GPU:
+
+- **175.3 s/round** (3-round measurement, post-bug-fix)
+- extrapolated to the real `num_rounds=30`: **~87.6 min per run_id**
+- extrapolated to the full grid (7 aggregators x 5 attacks x 4 malicious
+  fractions x 4 non-IID alphas = 560 run_ids/dataset x 3 datasets = 1680
+  run_ids): **~2454 GPU-hours (~102 days) of continuous compute**
+
+And this is an *underestimate* for two reasons: (1) `cicids2017_robustness.
+yaml` actually sets `sample_frac: null` (full 2.26M rows, ~10x this
+benchmark's sample), and (2) GPU utilization during the benchmark was ~5-18%
+-- confirmed via `nvidia-smi` and `Get-Process` CPU-time sampling while
+investigating why it looked idle -- meaning the bottleneck is per-round/
+per-client Python and DataLoader overhead across 10 clients x up to 20
+local epochs, not matrix-multiply throughput. **A faster GPU would not fix
+this**; the levers that matter are grid size, `num_rounds`, `local_epochs`,
+and possibly restructuring the per-client training loop itself.
+
+### Options for trimming (needs a decision, not made unilaterally here)
+
+- Cut grid combinatorics (e.g. non_iid_alphas 4->2, malicious_fractions
+  4->2 -- a 4x cut lands near ~26 days, still likely too slow alone).
+- Cut `local_epochs` (currently 20, matching the paper's Table 2 -- lowering
+  this changes what's being reproduced, so this specifically needs the
+  user's sign-off, not just an engineering call).
+- Cut `num_rounds` below 30 (the e-process needs enough rounds to
+  accumulate evidence past `burn_in_rounds=3`, so there's a floor below
+  which the detection-speed story breaks -- test_armor.py's statistical
+  checks pass at `num_rounds=25`, so ~25-30 is probably close to the real
+  floor already).
+- Reduce `sample_frac` further across all three datasets.
+- Restructure local training to reduce per-round Python overhead (batch
+  multiple clients' training instead of a fresh model+DataLoader per client
+  per round) -- a real engineering investment, not a config change.
+- Parallelize across multiple runs/machines (doesn't reduce total compute-
+  hours, only wall-clock if run concurrently).
+
+Realistically this needs several of these combined, and the right mix
+depends on which grid cells the manuscript's narrative actually needs a
+head-to-head number for -- flagged to the user rather than choosing
+unilaterally.
+
+## 2026-08-27 (latest 3)
+
+**Added a centralized XGBoost baseline (`scripts/xgboost_baseline.py`)
+per the user's suggestion**, before committing compute to the full
+ARMOR-FL grid: "run it to test if it is really good, then we fully run
+it, so we need some baseline models." This is *not* a robustness
+comparison method (it sees all training data pooled, no client
+partitioning, no attacks) -- it's a fast ceiling reference to sanity-check
+each dataset is learnable at all and to know how much headroom the FL
+approach has below a strong classical baseline in the clean/IID case.
+Same loaders, `sample_frac`, stratified split, and metric set
+(accuracy/weighted-F1/weighted-precision/weighted-recall/macro-F1, matching
+`armor_fl.fl.client.evaluate`) as the FL grid, for direct comparability.
+`xgboost>=3.4` (3.4.1 installed) added to `requirements.txt`. Also
+reassembled all three datasets locally (`bash scripts/reassemble_datasets.sh`)
+and found `.gitignore` had `*.zip` but not `*.tar.gz` -- the reassembled
+CICIDS2018 tar.gz landed as an untracked 1.6GB file at repo root; fixed the
+gitignore gap and deleted the (regenerable) leftover archives.
+
+Results (GPU, `results/baselines/*.json`):
+
+| Dataset | sample_frac | train rows | accuracy | F1 (weighted) | F1 (macro) |
+|---|---|---|---|---|---|
+| CICIDS2017 | full | 2.26M | 0.9990 | 0.9990 | 0.9316 |
+| CICIDS2018 | 0.05 | 649k | 0.9842 | 0.9806 | 0.7992 |
+| CICIoT2023 | 0.02 | 720k | 0.8561 | 0.8377 | 0.6601 |
+
+**Takeaways**: CICIDS2017 is nearly saturated by a classical baseline (macro-F1
+still capped by the extremely rare Heartbleed/Infiltration classes noted
+earlier). CICIDS2018 and especially CICIoT2023 have substantially more
+headroom (macro-F1 0.80 and 0.66) -- consistent with known literature
+findings that these are harder multi-class problems (CICIoT2023's 8-class
+grouping from 34 raw attack types, some with very similar flow signatures).
+This sets realistic accuracy-ceiling expectations before evaluating
+ARMOR-FL's own numbers: hitting >90% macro-F1 on CICIoT2023 would be
+suspicious, not impressive. Worth citing these baseline numbers directly in
+the manuscript's experimental setup as an "is this dataset/feature set
+learnable" sanity anchor, separate from the robustness-comparison story.
+
+Loading `_load_and_group` is the dominant cost even with `sample_frac` set
+(CICIDS2018 sample took 397s to load vs 23s to train) -- it reads full CSVs
+before subsampling per-file. Not a blocker for now, but worth optimizing
+(e.g. `pandas.read_csv` with `skiprows`/chunked reading, or caching a
+subsampled parquet) if it becomes a bottleneck for repeated grid runs.
+
 ## 2026-08-27 (latest 2)
 
 - **Step 2 of the next-steps list done**: `configs/cicids2018_robustness.yaml`

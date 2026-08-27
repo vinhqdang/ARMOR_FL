@@ -3,6 +3,7 @@ data_raw/
 data_processed/
 results/
 *.zip
+*.tar.gz
 *.pdf
 !manuscript/**/*.pdf
 checkpoints/
