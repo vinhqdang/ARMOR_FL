@@ -4,6 +4,35 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-08-27 (latest 2)
+
+- **Step 2 of the next-steps list done**: `configs/cicids2018_robustness.yaml`
+  and `configs/cicids2018_comparability.yaml` added (mirror the CICIDS2017
+  ones), and `cicids2018` -> `load_cicids2018` wired into
+  `scripts/run_experiment.py`'s `DATASET_LOADERS` registry. Robustness config
+  uses `sample_frac: 0.05` (~810k rows of the 16.2M-row full dataset, same
+  order of magnitude as the CICIoT2023 sampled set); comparability config
+  uses `sample_frac: 0.2` (~2.6M rows, roughly CICIDS2017's full size) since
+  even an R=5 FedAvg-only sanity check isn't worth the wall-clock at full
+  16.2M-row scale. README's dataset table was also stale (still said
+  CICIDS2018 "not yet downloaded/archived" from before the prior commit
+  archived it) -- fixed. All 11 tests still pass; registry import verified.
+  `data_raw/` is not populated on this machine yet (gitignored, needs
+  `bash scripts/reassemble_datasets.sh`) so the CICIDS2018 loader itself was
+  not re-exercised end-to-end here, only via the existing test suite + a
+  dry import check. Next up is still step 3: estimate the real compute
+  budget and run the full grids.
+- **Compute note for step 3**: picking this up on a Windows machine
+  (`C:\work\ARMOR_FL`) with an NVIDIA RTX A2000 8GB laptop GPU, CUDA
+  available and `torch.cuda.is_available()` True (torch 2.11.0.dev+cu128).
+  All configs currently default to `device: cpu` for portability (the prior
+  session's M-series Mac had no CUDA) -- pass `device: cuda` in the config
+  (or override) when actually launching the full grids from this machine.
+  The backbone is tiny (4649 params) so most of the wall-clock is probably
+  data loading / per-round Python overhead rather than matmul-bound, but
+  worth benchmarking one run_id both ways before committing to the full
+  grid's time budget.
+
 ## 2026-08-27 (latest)
 
 **Status: harness built and unit-tested; all three datasets downloaded,

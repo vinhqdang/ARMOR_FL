@@ -42,8 +42,8 @@ provenance (original source URLs, checksums) of each dataset.
 | Dataset | Status | Loader |
 |---|---|---|
 | CICIDS2017 | archived in `data_archive/cicids2017/` | `load_cicids2017` |
+| CICIDS2018 | archived in `data_archive/cicids2018/` | `load_cicids2018` |
 | CICIoT2023 | archived in `data_archive/ciciot2023/` | `load_ciciot2023` |
-| CICIDS2018 | not yet downloaded/archived | not yet written |
 
 ## Project layout
 

@@ -17,7 +17,7 @@ import yaml
 sys.path.insert(0, ".")
 
 from armor_fl.data.preprocessing import (
-    load_cicids2017, load_ciciot2023, train_test_split_stratified,
+    load_cicids2017, load_cicids2018, load_ciciot2023, train_test_split_stratified,
 )
 from armor_fl.fl.armor import ArmorConfig
 from armor_fl.fl.simulate import SimulationConfig, run_simulation
@@ -25,6 +25,7 @@ from armor_fl.models.dds_backbone import SE1DSqueezeNet
 
 DATASET_LOADERS = {
     "cicids2017": load_cicids2017,
+    "cicids2018": load_cicids2018,
     "ciciot2023": load_ciciot2023,
 }
 

@@ -1,0 +1,32 @@
+# Reproduces the FedSE-1DSqueezeNet paper's own FL protocol as closely as
+# possible (Table 2, no attacks, IID) as a sanity baseline on CICIDS2018:
+# FedAvg only, R=5 rounds, client_fraction=0.6, local_epochs<=20 w/ patience=5.
+# Mirrors configs/cicids2017_comparability.yaml. Unlike that file this one
+# sets sample_frac -- CICIDS2018's full 16.2M rows is ~6x CICIDS2017's, and
+# even a FedAvg-only R=5 sanity check isn't worth the wall-clock at full
+# scale; 0.2 keeps the training set (~2.6M rows) in the same ballpark as
+# CICIDS2017's full size for a fair-ish comparability read.
+name: cicids2018_comparability
+dataset: cicids2018
+raw_dir: data_raw/cicids2018
+sample_frac: 0.2
+test_frac: 0.2
+seed: 0
+
+fl:
+  num_clients: 10
+  client_fraction: 0.6
+  num_rounds: 5
+  local_epochs: 20
+  patience: 5
+  lr: 0.01
+  batch_size: 32
+  dropout: 0.5
+  device: cpu
+  log_every: 1
+
+grid:
+  aggregators: [fedavg]
+  attack_types: [null]
+  malicious_fractions: [0.0]
+  non_iid_alphas: [null, 1.0, 0.5, 0.1]
