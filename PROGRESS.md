@@ -4,11 +4,52 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
-## 2026-08-27
+## 2026-08-27 (latest)
 
-**Status: harness built, unit-tested, and validated end-to-end on real
-CICIDS2017 data. No manuscript writing has started yet. CICIDS2018 not yet
-obtained.**
+**Status: harness built and unit-tested; all three datasets downloaded,
+loaders written, and archived to this repo. Related-work/baseline literature
+research done. No manuscript writing has started yet. No full-scale
+experiment run yet -- that's the next real blocker.**
+
+### Since the entry below
+
+- **All three datasets now archived in `data_archive/`**: CICIDS2018 (6.5GB
+  raw -> 1.6GB gzipped) synced via `aws s3 sync --no-sign-request` from just
+  the `Processed Traffic Data for ML Algorithms/` prefix (NOT the raw
+  pcap/log half of the bucket, which is far larger and not needed), 10 daily
+  CSVs, 16.2M rows. Known data-quality quirk confirmed and handled: ~59 rows
+  have `Label=="Label"` (CICFlowMeter's header re-emitted mid-file on one
+  day) -- these are silently and correctly dropped by the existing
+  unmapped-label path in `_load_and_group`, not a special case needed.
+  `load_cicids2018` added to `armor_fl/data/preprocessing.py`, 7-class
+  taxonomy (BENIGN/DoS/DDoS/BruteForce/WebAttack/Bot/Infiltration -- no
+  PortScan or Heartbleed in this dataset), verified on a 2% sample.
+  Re-archived as `.tar.gz` (source is loose CSVs, not a zip) since gzip
+  compresses this text data ~4x.
+- **Baseline literature research complete**: see
+  `manuscript/related_work_candidates.md` for two full tables (12
+  robust/Byzantine-defense FL-IDS papers, 8 recent general SOTA IDS papers)
+  plus a gap analysis. Headline finding worth building the paper's novelty
+  framing around: **no robust-aggregation FL-IDS paper was found with
+  reported attack-robustness numbers on CICIoT2023 specifically** -- ARMOR-FL
+  would be a first mover there. Also: almost none of the 12 defense papers
+  give formal statistical guarantees (they're empirical clustering/distance/
+  reputation heuristics), and none disambiguate "drifting" from "attacking"
+  -- both are ARMOR-FL's actual differentiators, now backed by a literature
+  gap rather than just first-principles reasoning.
+- **Agent-orchestration note**: the first `fork` subagent dispatched for this
+  research task went out of scope (wrote/committed/pushed unrelated files
+  across two separate turns, then got confused about its own identity when
+  asked to just report findings as text -- see feedback drafts sent this
+  session). Abandoned it and used a fresh `general-purpose` agent instead,
+  which worked cleanly. Worth remembering if delegating research-only tasks
+  again: a fresh agent may be more reliable than a fork when the task
+  shouldn't touch files/git at all.
+
+## 2026-08-27 (earlier)
+
+**Status at this point: harness built, unit-tested, and validated end-to-end
+on real CICIDS2017 data. CICIDS2018 not yet obtained.**
 
 ### What's done
 
@@ -105,28 +146,32 @@ obtained.**
 
 ### Next steps (in rough order)
 
-1. Resolve CICIDS2018 (re-run the `aws s3 sync`, write `load_cicids2018`
-   following the same pattern as the other two loaders once its columns are
-   known, chunk+commit it into `data_archive/` the same way).
-2. Pull in the fork's baseline-literature research results (if not already
-   in this doc) and decide which numbers are worth a head-to-head comparison
-   table vs. which are just Related Work citations.
-3. Run the full experiment grid (`configs/cicids2017_robustness.yaml` /
-   equivalents for the other two datasets once loaders exist) at real
-   settings (local_epochs=20, patience=5, num_rounds=30). NOTE: at ~1400s
-   for 8 reduced-setting rounds on 5% of one dataset, the full grid (7
+1. Decide which Table 1 entries in `manuscript/related_work_candidates.md`
+   are worth an actual head-to-head numerical comparison (vs. just Related
+   Work citations) -- most only have partial/unconfirmed metrics, so this
+   needs a closer read of the actual papers, not just the abstracts.
+2. Write `configs/cicids2018_robustness.yaml` and
+   `configs/cicids2018_comparability.yaml` (mirror the CICIDS2017 ones;
+   `configs/ciciot2023_robustness.yaml` already exists). Wire `cicids2018`
+   into `scripts/run_experiment.py`'s `DATASET_LOADERS` registry.
+3. Run the full experiment grids at real settings (local_epochs=20,
+   patience=5, num_rounds=30) across all three datasets. NOTE: at ~1400s for
+   8 reduced-setting rounds on 5% of CICIDS2017 alone, the full grid (7
    aggregators x 5 attacks x 4 malicious fractions x 4 non-IID levels x 30
-   rounds x full dataset) will be very slow on this M-series Mac CPU --
-   estimate the real budget before launching, consider trimming the grid,
-   using MPS (`device: mps` in the config), or moving to Colab GPU per the
-   user's standing instruction for GPU jobs.
-4. Also run `configs/cicids2017_comparability.yaml` (R=5, FedAvg only, no
-   attacks) to sanity-check accuracy numbers land in the same ballpark as
+   rounds x full dataset, x3 datasets) will be very slow on this M-series Mac
+   CPU -- estimate the real budget before launching, consider trimming the
+   grid, using MPS (`device: mps` in the config), or moving to Colab GPU per
+   the user's standing instruction for GPU jobs. CICIDS2018's
+   Tuesday-20-02-2018 file alone is 3.9GB/one day, so sample_frac is close to
+   mandatory there too (see the CICIoT2023 config's sample_frac=0.02 pattern).
+4. Also run the `*_comparability.yaml` configs (R=5, FedAvg only, no attacks)
+   per dataset to sanity-check accuracy numbers land in the same ballpark as
    the paper's own Table 3 before trusting the robustness-grid numbers.
 5. Once results exist: draft the manuscript in `manuscript/` (LaTeX,
-   `sn-jnl.cls`, `[iicol]`), following the Cluster Computing guidelines
-   above and this user's global writing instructions (storytelling,
-   comprehensive, reasoning-driven prose -- not a technical-blog tone).
+   `sn-jnl.cls`, `[iicol]`), following the Cluster Computing guidelines above,
+   this user's global writing instructions (storytelling, comprehensive,
+   reasoning-driven prose -- not a technical-blog tone), and the novelty
+   framing in `manuscript/related_work_candidates.md`'s gap analysis.
 6. Per the user's standing instruction, spawn a review agent after major
    milestones (e.g. after a full experiment pass, and again after a full
    manuscript draft).

@@ -46,6 +46,28 @@ CICIDS2017_CLASSES = [
 
 LABEL_COL_CANDIDATES = ["Label", " Label", "label", "Attack", "Attack_type"]
 
+# CICIDS2018 label grouping. The dataset ships with a known data-quality
+# quirk (CICFlowMeter re-emitting its header mid-file in some daily CSVs) --
+# ~59 rows literally have Label=="Label"; these are unmapped here and dropped
+# automatically by _load_and_group's unmapped-label handling, not a bug.
+# Note the dataset's own "Infilteration" typo -- mapped to "Infiltration" to
+# match CICIDS2017's class naming.
+CICIDS2018_LABEL_GROUPS: dict[str, str] = {
+    "Benign": "BENIGN",
+    "DDOS attack-HOIC": "DDoS", "DDoS attacks-LOIC-HTTP": "DDoS",
+    "DDOS attack-LOIC-UDP": "DDoS",
+    "DoS attacks-Hulk": "DoS", "DoS attacks-SlowHTTPTest": "DoS",
+    "DoS attacks-GoldenEye": "DoS", "DoS attacks-Slowloris": "DoS",
+    "Bot": "Bot",
+    "FTP-BruteForce": "BruteForce", "SSH-Bruteforce": "BruteForce",
+    "Infilteration": "Infiltration",
+    "Brute Force -Web": "WebAttack", "Brute Force -XSS": "WebAttack",
+    "SQL Injection": "WebAttack",
+}
+CICIDS2018_CLASSES = [
+    "BENIGN", "DoS", "DDoS", "BruteForce", "WebAttack", "Bot", "Infiltration",
+]
+
 # CICIoT2023 label grouping, following the 7-attack-family taxonomy from the
 # dataset's own paper (Neto et al. 2023, "CICIoT2023: A Real-Time Dataset and
 # Benchmark for Large-Scale Attacks in IoT Environment", Sensors 23(13)).
@@ -156,6 +178,25 @@ def load_cicids2017(raw_dir: str, sample_frac: float | None = None,
         raise FileNotFoundError(f"No CICIDS2017 CSVs found under {raw_dir}")
     return _load_and_group(files, CICIDS2017_LABEL_GROUPS, CICIDS2017_CLASSES,
                             "CICIDS2017", sample_frac, seed)
+
+
+def load_cicids2018(raw_dir: str, sample_frac: float | None = None,
+                     seed: int = 0) -> DatasetBundle:
+    """Load and concatenate the 10 CICIDS2018 "Processed Traffic Data for ML
+    Algorithms" daily CSVs (from the public S3 bucket cse-cic-ids2018).
+
+    Parameters
+    ----------
+    raw_dir: directory containing the *_TrafficForML_CICFlowMeter.csv files.
+    sample_frac: if set, stratified-sample this fraction of rows per file --
+        recommended given the full dataset is ~16M rows (one file, the
+        Tuesday-20-02-2018 flood-attack day, is ~3.9GB alone). None = all rows.
+    """
+    files = _find_csv_files(raw_dir, [])
+    if not files:
+        raise FileNotFoundError(f"No CICIDS2018 CSVs found under {raw_dir}")
+    return _load_and_group(files, CICIDS2018_LABEL_GROUPS, CICIDS2018_CLASSES,
+                            "CICIDS2018", sample_frac, seed)
 
 
 def load_ciciot2023(raw_dir: str, sample_frac: float | None = None,
