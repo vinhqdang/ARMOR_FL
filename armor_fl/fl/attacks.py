@@ -28,7 +28,7 @@ def gaussian_noise(honest_delta: torch.Tensor, sigma: float = 1.0,
                     generator: torch.Generator | None = None) -> torch.Tensor:
     """Malicious delta = pure Gaussian noise, norm-matched to the honest
     delta so it isn't trivially caught by a magnitude-only check."""
-    noise = torch.randn(honest_delta.shape, generator=generator)
+    noise = torch.randn(honest_delta.shape, generator=generator, device=honest_delta.device)
     return noise * sigma * honest_delta.norm() / max(noise.norm().item(), 1e-8)
 
 
@@ -37,7 +37,8 @@ def free_rider(template_delta: torch.Tensor, jitter_sigma: float = 1e-3,
     """Lazy client: near-zero delta (tiny noise only), contributing no real
     training signal while still collecting reward / avoiding
     detection-by-total-inactivity."""
-    return torch.randn(template_delta.shape, generator=generator) * jitter_sigma
+    return torch.randn(template_delta.shape, generator=generator,
+                        device=template_delta.device) * jitter_sigma
 
 
 def alie_attack(honest_deltas: list[torch.Tensor], z_max: float = 1.5) -> torch.Tensor:

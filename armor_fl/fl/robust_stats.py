@@ -22,9 +22,9 @@ def unflatten_to_state_dict(vector: torch.Tensor,
 
 
 def weighted_average(vectors: list[torch.Tensor], weights: list[float]) -> torch.Tensor:
-    w = torch.tensor(weights, dtype=torch.float32)
-    w = w / w.sum().clamp_min(1e-12)
     stacked = torch.stack(vectors, dim=0)
+    w = torch.tensor(weights, dtype=torch.float32, device=stacked.device)
+    w = w / w.sum().clamp_min(1e-12)
     return (stacked * w.unsqueeze(-1)).sum(dim=0)
 
 
@@ -52,7 +52,7 @@ def geometric_median(vectors: list[torch.Tensor], weights: list[float] | None = 
     stacked = torch.stack(vectors, dim=0)  # (K, D)
     if weights is None:
         weights = [1.0] * len(vectors)
-    w = torch.tensor(weights, dtype=torch.float32)
+    w = torch.tensor(weights, dtype=torch.float32, device=stacked.device)
     w = w / w.sum().clamp_min(1e-12)
 
     y = (stacked * w.unsqueeze(-1)).sum(dim=0)
@@ -76,7 +76,7 @@ def krum_select(vectors: list[torch.Tensor], num_byzantine_assumed: int,
     f = min(num_byzantine_assumed, max(0, (k - 3) // 2))
     n_neighbors = max(1, k - f - 2)
 
-    dist_matrix = torch.zeros((k, k))
+    dist_matrix = torch.zeros((k, k), device=vectors[0].device if vectors else "cpu")
     for i in range(k):
         for j in range(k):
             if i != j:

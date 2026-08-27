@@ -70,6 +70,7 @@ def evaluate(model: nn.Module, X: torch.Tensor, y: torch.Tensor,
              device: str = "cpu") -> dict[str, float]:
     from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
+    model = model.to(device)
     model.eval()
     X, y = X.to(device), y.to(device)
     logits = model(X)

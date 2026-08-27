@@ -72,7 +72,7 @@ def run_simulation(model_factory, X: np.ndarray, y: np.ndarray,
                                                     seed=cfg.seed)
                      if cfg.malicious_fraction > 0 else set())
 
-    global_model = model_factory()
+    global_model = model_factory().to(cfg.device)
     template_state = copy.deepcopy(global_model.state_dict())
     global_vector = flatten_state_dict(template_state)
 
