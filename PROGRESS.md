@@ -4,6 +4,27 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-08-28 -- session paused here, decision needed on the next machine
+
+Everything below (2026-08-27, "latest 4" through "latest") is committed and
+pushed (`main` at `8b56745`). **Stopped at exactly the decision point in
+"Options for trimming" below** -- the user was asked to pick which lever(s)
+to pull to cut the full grid down from its current ~102-day estimate, and
+deferred that choice to continue on a different machine rather than answer
+inline. Nothing has been trimmed yet; the grid configs (`configs/*_
+robustness.yaml`) are unchanged from what's described below. **Read the
+"The wall-clock finding" and "Options for trimming" sections just below
+before running anything at real settings** -- picking up and just running
+`scripts/run_experiment.py` on a robustness config as-is will not finish in
+any reasonable time.
+
+Practical note for picking this up: `data_raw/` (all three datasets,
+reassembled via `bash scripts/reassemble_datasets.sh`) and the leftover
+`*.tar.gz`/`*.zip` reassembly intermediates are gitignored and were never
+pushed -- a fresh machine needs to re-run the reassemble script (fast, no
+re-download, just cat+extract from the committed `data_archive/` chunks)
+before any dataset loader will find files.
+
 ## 2026-08-27 (latest 4)
 
 **Found and fixed a real, previously-unexercised CUDA bug while running the
