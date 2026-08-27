@@ -1,0 +1,27 @@
+# Reproduces the FedSE-1DSqueezeNet paper's own FL protocol as closely as
+# possible (Table 2, no attacks, IID) as a sanity baseline: FedAvg only,
+# R=5 rounds, client_fraction=0.6, local_epochs<=20 w/ patience=5.
+name: cicids2017_comparability
+dataset: cicids2017
+raw_dir: data_raw/cicids2017
+sample_frac: null
+test_frac: 0.2
+seed: 0
+
+fl:
+  num_clients: 10
+  client_fraction: 0.6
+  num_rounds: 5
+  local_epochs: 20
+  patience: 5
+  lr: 0.01
+  batch_size: 32
+  dropout: 0.5
+  device: cpu
+  log_every: 1
+
+grid:
+  aggregators: [fedavg]
+  attack_types: [null]
+  malicious_fractions: [0.0]
+  non_iid_alphas: [null, 1.0, 0.5, 0.1]

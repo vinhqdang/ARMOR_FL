@@ -1,0 +1,50 @@
+# ARMOR-FL robustness experiment grid on CICIDS2017.
+# Mirrors the FedSE-1DSqueezeNet paper's FL hyperparameters (Table 2) where
+# comparable, but uses more communication rounds than their R=5 so the
+# e-process-based defenses have room to accumulate evidence -- R=5 is only
+# enough for a single post-burn-in decision round.
+name: cicids2017_robustness
+dataset: cicids2017
+raw_dir: data_raw/cicids2017
+sample_frac: null      # null = full dataset; set e.g. 0.1 for a faster pass
+test_frac: 0.2
+seed: 0
+
+fl:
+  num_clients: 10
+  client_fraction: 0.6
+  num_rounds: 30
+  local_epochs: 20
+  patience: 5
+  lr: 0.01
+  batch_size: 32
+  dropout: 0.5
+  attack_start_round: 3
+  device: cpu
+  log_every: 1
+  armor_config:
+    alpha_pop: 0.05
+    alpha_drift: 0.05
+    beta: 4.0
+    bet_fraction: 0.5
+    burn_in_rounds: 3
+    z_bound: 15.0
+    drift_bound: 15.0
+    probation_rounds: 3
+    reinstatement_trust_scale: 0.3
+    center_method: trimmed_mean
+    trim_fraction: 0.2
+  aggregator_kwargs:
+    krum:
+      num_byzantine_assumed: 3
+    multi_krum:
+      num_byzantine_assumed: 3
+      multi: 3
+    trimmed_mean:
+      trim_fraction: 0.2
+
+grid:
+  aggregators: [fedavg, krum, multi_krum, trimmed_mean, coordinate_median, foolsgold, armor]
+  attack_types: [label_flip, sign_flip, gaussian_noise, free_rider, alie]
+  malicious_fractions: [0.1, 0.2, 0.3, 0.4]
+  non_iid_alphas: [null, 1.0, 0.5, 0.1]

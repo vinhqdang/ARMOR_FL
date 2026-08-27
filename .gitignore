@@ -1,3 +1,16 @@
+# Project data / large binaries (never push raw datasets or copyrighted PDFs to git)
+data_raw/
+data_processed/
+results/
+*.zip
+*.pdf
+!manuscript/**/*.pdf
+checkpoints/
+*.pt
+*.pth
+wandb/
+mlruns/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
