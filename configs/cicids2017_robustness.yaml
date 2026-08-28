@@ -28,7 +28,7 @@ fl:
   local_epochs: 10
   patience: 3
   lr: 0.01
-  batch_size: 32
+  batch_size: 256  # was 32 (paper Table 2) -- see PROGRESS.md batch_size finding
   dropout: 0.5
   attack_start_round: 3
   device: cuda

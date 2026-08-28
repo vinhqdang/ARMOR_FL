@@ -4,6 +4,67 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-08-28 -- batch_size was the real lever; trimmed grid now ~3 GPU-days
+
+Follow-up to "grid trimming round 2" immediately below. Asked the user how
+to close the remaining gap (37-50+ estimated GPU-days even after all four
+previously-approved levers); they picked **increase batch_size**.
+
+**Process-management mistake first, worth flagging so it isn't repeated**:
+while benchmarking batch sizes, several earlier `Bash` calls had combined a
+trailing shell `&` with the tool's own `run_in_background: true` on the same
+command. The tool considered those "completed" the instant the outer shell
+returned, but the actual `conda run ... python ...` process kept running
+detached and untracked. Three separate stray Python processes ended up
+alive simultaneously, all fighting over the same GPU (confirmed via
+`nvidia-smi`'s process list, ~16/16.3 GB VRAM used, GPU stuck at low-power
+P4 state) -- this is why an early batch-size run silently produced an empty
+log (buffered stdout lost when a process is killed/contended) and why a
+`local_epochs=10` re-check earlier in the session read 308.3s/round instead
+of the true single-process number. Killed all three stray PIDs via
+`taskkill`; every timing number below is from a single clean process.
+**Lesson: never combine a trailing `&` with `run_in_background: true` on the
+same call -- pick exactly one.**
+
+### The real finding
+
+Same representative run_id (armor aggregator, gaussian_noise, non_iid_alpha=
+0.5, 10% CICIDS2017 sample), `local_epochs=10`/`patience=3`, 5 rounds, varying
+only `batch_size`, single clean process, this machine:
+
+| batch_size | s/round | trimmed-grid extrapolation (420 run_ids) |
+|---|---|---|
+| 32 | 211.5 | 25.7 days |
+| 128 | 47.1 | 5.7 days |
+| 256 | 25.9 | 3.1 days |
+| 512 | 10.7 | 1.3 days |
+
+Batch size was the dominant lever all along -- far more than the
+combinatorics/epoch/round cuts combined, consistent with the original
+"GPU utilization 5-18%" finding: a tiny model at `batch_size=32` is almost
+entirely kernel-launch-overhead-bound, not compute-bound, on this GPU.
+Accuracy/F1 were statistically indistinguishable across batch sizes in this
+short check (acc=0.803, f1=0.715 at bs=32/256/512; bs=128 landed at
+acc=0.805 -- within run-to-run noise for a 5-round smoke test, not a real
+comparison).
+
+### Decision: batch_size=256 for the robustness grids only
+
+Chose **256** (not the fastest 512) as a defensible middle ground -- ~3.1
+days total is comfortably runnable, without taking the most extreme
+deviation from the paper's own `batch_size=32` (Table 2) when a smaller
+deviation gets most of the benefit. Applied to all three
+`*_robustness.yaml` files only. **`*_comparability.yaml` configs
+deliberately kept at `batch_size=32`** -- their entire purpose is fidelity
+to the paper's own protocol, so they shouldn't take this deviation. All 17
+tests still pass after the change.
+
+This is a hyperparameter deviation from Table 2 and needs to be stated
+plainly in the manuscript's Method/Limitations section as a practical
+compute-budget decision, the same way the `label_flip` detection blind spot
+was flagged earlier in this file -- not quietly folded in as if it were the
+paper's original protocol.
+
 ## 2026-08-28 -- grid trimming round 2, on a new (slower) GPU machine -- still infeasible, blocked again
 
 Picked up the deferred grid-trimming decision from the entry below. The user
