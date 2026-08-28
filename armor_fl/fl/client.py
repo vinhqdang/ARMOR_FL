@@ -8,7 +8,6 @@ from dataclasses import dataclass
 
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader, TensorDataset
 
 
 @dataclass
@@ -23,14 +22,22 @@ class LocalTrainConfig:
 def local_train(model: nn.Module, X: torch.Tensor, y: torch.Tensor,
                  X_val: torch.Tensor, y_val: torch.Tensor,
                  cfg: LocalTrainConfig) -> tuple[nn.Module, list[float], int]:
-    """Returns (trained model, per-epoch validation loss trajectory, epochs_run)."""
+    """Returns (trained model, per-epoch validation loss trajectory, epochs_run).
+
+    Batches manually via index permutation rather than DataLoader/TensorDataset:
+    same shuffle-every-epoch, fixed-batch-size semantics (no change to what's
+    being reproduced), but avoids per-batch DataLoader/collate overhead that
+    dominates wall-clock when data is already fully GPU-resident (this is
+    called ~num_clients x num_rounds times per run_id, so the per-batch Python
+    overhead compounds heavily -- see PROGRESS.md's wall-clock finding).
+    """
     model = model.to(cfg.device)
     X, y = X.to(cfg.device), y.to(cfg.device)
     X_val, y_val = X_val.to(cfg.device), y_val.to(cfg.device)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=cfg.lr)
     criterion = nn.CrossEntropyLoss()
-    loader = DataLoader(TensorDataset(X, y), batch_size=cfg.batch_size, shuffle=True)
+    n = X.shape[0]
 
     best_loss = float("inf")
     best_state = copy.deepcopy(model.state_dict())
@@ -40,7 +47,12 @@ def local_train(model: nn.Module, X: torch.Tensor, y: torch.Tensor,
 
     for epoch in range(cfg.max_epochs):
         model.train()
-        for xb, yb in loader:
+        perm = torch.randperm(n, device=X.device)
+        for start in range(0, n, cfg.batch_size):
+            batch_idx = perm[start:start + cfg.batch_size]
+            if batch_idx.numel() < 2:
+                continue  # BatchNorm1d requires >1 sample per channel in train mode
+            xb, yb = X[batch_idx], y[batch_idx]
             optimizer.zero_grad()
             loss = criterion(model(xb), yb)
             loss.backward()

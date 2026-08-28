@@ -1,26 +1,29 @@
 # ARMOR-FL robustness experiment grid on CICIoT2023.
 # The full dataset is ~45M rows across 63 files -- essentially every published
-# CICIoT2023 paper subsamples for tractability; sample_frac below keeps a
-# multi-million-row training set while staying runnable. Increase once real
-# compute (Colab GPU / longer wall-clock budget) is available for a final pass.
+# CICIoT2023 paper subsamples for tractability.
+#
+# 2026-08-28 grid-trimming pass (see PROGRESS.md "grid trimming, round 2"):
+# sample_frac cut further (0.02->0.01, ~450k rows) plus the same
+# local_epochs/patience/num_rounds/grid-combinatorics cuts as
+# cicids2017_robustness.yaml.
 name: ciciot2023_robustness
 dataset: ciciot2023
 raw_dir: data_raw/ciciot2023
-sample_frac: 0.02      # ~900k rows; set to null for the full 45M-row dataset
+sample_frac: 0.01      # ~450k rows; set to null for the full 45M-row dataset
 test_frac: 0.2
 seed: 0
 
 fl:
   num_clients: 10
   client_fraction: 0.6
-  num_rounds: 30
-  local_epochs: 20
-  patience: 5
+  num_rounds: 25
+  local_epochs: 10
+  patience: 3
   lr: 0.01
   batch_size: 32
   dropout: 0.5
   attack_start_round: 3
-  device: cpu
+  device: cuda
   log_every: 1
   armor_config:
     alpha_pop: 0.05
@@ -46,5 +49,5 @@ fl:
 grid:
   aggregators: [fedavg, krum, multi_krum, trimmed_mean, coordinate_median, foolsgold, armor]
   attack_types: [label_flip, sign_flip, gaussian_noise, free_rider, alie]
-  malicious_fractions: [0.1, 0.2, 0.3, 0.4]
-  non_iid_alphas: [null, 1.0, 0.5, 0.1]
+  malicious_fractions: [0.2, 0.4]
+  non_iid_alphas: [null, 0.5]

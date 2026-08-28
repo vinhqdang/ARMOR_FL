@@ -1,27 +1,29 @@
 # ARMOR-FL robustness experiment grid on CICIDS2018.
 # Mirrors configs/cicids2017_robustness.yaml. The full dataset is 16.2M rows
-# across 10 daily CSVs (one day, Tuesday-20-02-2018, is 3.9GB on its own), so
-# sample_frac is used to keep this tractable on CPU -- same rationale as
-# ciciot2023_robustness.yaml's sample_frac=0.02. 0.05 of 16.2M is ~810k rows,
-# the same order of magnitude as CICIoT2023's sampled training set.
+# across 10 daily CSVs (one day, Tuesday-20-02-2018, is 3.9GB on its own).
+#
+# 2026-08-28 grid-trimming pass (see PROGRESS.md "grid trimming, round 2"):
+# sample_frac cut further (0.05->0.02, ~324k rows) plus the same
+# local_epochs/patience/num_rounds/grid-combinatorics cuts as
+# cicids2017_robustness.yaml.
 name: cicids2018_robustness
 dataset: cicids2018
 raw_dir: data_raw/cicids2018
-sample_frac: 0.05      # ~810k rows; set to null for the full 16.2M-row dataset
+sample_frac: 0.02      # ~324k rows; set to null for the full 16.2M-row dataset
 test_frac: 0.2
 seed: 0
 
 fl:
   num_clients: 10
   client_fraction: 0.6
-  num_rounds: 30
-  local_epochs: 20
-  patience: 5
+  num_rounds: 25
+  local_epochs: 10
+  patience: 3
   lr: 0.01
   batch_size: 32
   dropout: 0.5
   attack_start_round: 3
-  device: cpu
+  device: cuda
   log_every: 1
   armor_config:
     alpha_pop: 0.05
@@ -47,5 +49,5 @@ fl:
 grid:
   aggregators: [fedavg, krum, multi_krum, trimmed_mean, coordinate_median, foolsgold, armor]
   attack_types: [label_flip, sign_flip, gaussian_noise, free_rider, alie]
-  malicious_fractions: [0.1, 0.2, 0.3, 0.4]
-  non_iid_alphas: [null, 1.0, 0.5, 0.1]
+  malicious_fractions: [0.2, 0.4]
+  non_iid_alphas: [null, 0.5]

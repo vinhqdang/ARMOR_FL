@@ -3,24 +3,35 @@
 # comparable, but uses more communication rounds than their R=5 so the
 # e-process-based defenses have room to accumulate evidence -- R=5 is only
 # enough for a single post-burn-in decision round.
+#
+# 2026-08-28 grid-trimming pass (see PROGRESS.md "grid trimming, round 2" for
+# the full wall-clock accounting): sample_frac/local_epochs/num_rounds cut and
+# grid combinatorics reduced (non_iid_alphas, malicious_fractions 4->2 each)
+# to bring the full 3-dataset grid down from an infeasible ~102-248 GPU-days
+# estimate. local_epochs=10/patience=3 measured at 308s/round on this
+# machine's GPU (vs 426s/round at local_epochs=20/patience=5, and 564s/round
+# pre-optimization at local_epochs=20) -- less-than-linear savings from
+# cutting epochs because patience was already triggering early stopping most
+# of the time. sample_frac=0.1 matches the wall-clock benchmark exactly (was
+# null/full 2.26M rows, a previously-unaccounted ~10x cost multiplier).
 name: cicids2017_robustness
 dataset: cicids2017
 raw_dir: data_raw/cicids2017
-sample_frac: null      # null = full dataset; set e.g. 0.1 for a faster pass
+sample_frac: 0.1
 test_frac: 0.2
 seed: 0
 
 fl:
   num_clients: 10
   client_fraction: 0.6
-  num_rounds: 30
-  local_epochs: 20
-  patience: 5
+  num_rounds: 25
+  local_epochs: 10
+  patience: 3
   lr: 0.01
   batch_size: 32
   dropout: 0.5
   attack_start_round: 3
-  device: cpu
+  device: cuda
   log_every: 1
   armor_config:
     alpha_pop: 0.05
@@ -46,5 +57,5 @@ fl:
 grid:
   aggregators: [fedavg, krum, multi_krum, trimmed_mean, coordinate_median, foolsgold, armor]
   attack_types: [label_flip, sign_flip, gaussian_noise, free_rider, alie]
-  malicious_fractions: [0.1, 0.2, 0.3, 0.4]
-  non_iid_alphas: [null, 1.0, 0.5, 0.1]
+  malicious_fractions: [0.2, 0.4]
+  non_iid_alphas: [null, 0.5]

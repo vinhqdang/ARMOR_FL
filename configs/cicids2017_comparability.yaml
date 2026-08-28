@@ -4,7 +4,7 @@
 name: cicids2017_comparability
 dataset: cicids2017
 raw_dir: data_raw/cicids2017
-sample_frac: null
+sample_frac: 0.1  # matches cicids2017_robustness.yaml's scale (2026-08-28 grid-trimming pass)
 test_frac: 0.2
 seed: 0
 
@@ -17,7 +17,7 @@ fl:
   lr: 0.01
   batch_size: 32
   dropout: 0.5
-  device: cpu
+  device: cuda
   log_every: 1
 
 grid:

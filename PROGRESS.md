@@ -4,6 +4,135 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-08-28 -- grid trimming round 2, on a new (slower) GPU machine -- still infeasible, blocked again
+
+Picked up the deferred grid-trimming decision from the entry below. The user
+approved all four levers that had been offered: restructure the training
+loop first, cut grid combinatorics, reduce `local_epochs`, and reduce
+`num_rounds`/`sample_frac` further. This entry documents what actually
+happened when those were implemented -- headline: **even after all four,
+the full 3-dataset grid is still an estimated 5-8+ weeks of continuous GPU
+time on this machine**, which is a materially different (worse) outcome than
+"cut it down to something runnable," so this is flagged back to the user
+again rather than silently pushing further cuts.
+
+### New machine, new GPU
+
+This session runs on a different physical machine than the one that produced
+the ~102-day / 175.3 s/round estimate below -- an NVIDIA RTX 5000 Ada
+Generation Laptop GPU (16 GB), driver 596.58, CUDA 13.2, PyTorch 2.6.0+cu124.
+`data_raw/` had to be regenerated via `bash scripts/reassemble_datasets.sh`
+(not pushed, per the note below); all three datasets reassembled cleanly and
+checksums matched.
+
+**A real, unrelated CUDA driver bug surfaced immediately**: the full test
+suite crashed reliably (`Windows fatal exception: access violation`, native
+crash inside `torch._dynamo`'s eval-frame hook) at the exact same test every
+time, but only when CUDA tests ran after the CPU-only test files earlier in
+the same pytest session -- `tests/test_device_consistency.py` alone always
+passed. Confirmed via `git stash` that this reproduces identically on the
+unmodified pre-session code, so it's an environment issue, not something the
+training-loop changes below introduced. Root cause: CUDA's lazy module
+loading (default in recent driver/CUDA combos) misbehaving with this
+PyTorch build on Windows. Fix: `CUDA_MODULE_LOADING=EAGER`, which resolved it
+across repeated full-suite runs. Persisted permanently for this machine via
+`conda env config vars set CUDA_MODULE_LOADING=EAGER -n py313` (survives
+`conda activate`, doesn't need to be remembered per-command).
+
+### Training-loop restructure (`armor_fl/fl/client.py`, `armor_fl/fl/simulate.py`)
+
+Implemented the "attack the actual overhead" lever from the options list
+below, without changing any hyperparameter that affects what's being
+reproduced:
+- `local_train`: replaced `DataLoader`/`TensorDataset` with manual
+  `torch.randperm` + slicing directly on already-GPU-resident tensors --
+  same shuffle-every-epoch, same fixed `batch_size`, just without
+  DataLoader's per-batch Python/collate overhead.
+- `run_simulation`: train/test tensors are moved to `cfg.device` once up
+  front (previously each client's slice was transferred fresh every
+  client-round); a single local-training model is constructed once and
+  reset via `load_state_dict` per client instead of calling
+  `model_factory()` (and `.to(device)`) fresh every client-round.
+- Found and fixed a latent crash this restructure would have hit: a
+  leftover final batch of exactly 1 sample crashes `nn.BatchNorm1d` in
+  train mode ("expected more than 1 value per channel"). Added an explicit
+  skip for `batch_idx.numel() < 2`. (`DataLoader`'s default `drop_last=False`
+  had the same latent bug -- this wasn't newly introduced, just newly
+  exercised by manual batching in the test suite's tiny synthetic
+  partitions.)
+- All 17 existing tests still pass, including the 6 CUDA
+  device-consistency tests.
+
+### The wall-clock reality check
+
+Same representative run_id as the original benchmark (armor aggregator,
+gaussian_noise attack, non_iid_alpha=0.5, 10% CICIDS2017 sample, 226k train
+rows), measured on **this machine** both before and after the restructure
+(same-machine comparison, since the ~102-day estimate below was from
+different hardware and isn't a fair baseline here):
+
+| variant | local_epochs/patience | s/round |
+|---|---|---|
+| pre-restructure (this machine) | 20 / 5 | 564.0 |
+| post-restructure | 20 / 5 | 426.0 |
+| post-restructure | 10 / 3 | 308.3 |
+
+Two findings worth internalizing:
+1. **The restructure bought ~1.32x**, not the large multiple hoped for.
+   This machine's laptop GPU is simply much slower per-round than whatever
+   produced the earlier 175.3 s/round figure -- the earlier estimate isn't
+   a fair comparison target on this hardware.
+2. **Cutting `local_epochs` 20->10 only bought ~1.38x, not 2x** --
+   `patience=5`/`patience=3` was already triggering early stopping before
+   `max_epochs` in most client-rounds, so the epoch cap isn't the binding
+   constraint most of the time; the fixed per-round cost (client selection,
+   aggregation, eval, model reset) is a bigger share of the total than
+   expected.
+
+### What was actually applied to the configs
+
+All three `*_robustness.yaml` (and both `*_comparability.yaml`) now set
+`device: cuda`. Robustness grids: `local_epochs: 10`, `patience: 3`,
+`num_rounds: 25` (matches the statistical floor `test_armor.py` validates),
+`malicious_fractions: [0.2, 0.4]` (was 4 levels), `non_iid_alphas: [null,
+0.5]` (was 4 levels) -- combinatorics 560->140 run_ids/dataset (420 total,
+down from 1680). `sample_frac`: cicids2017 null->0.1 (matches the benchmark
+exactly -- was a previously-unaccounted ~10x hidden cost), cicids2018
+0.05->0.02, ciciot2023 0.02->0.01.
+
+**New estimate at these settings: ~899 GPU-hours (~37.5 days) just for a
+single CICIDS2017-scale run through the trimmed 420-run_id grid** (140
+run_ids/dataset x 25 rounds x 308.3 s/round, extrapolated across all 3
+datasets assuming similar per-row cost -- CICIDS2018 and CICIoT2023 will
+likely run somewhat higher since their trimmed sample_fracs still leave
+larger absolute row counts than CICIDS2017's 226k). **This is not "something
+runnable" in any casual sense** -- it's 5-8+ weeks of continuous GPU time on
+a laptop, which is a different problem (can the machine even stay on and
+undisturbed that long?) than the ~102-day number this was originally framed
+against.
+
+### Blocked again -- flagged back to the user rather than cutting further unilaterally
+
+The four approved levers are now implemented as far as they reasonably go
+without a new kind of decision:
+- Combinatorics can be cut further (e.g. drop to 3-4 aggregators or 3
+  attack types) but that directly shapes which comparisons the manuscript
+  can make -- a paper-narrative call, not an engineering one.
+- `batch_size` (currently 32, matching Table 2) was never actually the
+  lever exercised -- GPU utilization is still well under 100% at this batch
+  size on this GPU, so increasing it would likely help a lot, but it's a
+  hyperparameter deviation from the paper's own protocol and wasn't part of
+  what was approved.
+- Running multiple run_ids concurrently as separate processes on the same
+  GPU (no science change, since GPU utilization has headroom) is untested
+  and might not scale well if the bottleneck is Python/CPU-side overhead
+  rather than raw GPU compute -- worth trying but unproven.
+- Simply accepting a multi-week unattended background run is also a valid
+  choice, just one with real practical constraints on a laptop.
+
+Not picking one of these unilaterally; see next-steps/decision needed at the
+top of this file structure going forward.
+
 ## 2026-08-28 -- session paused here, decision needed on the next machine
 
 Everything below (2026-08-27, "latest 4" through "latest") is committed and

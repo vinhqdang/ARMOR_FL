@@ -82,10 +82,22 @@ def run_simulation(model_factory, X: np.ndarray, y: np.ndarray,
     else:
         aggregator = build_aggregator(cfg.aggregator, **cfg.aggregator_kwargs)
 
-    X_t = torch.tensor(X, dtype=torch.float32)
-    y_t = torch.tensor(y, dtype=torch.long)
-    X_test_t = torch.tensor(X_test, dtype=torch.float32)
-    y_test_t = torch.tensor(y_test, dtype=torch.long)
+    # Train/test tensors are made GPU-resident once here (rather than per
+    # client-round transfers inside local_train) -- for the dataset sizes
+    # this repo works with (<=a few M rows, <100 features) this comfortably
+    # fits in GPU memory and removes a repeated host->device copy that
+    # otherwise happens num_clients x num_rounds times per run_id.
+    X_t = torch.tensor(X, dtype=torch.float32, device=cfg.device)
+    y_t = torch.tensor(y, dtype=torch.long, device=cfg.device)
+    X_test_t = torch.tensor(X_test, dtype=torch.float32, device=cfg.device)
+    y_test_t = torch.tensor(y_test, dtype=torch.long, device=cfg.device)
+
+    # A single reusable local-training model, reset via load_state_dict before
+    # each client's local training instead of constructing (and .to(device)-ing)
+    # a fresh model_factory() instance per client per round -- module
+    # construction + parameter registration overhead compounds heavily across
+    # num_clients x num_rounds x len(grid) calls.
+    local_model = model_factory().to(cfg.device)
 
     result = SimulationResult(config=cfg)
     first_excluded_round: dict[int, int] = {}
@@ -111,17 +123,18 @@ def run_simulation(model_factory, X: np.ndarray, y: np.ndarray,
             if len(train_idx) == 0:
                 continue
 
-            Xc, yc = X_t[train_idx], y_t[train_idx]
-            Xv, yv = X_t[val_idx], y_t[val_idx]
+            train_idx_t = torch.as_tensor(train_idx, dtype=torch.long, device=cfg.device)
+            val_idx_t = torch.as_tensor(val_idx, dtype=torch.long, device=cfg.device)
+            Xc, yc = X_t[train_idx_t], y_t[train_idx_t]
+            Xv, yv = X_t[val_idx_t], y_t[val_idx_t]
 
             is_malicious = attack_active and cid in malicious_ids
             if is_malicious and cfg.attack_type == "label_flip":
                 yc = torch.tensor(
-                    atk.label_flip(yc.numpy(), num_classes, seed=cfg.seed + round_idx),
-                    dtype=torch.long,
+                    atk.label_flip(yc.cpu().numpy(), num_classes, seed=cfg.seed + round_idx),
+                    dtype=torch.long, device=cfg.device,
                 )
 
-            local_model = model_factory()
             local_model.load_state_dict(
                 unflatten_to_state_dict(global_vector, template_state))
             train_cfg = LocalTrainConfig(max_epochs=cfg.local_epochs, patience=cfg.patience,
