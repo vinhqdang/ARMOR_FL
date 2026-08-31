@@ -4,6 +4,35 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-08-31 -- launched the full experiment sequence
+
+Kicked off `bash scripts/run_all_experiments.sh` (new script -- runs
+`cicids2017_comparability`, `cicids2018_comparability`, then the three
+`*_robustness.yaml` grids, sequentially, since running configs concurrently
+previously caused GPU contention -- see the batch_size entry below) as a
+background process, logging to `/tmp/run_all_experiments.log`. Confirmed
+clean startup (first run_id `fedavg__atk=None__mal=0.0__alpha=None` on
+`cicids2017_comparability` began without error, single process, GPU
+active).
+
+**Status/progress check for whoever picks this up next**: tail
+`/tmp/run_all_experiments.log` for the `== START:`/`== END:` markers per
+config and the per-run_id `===` lines; each config also writes
+`results/<config_name>/summary.csv` and one `<run_id>.json` per run as it
+completes, so partial progress is inspectable even before a config finishes.
+Expected order of completion: both comparability configs first (cheap, ~2-3
+hours each), then `cicids2017_robustness` / `cicids2018_robustness` /
+`ciciot2023_robustness` (the ~3.1-day estimate from the batch_size entry
+below applies to this stage). Do not launch a second `run_experiment.py`
+process concurrently with this one -- confirm via `nvidia-smi`'s process
+list and `ps aux` that only one is running first (see the "process-
+management mistake" note below for why this matters).
+
+Next steps once this finishes: sanity-check the comparability results
+against the paper's own Table 3 numbers before trusting the robustness
+grid's accuracy figures, then start drafting the manuscript per the
+Cluster Computing submission guidelines noted further down this file.
+
 ## 2026-08-28 -- batch_size was the real lever; trimmed grid now ~3 GPU-days
 
 Follow-up to "grid trimming round 2" immediately below. Asked the user how
