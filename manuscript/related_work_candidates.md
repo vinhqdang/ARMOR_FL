@@ -100,3 +100,25 @@ All 9 are now real BibTeX entries in `manuscript/sn-bibliography.bib` (keys
 `dang2026fortressfl`, `dang2026stfedxids`, `dang2026uncertainty`,
 `dang2024iotmalwarefl`, `dang2024conformalbotnet`, `dang2022mlids`,
 `dang2023transferids`, `dang2022iotids`, `dang2021explainableids`).
+
+## Table 4 -- Cluster Computing journal papers (target-venue fit)
+
+Searched specifically for **Cluster Computing** (this manuscript's target
+journal) papers on FL/Byzantine-robustness/IDS, beyond Table 1's entry #11
+(Akter et al.). All verified directly against the Crossref API (title,
+authors, volume/issue, DOI) -- not just taken from search-result snippets.
+
+| # | Title | Authors | Vol/Issue | DOI | Relevance |
+|---|---|---|---|---|---|
+| 1 | RPCFL: a byzantine-robust and privacy-preserving clustered federated learning framework | Chen, Tan, Zhong, Wang, Fan, Weng | 29(2):125 (2026) | 10.1007/s10586-025-05900-1 | **Directly on-topic** -- Byzantine-robust + privacy-preserving clustered FL, published in the target journal. Closest Table-1-style comparator that also happens to be in-venue; worth a careful differentiation paragraph (SMPC/clustering-based robustness vs. ARMOR-FL's anytime-valid e-process approach). |
+| 2 | Federated learning in intrusion detection: advancements, applications, and future directions | Buyuktanir, Altinkaya, Karatas Baydogmus, Yildiz | 28(7):473 (2025) | 10.1007/s10586-025-05325-w | Survey/review paper -- good broad framing citation for the Introduction, establishes the target journal already publishes FL-IDS survey work. |
+| 3 | Lightweight LLM-based hierarchical federated learning for B5G-enabled IoT intrusion detection networks | Mohawesh, Al-Obiedollah, Maqsood, Bany Salameh | 29(3):195 (2026) | 10.1007/s10586-026-05939-8 | FL + IoT IDS in-venue precedent; not attack/robustness-focused, so a Related Work citation rather than a head-to-head comparator. |
+| 4 | Enhancing data privacy in cyber-physical systems with federated learning-based intrusion detection | Bella, Guezzaz, Ravi, Benkirane, Mohy-eddine, Azrour, Ennajar | 29(6):346 (2026) | 10.1007/s10586-026-06001-3 | FL-IDS in-venue precedent (CPS domain); privacy-framed, not robustness-framed. |
+| 5 | Improving IoT security through federated deep Q-learning with realistic traffic modelling | Godavarthi, Mahesh, Jithendar, Mohanty, Dash | 29(6):399 (2026) | 10.1007/s10586-026-06160-3 | FL + IoT security in-venue precedent (RL-based, not supervised IDS) -- weakest fit of the five, include only if Related Work needs venue-breadth over topical precision. |
+
+All 5 are now real BibTeX entries in `manuscript/sn-bibliography.bib` (keys
+`chen2026rpcfl`, `buyuktanir2025flidssurvey`, `mohawesh2026llmhfl`,
+`bella2026cpsfedids`, `godavarthi2026fedqlearning`). Entry #1 (RPCFL) is the
+one worth the most attention -- it's the only other Byzantine-robust FL
+paper found in the target journal itself, so reviewers may expect it to be
+addressed explicitly.
