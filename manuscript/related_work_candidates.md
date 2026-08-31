@@ -74,3 +74,29 @@ likely be the same paper.
 5. Several 2026-dated venues (Computer Networks, Neurocomputing) confirm this
    is a fast-moving, still-consolidating subfield -- re-run a citation check
    close to submission.
+
+## Table 3 -- Author self-citations (curated 2026-08-31 from ORCID 0000-0002-3877-8024)
+
+The author (Quang-Vinh Dang) has 82 works on ORCID; most are outside this
+manuscript's scope (malware/fraud/recommendation/NLP applications, general
+ML-for-IDS book chapters on datasets ARMOR-FL doesn't use). This table is a
+**curated subset actually on-topic** -- moderate self-citation per COPE
+guidance, not exhaustive coverage. All bibliographic fields below verified
+directly against the Crossref API, not just the ORCID listing.
+
+| # | Title | Venue | Year | DOI | Why it's relevant here |
+|---|---|---|---|---|---|
+| 1 | FORTRESS-FL: Byzantine-robust and privacy-preserving federated orchestration for next-generation networks | Array, 29:100680 | 2026 | 10.1016/j.array.2026.100680 | **Closest prior self-citation** -- Byzantine-robust FL, but no anytime-valid/e-process guarantee or drift-vs-attack decoupling. Needs explicit differentiation, not just a citation. |
+| 2 | ST-FedXIDS: spatiotemporal federated explainable IDS with drift-adaptive graph learning for high-density public WiFi | Int. J. Advances in Signal and Image Sciences, 12(1):873-886 | 2026 | 10.29284/zcrk2p65 | Drift-adaptation precedent -- cite for the drift half of ARMOR-FL's contribution only. |
+| 3 | Utilizing uncertainty measures to improve the performance of intrusion detection systems | SN Computer Science, 7(4):344 | 2026 | 10.1007/s42979-026-04923-8 | Statistical-testing framing grounding for the e-process approach. |
+| 4 | Detecting IoT malware using federated learning | LNNS, *Data Science and Applications*, 73-83 | 2024 | 10.1007/978-981-99-7862-5_6 | Author's own FL + IoT-security precedent (malware, not network IDS, but same FL-for-security framing). |
+| 5 | Kernel methods for conformal prediction to detect botnets | LNNS, *AI: Theory and Applications*, 29-41 | 2024 | 10.1007/978-981-99-8476-3_3 | Conformal-prediction lineage -- distribution-free guarantees, same statistical family as ARMOR-FL's e-processes. |
+| 6 | Using machine learning for intrusion detection systems | Computing and Informatics, 41(1):12-33 | 2022 | 10.31577/cai_2022_1_12 | General ML-for-IDS foundational self-citation, establishes track record. |
+| 7 | Learning to transfer knowledge between datasets to enhance intrusion detection systems | LNEE, *Computational Intelligence*, 39-46 | 2023 | 10.1007/978-981-19-7346-8_4 | Cross-dataset generalization precedent -- relevant to ARMOR-FL's 3-dataset (CICIDS2017/2018/CICIoT2023) design. |
+| 8 | Intrusion detection in Internet of Things environment | *Advances in Digital Science -- ADS 2022*, 26-34 | 2022 | 10.33847/978-5-6048575-0-2_2 | IoT-specific IDS precedent, relevant to CICIoT2023. |
+| 9 | Improving the performance of the intrusion detection systems by the machine learning explainability | Int. J. Web Information Systems, 17(5):537-555 | 2021 | 10.1108/ijwis-03-2021-0022 | Only relevant if the Discussion section addresses interpretability of ARMOR-FL's trust weights -- optional. |
+
+All 9 are now real BibTeX entries in `manuscript/sn-bibliography.bib` (keys
+`dang2026fortressfl`, `dang2026stfedxids`, `dang2026uncertainty`,
+`dang2024iotmalwarefl`, `dang2024conformalbotnet`, `dang2022mlids`,
+`dang2023transferids`, `dang2022iotids`, `dang2021explainableids`).
