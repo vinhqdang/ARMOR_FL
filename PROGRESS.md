@@ -4,6 +4,72 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-09-01 -- paused: unrelated GPU-sharing job made this untenable, resume when it's done
+
+**Deliberately stopped the experiment sequence** (`scripts/run_all_experiments.sh`,
+launched 2026-08-31 08:05) at the user's explicit request, rather than letting
+it keep fighting for the GPU. Do not restart it until the reason below is gone.
+
+### Why
+
+This machine's GPU was being shared, uncoordinated, with a `scripts/run_ablation.py`
+process from a completely unrelated project/session (`super_resolution`) that
+happened to start 12 minutes after ours (08:17 vs 08:05) and ran for over a day.
+Confirmed directly with that session: it independently measured the same
+**~20x slowdown** on its own workload, so this wasn't a bug on either side --
+it's a real property of two small-kernel-launch-heavy CUDA workloads sharing
+one GPU under Windows' WDDM scheduler (no true concurrent kernel execution
+like Linux MPS/TCC; every switch between the two processes' contexts is an
+expensive full context swap, worse when VRAM is nearly maxed at ~15.9/16.3 GB
+by both jobs at once -- see the session transcript for the full explanation
+given to the user).
+
+Net effect: run 2/428 (`fedavg__atk=None__mal=0.0__alpha=1.0` on
+`cicids2017_comparability`) was still not done after **~24 hours** (clean
+estimate: ~35 min). Continuing to grind through the full grid under these
+conditions would have taken an unpredictable multiple of the already-long
+estimate, for no good reason when the fix is simply "wait for the other job
+to finish, then resume with a GPU to ourselves."
+
+### What's actually done vs. lost
+
+- **Complete and saved**: `results/cicids2017_comparability/fedavg__atk=None__mal=0.0__alpha=None.json`
+  (the IID run: acc=0.8519, f1=0.8066, 6343.9s under partial contention).
+- **Lost, not resumable**: the in-progress `alpha=1.0` run (~24h of compute).
+  `run_experiment.py` only writes a result JSON after a run_id fully
+  completes -- there's no mid-run checkpoint, so this one has to be redone
+  from scratch. Not worth adding checkpointing for a single lost run; revisit
+  only if pausing mid-grid becomes a recurring need.
+- Everything else in the grid (all of `cicids2018_comparability` and all
+  three `*_robustness.yaml` configs, 424 run_ids) hadn't started yet --
+  nothing else was lost.
+
+### How this was stopped (for the record, in case cleanup is ever incomplete)
+
+`TaskStop` on the tracked background task didn't actually kill the process
+tree (the outer `bash scripts/run_all_experiments.sh` loop survived it and
+promptly started the next config after the inner python process died) --
+had to `taskkill /F /T` the actual PIDs directly, twice, once for the
+in-progress python process and once for the bash driver script itself once
+it was noticed still alive and having launched `cicids2018_comparability`.
+Verified clean via `nvidia-smi` (memory dropped to only the other session's
+usage) and `ps aux` (no more `run_experiment.py` or `run_all_experiments`
+processes). The two `tail -f` log-watching Monitor tasks were stopped too.
+
+### How to resume
+
+1. Confirm the other GPU job is actually done: `nvidia-smi` should show
+   only ~1 process using the GPU (this machine's own), not two.
+2. Re-run `bash scripts/run_all_experiments.sh > /tmp/run_all_experiments.log 2>&1`
+   (**as ONE properly-backgrounded call -- do not combine a trailing `&`
+   with the tool's own background-tracking flag, that caused a separate
+   stray-process incident earlier this session**). It will redo
+   `cicids2017_comparability` from its first run_id (`fedavg`/IID) again --
+   fine, it's fast and the existing JSON will just be overwritten with an
+   equivalent result under clean conditions.
+3. Re-benchmark one run_id first if there's any doubt the GPU is really
+   uncontended before committing to the full sequence again.
+
 ## 2026-08-31 -- launched the full experiment sequence
 
 Kicked off `bash scripts/run_all_experiments.sh` (new script -- runs
