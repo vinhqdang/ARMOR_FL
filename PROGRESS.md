@@ -4,6 +4,39 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-09-01 -- second grid-trimming pass, GPU free again, relaunched
+
+The other session's GPU-sharing job finished; confirmed via `nvidia-smi`
+(802 MiB used, no compute processes) before doing anything else.
+
+User felt even the already-trimmed 428-run_id grid was still too big.
+Cut further (user's explicit choices, since this is a paper-narrative call):
+- **Aggregators 7->4**: `fedavg, krum, foolsgold, armor` -- naive baseline +
+  one classic Byzantine-robust baseline + one modern reputation-based
+  baseline + our method. Dropped `multi_krum`, `trimmed_mean`,
+  `coordinate_median` as redundant with `krum` for the comparison story.
+- **Attack types 5->3**: `label_flip, gaussian_noise, alie` -- one
+  representative per category (data-space / simple parameter-space /
+  sophisticated-adaptive). Dropped `sign_flip`, `free_rider` as similar in
+  kind to `gaussian_noise`.
+- **Kept both `malicious_fractions` levels** ([0.2, 0.4]) and both
+  `non_iid_alphas` levels ([null, 0.5]) -- user wanted to preserve those
+  sweeps.
+- Also removed the now-unused `multi_krum`/`trimmed_mean` entries from each
+  config's `aggregator_kwargs`.
+
+New grid: 4 x 3 x 2 x 2 = 48 run_ids/dataset x 3 datasets = 144, plus the 8
+comparability run_ids = **152 total** (down from 428, down from the original
+1680). At the batch_size=256 clean per-round rate (25.9s/round x 25 rounds
+= ~647.5s/run_id), clean estimate is roughly **~1.3 days** for the whole
+sequence -- a large improvement, assuming the GPU stays uncontended this
+time.
+
+Relaunched `bash scripts/run_all_experiments.sh` (same driver script, will
+redo `cicids2017_comparability` from its first run_id since the earlier
+`alpha=None` result gets naturally overwritten -- fine, it's fast and
+should reproduce closely).
+
 ## 2026-09-01 -- paused: unrelated GPU-sharing job made this untenable, resume when it's done
 
 **Deliberately stopped the experiment sequence** (`scripts/run_all_experiments.sh`,

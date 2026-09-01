@@ -48,14 +48,11 @@ fl:
   aggregator_kwargs:
     krum:
       num_byzantine_assumed: 3
-    multi_krum:
-      num_byzantine_assumed: 3
-      multi: 3
-    trimmed_mean:
-      trim_fraction: 0.2
 
 grid:
-  aggregators: [fedavg, krum, multi_krum, trimmed_mean, coordinate_median, foolsgold, armor]
-  attack_types: [label_flip, sign_flip, gaussian_noise, free_rider, alie]
+  # 2026-09-01 second grid-trimming pass: 7->4 aggregators, 5->3 attacks (user
+  # call, see PROGRESS.md) -- 428->152 total run_ids across all 5 configs.
+  aggregators: [fedavg, krum, foolsgold, armor]
+  attack_types: [label_flip, gaussian_noise, alie]
   malicious_fractions: [0.2, 0.4]
   non_iid_alphas: [null, 0.5]
