@@ -231,3 +231,4 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+results_v1_no_shift_gate/

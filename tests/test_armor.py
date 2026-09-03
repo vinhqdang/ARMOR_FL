@@ -106,6 +106,45 @@ def test_drifting_but_honest_client_is_not_excluded():
     )
 
 
+def test_persistently_heterogeneous_honest_clients_are_not_excluded():
+    """Regression test for the false-positive mechanism found on real data:
+    clients whose updates sit persistently farther from the robust center
+    (ordinary non-IID heterogeneity -- NOT attacks, and NOT changing over
+    time) must not be hard-excluded.
+
+    Before the self-shift gate, the population e-process would eventually
+    exclude every one of these, because an anytime-valid test is guaranteed
+    to reject any client whose z-score sits persistently above the median --
+    that is the guarantee working as designed, which is exactly why level
+    alone cannot be the exclusion criterion. The loss-based drift e-process
+    does not catch this either: these clients' own losses are stable, so
+    nothing looks like drift.
+    """
+    torch.manual_seed(7)
+    agg = ArmorAggregator(NUM_CLIENTS, make_config())
+    # Clients 5-9 are consistently ~2x more scattered than 0-4, from round 1
+    # onward, and never change. All are honest.
+    scatter = {cid: (1.0 if cid < 5 else 2.2) for cid in range(NUM_CLIENTS)}
+
+    excluded_ever = set()
+    for r in range(ROUNDS):
+        updates = []
+        shared_direction = torch.randn(D) * 0.1
+        for cid in range(NUM_CLIENTS):
+            vec = shared_direction + torch.randn(D) * 0.05 * scatter[cid]
+            # own loss is stable w.r.t. the client's OWN history
+            loss = 1.0 + 0.1 * scatter[cid] + 0.02 * torch.randn(1).item()
+            updates.append(ClientUpdate(client_id=cid, vector=vec, n_k=100,
+                                         local_val_loss=loss))
+        result = agg.step(updates)
+        excluded_ever.update(result.excluded_this_round)
+
+    assert not excluded_ever, (
+        f"honest but persistently-heterogeneous clients were excluded: "
+        f"{sorted(excluded_ever)} (none of them are attacking)"
+    )
+
+
 def test_reinstatement_resets_after_probation():
     torch.manual_seed(2)
     cfg = make_config(probation_rounds=2)
