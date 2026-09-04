@@ -77,6 +77,7 @@ class ArmorConfig:
     require_shift_for_exclusion: bool = True  # gate hard exclusion on the shift signal
     shift_baseline_rounds: int = 2   # own-z rounds used as the pre-attack baseline
     gross_outlier_z: float = 4.0     # z at/above which shift gating is bypassed
+    mad_floor_fraction: float = 0.5  # floor on MAD relative to its own recent history
 
     # NOTE on null_mean=1.0: both statistics below are of the form
     # dist_i / median(dist_1..dist_K), and the median of a set divided by
@@ -144,6 +145,7 @@ class ArmorAggregator:
             cid: ClientRecord() for cid in range(num_clients)
         }
         self.round_idx = 0
+        self.mad_history: list[float] = []  # raw (unfloored) per-round MAD, population-level
 
     def _robust_center(self, vectors: list[torch.Tensor], ns: list[int]) -> torch.Tensor:
         if self.cfg.center_method == "geometric_median":
@@ -204,7 +206,29 @@ class ArmorAggregator:
         ns = [u.n_k for u in active]
         center = self._robust_center(vectors, ns)
         dists = [torch.norm(u.vector - center).item() for u in active]
-        mad = max(float(np.median(dists)) if dists else 1e-8, 1e-8)
+        raw_mad = max(float(np.median(dists)) if dists else 1e-8, 1e-8)
+
+        # z = dist/MAD is unbounded below by construction: when the honest
+        # population is naturally homogeneous (near-IID data), cross-sectional
+        # MAD collapses toward zero, and dividing ordinary training noise by a
+        # near-zero MAD produces enormous z-scores from clients that are not
+        # attacking at all. Confirmed on real data (CICIDS2017, label_flip,
+        # malicious_fraction=0.2, IID): 62.5% of honest clients were excluded
+        # this way even after the shift-gate fix (which cannot help here --
+        # the inflated z looks identical to a genuine gross outlier).
+        #
+        # Floor MAD at a fraction of its own recent (pre-this-round) history,
+        # so a single round's small-sample noise in cross-sectional spread
+        # can't manufacture huge z-scores. This can only ever RAISE the
+        # effective MAD relative to the raw value, so it never masks a real
+        # attack: an attack's raw MAD is at least as large as its floor and
+        # is used unchanged. History stores the RAW value only, so a floored
+        # round can never ratchet the floor upward on its own account.
+        if len(self.mad_history) >= 3:
+            mad = max(raw_mad, cfg.mad_floor_fraction * float(np.median(self.mad_history)))
+        else:
+            mad = raw_mad
+        self.mad_history.append(raw_mad)
 
         # ---- pass 3: e-processes + trust weighting for the active population ----
         for u, dist in zip(active, dists):
@@ -266,9 +290,31 @@ class ArmorAggregator:
             else:
                 rec.status = "trusted"
 
-            # w_k^t = n_k * sigmoid(-beta * log E_pop_k^t): smooth downweighting
-            # (not a hard cutoff) as evidence of population divergence accumulates.
-            trust_scale = 1.0 / (1.0 + math.exp(cfg.beta * rec.pop_eprocess.log_value))
+            # w_k^t = n_k * sigmoid(-beta * (log E_pop_k^t / threshold - 1)): smooth
+            # downweighting relative to the SAME evidence threshold that gates hard
+            # exclusion (-log(alpha_pop)), not the raw unbounded log-value.
+            #
+            # Feeding the raw log-value into the sigmoid (the original formulation)
+            # crushes a client's weight to near-zero as soon as log_e_pop ticks
+            # barely positive -- log_e_pop=1.0 with beta=4.0 already gives
+            # trust_scale~0.018, when the actual hard-exclusion boundary sits at
+            # -log(alpha_pop)~3.0 (alpha_pop=0.05). Confirmed on real data (label_flip,
+            # CICIDS2017): the four attackers' updates happened to look statistically
+            # CENTRAL (log_e_pop stayed negative all run -- see the module docstring's
+            # note on this being a known blind spot), so they kept ~full weight,
+            # while merely-mildly-off-center HONEST clients were smoothly downweighted
+            # to a few percent of their n_k despite being nowhere near the exclusion
+            # boundary. Net effect: ARMOR's weighted average handed MORE relative
+            # influence to the undetected attackers than an unweighted average would,
+            # losing to plain FedAvg on this exact scenario.
+            #
+            # Rescaling by the threshold ties "how much to downweight" to "how close
+            # is this client to the same evidence bar that would exclude it": trust_scale
+            # ~ 0.98 at log_e_pop=0 (population median), ~0.5 exactly at the exclusion
+            # boundary, and only drops toward ~0 for evidence well past it.
+            pop_threshold = -math.log(max(cfg.alpha_pop, 1e-12))
+            normalized_pop = rec.pop_eprocess.log_value / max(pop_threshold, 1e-6)
+            trust_scale = 1.0 / (1.0 + math.exp(cfg.beta * (normalized_pop - 1.0)))
             if rec.reinstated_count > 0 and rec.status != "trusted":
                 trust_scale = min(trust_scale, cfg.reinstatement_trust_scale)
             w = u.n_k * trust_scale

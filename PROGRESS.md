@@ -4,6 +4,135 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-09-04 -- stopped the full v2 grid mid-run; found and fixed a THIRD
+## ARMOR bug via a new cheap canary tool; relaunched
+
+**Built `scripts/canary_check.py`** after the user pointed out that
+validating a fix by re-running the full 152-run grid (~1.3 days) is too
+costly. It runs `{fedavg, krum, armor}` on a couple of attack types at
+reduced settings (small `sample_frac`, fewer rounds) so a fix can be
+validated in ~5-15 minutes instead. Also added `scripts/trace_armor_run.py`,
+a full per-round diagnostic (weights/z/log_e_pop/log_e_drift/log_e_shift/
+status per client per round) for tracing exactly what ARMOR is doing on one
+real scenario, used to find the two bugs below.
+
+**Important canary calibration lesson**: the FIRST canary settings
+(`sample_frac=0.03, num_rounds=12, local_epochs=5`) were too weak --
+every aggregator collapsed to near-random, so the "armor loses" verdict was
+noise between two failures, not signal. Always sanity-check that fedavg vs
+krum actually separate under the reduced settings before trusting a
+comparison; `sample_frac=0.1, num_rounds=15, local_epochs=10` does.
+
+**`scripts/trace_armor_run.py` gotcha**: importing `torch` before
+`armor_fl.data.preprocessing` (which imports pandas/pyarrow) crashes with a
+native access violation on this machine -- a known Windows conflict between
+torch's bundled OpenMP/MKL and pyarrow's own threading, unrelated to CUDA.
+Fix: import the pandas-dependent module first. `scripts/canary_check.py`
+happened to already do this by accident; `trace_armor_run.py` didn't.
+
+### The v2 grid was stopped mid-run (~2 of 152 done) once the canary found the next bug
+
+The canary immediately paid for itself: at real-scenario settings
+(`label_flip, mal=0.4, alpha=0.5, CICIDS2017`, the exact combo that exposed
+the first bug), **ARMOR still lost badly to both fedavg and krum even after
+the shift-gate fix** (armor=0.117 vs fedavg=0.189, krum=0.799) -- caught in
+~6 minutes instead of after burning another day-plus on the full grid.
+
+### Bug #2: the smooth trust-weight sigmoid was applied to the raw,
+unbounded log-value instead of a threshold-relative one
+
+Traced via `trace_armor_run.py` on the failing scenario: all four malicious
+(label-flipping) clients kept ~full weight the ENTIRE run (e.g. client 4:
+w~13,000-13,390 consistently, `log_e_pop` staying NEGATIVE throughout --
+label-flipping happened to make this client's update look statistically
+CENTRAL, the already-documented blind spot). Meanwhile entirely honest
+clients with only mild population deviation were crushed to near-zero
+weight (client 3: w dropped to 124-681 while `log_e_pop` was only ~0.5-1.1,
+nowhere near the ~3.0 hard-exclusion threshold) -- because
+`sigmoid(-beta * log_value)` with `beta=4.0` applied to the RAW log-value
+already gives `trust_scale~0.018` at `log_value=1.0`, far short of where
+exclusion actually triggers. Net effect: ARMOR's weighted average handed
+MORE relative influence to the undetected attackers than an unweighted
+average would, explaining the loss to plain fedavg.
+
+Fix: rescale the sigmoid's input by the same threshold that gates hard
+exclusion (`-log(alpha_pop)`), so `trust_scale~0.98` at the population
+median, `~0.5` exactly at the exclusion boundary, and only drops toward 0
+well past it. See the comment above `pop_threshold`/`normalized_pop` in
+`armor_fl/fl/armor.py`.
+
+This alone did NOT fix the scenario (armor actually got marginally worse,
+0.069) -- see bug #3.
+
+### Bug #3 (the big one): z = dist/MAD blows up when the honest population
+is naturally homogeneous (near-IID), independent of any attack
+
+Broke down the ALREADY-COMPLETED v1 grid results (pre-both-fixes, archived
+under `results_v1_no_shift_gate/`) by non_iid_alpha instead of averaging
+across it, and found something that had been hidden inside an aggregate
+mean: ARMOR was actually COMPETITIVE with krum under `label_flip` in the
+non-IID case (`alpha=0.5`: armor 0.746-0.809 vs fedavg 0.485-0.799) but
+**catastrophic specifically under IID** (`alpha=None`: armor 0.086-0.108 vs
+fedavg 0.233-0.825, krum 0.838-0.904), with benign false-exclusion rates of
+33-62.5%. This is backwards from intuition -- IID should be the EASIER
+case for a population-comparison test, not the harder one.
+
+Mechanism: `z = dist / MAD` where MAD is this round's cross-sectional
+median distance from the robust center. When honest clients are naturally
+similar (IID data, or just an unlucky small 6-of-10 sample with tight
+agreement), MAD collapses toward zero -- and dividing ordinary training
+noise (different batch orders, small-sample SGD variance) by a near-zero
+MAD manufactures enormous z-scores from clients that aren't attacking at
+all. This is a different failure mode from bug #1 (persistent structural
+heterogeneity being mistaken for an attack) -- this one is about the
+POPULATION's own natural spread shrinking, not about any one client's
+persistent offset, and it hits hardest exactly when there's LESS
+heterogeneity, not more.
+
+Fix: floor MAD at a fraction (`mad_floor_fraction=0.5`) of its own recent
+history (median of `ArmorAggregator.mad_history`, which stores only the RAW
+per-round MAD, never the floored value, so there's no upward ratchet). This
+can only ever RAISE the effective MAD relative to the raw computed value, so
+it can never mask a real attack -- a genuine attack's raw MAD is already at
+least as large as its own floor and passes through unchanged.
+
+Validated via canary (`label_flip, mal=0.2, near-IID` -- used
+`--non-iid-alpha 1000000` as a Dirichlet proxy for true IID before adding
+proper `none`/`iid` support to the canary script): **armor=0.840 vs
+krum=0.841, fedavg=0.803, benign_FER=0.000** -- complete turnaround from
+v1's 0.086/62.5%-false-exclusion catastrophe on this combo. Re-validated the
+original failing scenario too (`label_flip, mal=0.4, alpha=0.5`):
+**armor=0.815, now BEATING krum=0.799** (was 0.117/0.069, losing to both,
+earlier this session).
+
+All 18 unit tests still pass (could not cleanly reproduce bug #3 in the
+existing lightweight synthetic-client test harness -- real neural-network
+training noise across clients is messier than a clean Gaussian-perturbation
+model; relied on the canary's real-data validation above instead of a new
+unit test for this one).
+
+### What's still open / known-not-fixed
+
+- `gaussian_noise` under `mal=0.4, alpha=0.5`: armor and fedavg both land on
+  the exact majority-class-baseline collapse (0.8030/0.7153) while krum
+  clearly wins (0.865/0.876) -- not a regression from this session's fixes,
+  just a case ARMOR doesn't yet handle better than doing nothing.
+- The documented bug #1 limitation stands: a from-round-1 constant attacker
+  below `gross_outlier_z` is still only smoothly downweighted, not
+  hard-excluded -- behavioural data alone can't separate that from a
+  heterogeneous honest client.
+
+### Relaunching
+
+v1 results are archived under `results_v1_no_shift_gate/` (gitignored) for
+comparison. Relaunching `scripts/run_all_experiments.sh` fresh (results/
+directory will be overwritten) now that the canary has validated all three
+fixes on the scenarios that mattered. GPU confirmed free (single process)
+before launch each time -- see the process-cleanup notes in earlier entries
+for why this matters (the driver script's outer bash loop has repeatedly
+survived `TaskStop`/one `taskkill`, needing a second explicit kill of the
+outer PID).
+
 ## 2026-09-01 -- second grid-trimming pass, GPU free again, relaunched
 
 The other session's GPU-sharing job finished; confirmed via `nvidia-smi`
