@@ -4,6 +4,29 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-09-05 -- manuscript submitted to Cluster Computing
+
+The ARMOR-FL manuscript was expanded (16 -> 34 pages per the user's request),
+reviewed by a 5-perspective panel (journal-fit, methodology, domain, cross-
+disciplinary, devil's advocate), and revised to address every CRITICAL and
+nearly every MAJOR finding: a systematic bibliography audit against Crossref
+caught fabricated given-names in 17 of 42 entries (family names/DOIs were
+correct, given names weren't), a real text/table contradiction in the
+aggregate-accuracy discussion, a hand-wavy step in Proposition 2's proof, an
+unreconciled gap between the nominal alpha=0.05 guarantee and the observed
+12-16% benign false-exclusion rate, and several missing citations (Bulyan,
+Karimireddy et al. 2021, Divide-and-Conquer, the Ramdas SAVI survey, Howard
+et al. confidence sequences). A follow-up verification re-review confirmed
+the fixes landed. Final formatting pass fixed a table overflowing the page
+width (switched to `tabularx`), added missing `\centering` to all tables
+(none had it -- they were rendering left-aligned instead of centered), and
+simplified the author affiliation to just British University Vietnam.
+Delivered the LaTeX source, compiled PDF, and a cover letter; **the user has
+submitted this to Cluster Computing (Springer Nature) as of today.** Next
+session, if there's a reviewer response, this is a revision-cycle re-entry
+point, not a fresh write -- read this entry and the manuscript's current
+state in git history before redoing any analysis.
+
 ## 2026-09-05 -- full 152-run grid complete; master results table built; starting manuscript
 
 The v3 grid (post all three ARMOR fixes) finished cleanly: 152/152 runs,
