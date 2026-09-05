@@ -1,0 +1,43 @@
+\documentclass[10.5pt]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{hyperref}
+\usepackage{parskip}
+\setlength{\parskip}{0.5\baselineskip}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue}
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{flushright}
+Quang-Vinh Dang\\
+British University Vietnam\\
+Hung Yen, Vietnam\\
+\href{mailto:vinh.dq4@buv.edu.vn}{vinh.dq4@buv.edu.vn}\\
+\today
+\end{flushright}
+
+\vspace{0.35cm}
+\noindent Editor-in-Chief\\
+\textit{Cluster Computing}\\
+Springer Nature
+
+\vspace{0.35cm}
+\noindent Dear Editor,
+
+\vspace{0.2cm}
+\noindent Please find enclosed our manuscript, ``\textbf{ARMOR-FL: Anytime-Valid Robust Martingale-Based Online Reweighting for Federated Intrusion Detection},'' which we submit for consideration for publication in \textit{Cluster Computing}.
+
+Federated intrusion detection allows network operators to train a shared classifier without pooling raw traffic, but it exposes the aggregator to poisoned client updates. Byzantine-robust defenses based on anytime-valid sequential testing offer a formal, cumulative guarantee on false-exclusion behavior that purely empirical defenses such as Krum and FoolsGold do not provide. In developing such a defense, we identified and formally characterized a previously undiagnosed failure mode: an anytime-valid population comparison is mathematically guaranteed to eventually exclude a persistently off-center honest client, and this failure grows more severe, not less, as the client population becomes more homogeneous -- the opposite of the intuitive expectation that IID data should be the easy case.
+
+Our manuscript introduces ARMOR-FL, which corrects this failure via a self-referential shift test, a scale-floored population statistic, and a threshold-calibrated trust weight, and validates the fix on isolated synthetic reproductions and on three real intrusion-detection benchmarks (CICIDS2017, CICIDS2018, and CICIoT2023) under three attack types of increasing subtlety. We report our results plainly: ARMOR-FL does not outperform the simpler Krum baseline in aggregate, and we discuss at length why, and under which specific conditions the reverse holds. We believe this honest, diagnostic framing -- alongside the formal statistical guarantees ARMOR-FL provides, which distinguish it from every other Byzantine-robust federated intrusion-detection defense we survey -- makes a genuine contribution to the growing body of federated-learning intrusion-detection research this journal has published, including recent work on Byzantine-robust and privacy-preserving federated frameworks (RPCFL) and lightweight federated intrusion-detection backbones (FedSE-1DSqueezeNet), both of which we build on or differentiate against directly.
+
+This manuscript is original, has not been published previously, and is not under consideration elsewhere. All authors have approved the manuscript and this submission. We have no conflicts of interest to disclose. The full implementation, experiment configuration grids, and reassembly-only dataset archives are released alongside the manuscript to support independent verification and extension.
+
+Thank you for considering our manuscript. We look forward to your response.
+
+\vspace{0.4cm}
+\noindent Sincerely,\\[0.2cm]
+Quang-Vinh Dang\\
+Corresponding author
+
+\end{document}

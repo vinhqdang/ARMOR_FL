@@ -25,6 +25,7 @@
 \usepackage{textcomp}%
 \usepackage{manyfoot}%
 \usepackage{booktabs}%
+\usepackage{tabularx}%
 \usepackage{algorithm}%
 \usepackage{algorithmicx}%
 \usepackage{algpseudocode}%
@@ -50,7 +51,7 @@
 
 \author*[1]{\fnm{Quang-Vinh} \sur{Dang}}\email{vinh.dq4@buv.edu.vn}
 
-\affil*[1]{\orgdiv{School of Computing and Innovative Technologies}, \orgname{British University Vietnam}, \orgaddress{\city{Hung Yen}, \country{Vietnam}}}
+\affil*[1]{\orgname{British University Vietnam}, \orgaddress{\city{Hung Yen}, \country{Vietnam}}}
 
 \abstract{Federated intrusion detection lets network operators train a shared classifier without pooling raw traffic, but it opens the aggregator to poisoned client updates. Existing Byzantine-robust defenses compare each round's updates against the population and flag outliers, yet an anytime-valid comparison of this kind is mathematically guaranteed to eventually reject any client whose behavior sits persistently off-center -- so it cannot tell a merely non-IID honest client from an attacker without further information. We diagnose this failure concretely: a population-only e-process excluded up to 62.5\% of honest clients under IID data in our experiments, the opposite of what intuition suggests. We introduce ARMOR-FL, which adds a self-referential shift test -- has this client's own deviation changed, not just how large is it -- alongside a scale-robust population statistic and a threshold-calibrated trust weight, to recover the sequential-testing guarantee without this failure mode. Across CICIDS2017, CICIDS2018, and CICIoT2023 under label-flipping, Gaussian-noise, and adaptive (ALIE) attacks, ARMOR-FL removes the false-exclusion pathology entirely and outperforms undefended averaging, though a distance-based Krum baseline remains stronger in aggregate; we report this honestly, including the specific conditions -- non-IID data under lighter poisoning (a moderate 20\% malicious client fraction) -- where ARMOR-FL's mechanism gives it a real edge over Krum. We release the full implementation, configuration grids, and reassembly-only dataset archives.}
 
@@ -97,8 +98,9 @@ Two papers deserve closer differentiation because they are the closest in spirit
 Table~\ref{tab:qualcomp} summarizes the eight defenses surveyed above (plus ARMOR-FL) along four properties that this paper's contribution turns on: whether the defense provides a formal, cumulative statistical guarantee rather than a per-round heuristic; whether it has any mechanism to decouple stable, honest heterogeneity from an evolving attack signal; its dominant per-round computational cost in the notation of Section~\ref{sec:complexity}; and whether it specifically targets coordinated (Sybil-style) attackers as opposed to independent ones.
 
 \begin{table*}[htbp]
+\centering
 \caption{Qualitative comparison of Byzantine-robust federated defenses}\label{tab:qualcomp}
-\begin{tabular}{@{}lllll@{}}
+\begin{tabularx}{\linewidth}{@{}XXXp{1.9cm}>{\centering\arraybackslash}p{1.6cm}@{}}
 \toprule
 Defense & Statistical guarantee & Drift/attack decoupling & Dominant cost & Sybil-targeted \\
 \midrule
@@ -113,7 +115,7 @@ FORTRESS-FL \citep{dang2026fortressfl} & None (empirical) & None & Not reported 
 RPCFL \citep{chen2026rpcfl} & None (cryptographic) & None & SMPC-dependent & No \\
 ARMOR-FL (ours) & Anytime-valid ($\alpha$-controlled) & Self-shift e-process & $O(Kd)$ & No \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table*}
 
 Three observations follow from this comparison. First, ARMOR-FL is, to our knowledge, the only defense in this table offering a formal cumulative false-exclusion guarantee, but this comes with the practical cost documented throughout this paper: the guarantee is only as good as the population statistic it is built on, and Section~\ref{sec:results} shows it does not translate into an aggregate accuracy advantage over Krum's purely empirical rule. Second, we distinguish two different senses of ``decoupling heterogeneity from attack.'' Karimireddy et al.\ \citep{karimireddy2021learning} address a real and closely related problem -- that standard robust-aggregation rules lose their convergence guarantee under client heterogeneity, because heterogeneity inflates the same cross-sectional variance the rule uses to detect attackers -- and fix it via worker-momentum smoothing applied to the aggregation rule itself. ARMOR-FL addresses a different failure, specific to \emph{sequential exclusion decisions}: whether a test that accumulates evidence across rounds can tell a client whose deviation is persistent-but-stable from one whose deviation is attack-coincident. No other defense in this table (including Karimireddy et al.'s momentum-based fix, which smooths the aggregation rule rather than gating an exclusion decision) provides this second, sequential-testing form of decoupling, which is the specific gap our claim in Section~\ref{sec2}.2 refers to -- the two mechanisms are complementary rather than competing, and momentum smoothing inside ARMOR-FL's own local training step is a plausible additional layer we have not tested. Third, RPCFL's guarantee is cryptographic (secure-multiparty-computation-based correctness) rather than statistical, making it complementary to, rather than a substitute for, ARMOR-FL's approach -- a system combining both remains, as noted above, a natural direction for future work.
@@ -254,6 +256,7 @@ We give the exact per-attack construction here, since Section~\ref{sec:results} 
 Table~\ref{tab:hyperparams} lists the federated-learning hyperparameters used across the robustness grid. We follow FedSE-1DSqueezeNet's own protocol \citep{zhou2026fedse1dsqueezenet} where feasible, with one disclosed deviation: batch size. The original protocol specifies a batch size of 32; we found, in a controlled sweep on identical data and hyperparameters otherwise, that per-round wall-clock time dropped from 211.5 seconds at batch size 32 to 25.9 seconds at batch size 256, an approximately eightfold reduction, with no measurable change in final accuracy or F1 across the batch sizes tested (32, 128, 256, 512). We attribute this to the backbone model being small enough, and the GPU used for these experiments large enough, that batch size 32 leaves the hardware overwhelmingly latency-bound rather than compute-bound -- GPU utilization at batch size 32 measured between 5\% and 18\% across a representative benchmark run. We use batch size 256 throughout the robustness grid on this basis, a practical compute-budget decision rather than a change to the federated-learning protocol itself, and disclose it here rather than presenting it silently as the original protocol's own setting. Separate comparability runs reproducing the original paper's own R=5, FedAvg-only, IID-plus-three-non-IID-level sanity check retain batch size 32 throughout, since their purpose is fidelity to the original protocol rather than robustness-grid throughput.
 
 \begin{table*}[htbp]
+\centering
 \caption{Federated learning hyperparameters, robustness grid}\label{tab:hyperparams}
 \begin{tabular}{@{}ll@{}}
 \toprule
@@ -295,6 +298,7 @@ To isolate the effect of the three corrections described in Section~\ref{sec:met
 Table~\ref{tab:master} reports mean final-round accuracy and mean last-eight-round accuracy, averaged across all twelve attack-type $\times$ malicious-fraction $\times$ non-IID-$\alpha$ combinations, for each aggregator on each dataset.
 
 \begin{table*}[htbp]
+\centering
 \caption{Mean accuracy (final-round / last-8-round mean) across all twelve attack-fraction-$\alpha$ combinations per dataset}\label{tab:master}
 \begin{tabular}{@{}lccc@{}}
 \toprule
@@ -317,6 +321,7 @@ All three datasets show meaningful oscillation between final-round and last-eigh
 Table~\ref{tab:master} aggregates across three attack types that, as Section~\ref{sec:setup} notes, differ substantially in how detectable they are from parameter-space distance alone. Table~\ref{tab:perattack} disaggregates final-round accuracy by attack type, revealing patterns the aggregate obscures.
 
 \begin{table*}[htbp]
+\centering
 \caption{Final-round accuracy by dataset and attack type, mean across malicious-fraction and non-IID-$\alpha$ combinations}\label{tab:perattack}
 \begin{tabular}{@{}llcccc@{}}
 \toprule
@@ -344,6 +349,7 @@ Three patterns stand out. First, ARMOR-FL beats Krum on label-flip specifically 
 Table~\ref{tab:perfraction} further disaggregates final-round accuracy by malicious client fraction (0.2 versus 0.4) and by non-IID Dirichlet concentration ($\alpha=0.5$ versus IID), each averaged across the remaining grid dimensions.
 
 \begin{table*}[htbp]
+\centering
 \caption{Final-round accuracy by malicious fraction and by non-IID $\alpha$, mean across the remaining grid dimensions}\label{tab:perfraction}
 \begin{tabular}{@{}llcccc@{}}
 \toprule
@@ -377,6 +383,7 @@ ARMOR-FL wins its single row on CICIDS2017 (mal.\ frac.\ 0.2, where the maliciou
 Table~\ref{tab:detection} reports ARMOR-FL's own detection precision, detection recall, and benign false-exclusion rate, averaged across all twelve combinations per dataset. Detection precision remains low throughout (0.167 to 0.312), meaning a meaningful fraction of clients ARMOR-FL excludes over a full run are not actually malicious, even after all three corrections described in Section~\ref{sec:method}; benign false-exclusion rates of 0.125 to 0.163 confirm the same pattern from a different angle. Detection recall is lower still (0.062 to 0.229): ARMOR-FL frequently fails to exclude a truly malicious client at all over the course of a run, not only misfires against honest ones. This is a genuine remaining limitation, not one hidden by the aggregate accuracy numbers in Table~\ref{tab:master}, and we discuss its likely causes -- the reinstatement grace period and label-flipping's fundamental resistance to distance-based detection -- in Section~\ref{sec:limitations}.
 
 \begin{table*}[htbp]
+\centering
 \caption{ARMOR-FL detection statistics, mean across all twelve combinations per dataset}\label{tab:detection}
 \begin{tabular}{@{}lccc@{}}
 \toprule
@@ -392,6 +399,7 @@ CICIoT2023 & 0.194 & 0.125 & 0.142 \\
 Table~\ref{tab:detectionattack} breaks detection statistics down further by attack type. Gaussian-noise, the most visibly extreme parameter-space perturbation of the three, is the attack type ARMOR-FL detects most precisely when it detects it at all (precision up to 1.0 on CICIDS2018), but its recall on the same attack type is frequently zero -- the aggregation-layer collapse described in Section~\ref{sec:results}.2 and~\ref{sec:results}.8 happens too fast, on CICIoT2023 specifically, for the sequential test to accumulate enough rounds of evidence before the damage is done. ALIE, designed explicitly to evade distance-based detection \citep{baruch2019alie}, produces the highest benign false-exclusion rates of the three attack types on two of three datasets (0.198--0.271), suggesting that an attack calibrated to blend into the honest population's statistical spread also makes it harder for the population e-process to separate genuinely elevated honest heterogeneity from the attack's own camouflaged elevation -- an adaptive attacker narrowing the very margin ARMOR-FL's self-shift test depends on.
 
 \begin{table*}[htbp]
+\centering
 \caption{ARMOR-FL detection statistics by attack type, mean across malicious-fraction and non-IID-$\alpha$ combinations}\label{tab:detectionattack}
 \begin{tabular}{@{}llccc@{}}
 \toprule
@@ -417,6 +425,7 @@ Dataset & Attack & Precision & Recall & Benign FER \\
 Section~\ref{sec:ablation-protocol} describes an archived grid run under an earlier, uncorrected implementation of ARMOR-FL -- before the self-shift e-process, MAD-flooring, and threshold-calibrated trust weight of Section~\ref{sec:method} were applied -- run under identical conditions to the corrected grid. Table~\ref{tab:ablation} compares the two directly. The corrected version reduces the benign false-exclusion rate on every dataset (most sharply on CICIDS2017, from 0.309 to 0.125, a reduction of more than half), confirming quantitatively, on the full real-data grid and not only the isolated synthetic reproductions of Section~\ref{sec:method}, that the three corrections do what they were designed to do. The effect on aggregate final-round accuracy is more mixed -- an improvement on CICIoT2023 (0.395 to 0.423) and CICIDS2017 (0.689 to 0.695), a small regression on CICIDS2018 (0.805 to 0.793) -- which we read as consistent with the honest framing of this paper throughout: reducing false exclusions is not the same lever as maximizing final accuracy, and the corrections were motivated by, and validated against, the false-exclusion pathology specifically rather than an aggregate accuracy target.
 
 \begin{table*}[htbp]
+\centering
 \caption{Ablation: uncorrected versus corrected ARMOR-FL, mean across all twelve combinations per dataset}\label{tab:ablation}
 \begin{tabular}{@{}llccc@{}}
 \toprule
@@ -441,6 +450,7 @@ The uncorrected version's detection precision is, counter-intuitively, higher th
 Table~\ref{tab:overhead} reports mean wall-clock time per full run (25 communication rounds), averaged across all twelve attack-fraction-$\alpha$ combinations per dataset, for each aggregator. Consistent with the complexity analysis in Section~\ref{sec:complexity}, Krum is the slowest of the four aggregators in aggregate, not ARMOR-FL -- ARMOR-FL's additional sequential-testing bookkeeping adds negligible measured overhead over undefended FedAvg (within noise on two of three datasets), while Krum's pairwise-distance computation adds a consistent, and on CICIDS2018 substantial, overhead.
 
 \begin{table*}[htbp]
+\centering
 \caption{Mean wall-clock time per 25-round run (seconds), averaged across all twelve combinations per dataset}\label{tab:overhead}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
@@ -560,6 +570,7 @@ Several concrete extensions follow directly from the limitations documented abov
 Tables~\ref{tab:appcicids2017}, \ref{tab:appcicids2018}, and \ref{tab:appciciot2023} report final-round accuracy for every individual attack-type $\times$ malicious-fraction $\times$ non-IID-$\alpha$ combination in the robustness grid, the complete disaggregation underlying the marginal summaries in Tables~\ref{tab:master}, \ref{tab:perattack}, and \ref{tab:perfraction}. We include these in full so that any specific comparison discussed in the main text can be checked directly against its source cell, and so that a reader interested in a combination we did not single out for discussion can locate it exactly.
 
 \begin{table*}[htbp]
+\centering
 \caption{CICIDS2017: final-round accuracy, every attack-fraction-$\alpha$ combination}\label{tab:appcicids2017}
 \begin{tabular}{@{}lllcccc@{}}
 \toprule
@@ -582,6 +593,7 @@ Label-flip & 0.4 & IID & 0.547 & 0.233 & 0.552 & \textbf{0.838} \\
 \end{table*}
 
 \begin{table*}[htbp]
+\centering
 \caption{CICIDS2018: final-round accuracy, every attack-fraction-$\alpha$ combination}\label{tab:appcicids2018}
 \begin{tabular}{@{}lllcccc@{}}
 \toprule
@@ -604,6 +616,7 @@ Label-flip & 0.4 & IID & 0.648 & 0.745 & 0.792 & \textbf{0.914} \\
 \end{table*}
 
 \begin{table*}[htbp]
+\centering
 \caption{CICIoT2023: final-round accuracy, every attack-fraction-$\alpha$ combination}\label{tab:appciciot2023}
 \begin{tabular}{@{}lllcccc@{}}
 \toprule
@@ -633,6 +646,7 @@ Several individual cells in Tables~\ref{tab:appcicids2017}--\ref{tab:appciciot20
 Tables~\ref{tab:appdetcicids2017}, \ref{tab:appdetcicids2018}, and \ref{tab:appdetciciot2023} disaggregate ARMOR-FL's own detection precision, detection recall, and benign false-exclusion rate (Section~\ref{sec:metrics}) by individual combination, underlying the marginal summaries in Tables~\ref{tab:detection} and~\ref{tab:detectionattack}. A precision cell marked ``--'' indicates ARMOR-FL excluded no client at all during that run, making precision (a ratio over excluded clients) undefined rather than zero; we report it as undefined rather than substituting an arbitrary default, since treating an undefined ratio as zero would misleadingly imply a failed detection attempt rather than the absence of any exclusion event.
 
 \begin{table*}[htbp]
+\centering
 \caption{CICIDS2017: ARMOR-FL detection statistics, every attack-fraction-$\alpha$ combination}\label{tab:appdetcicids2017}
 \begin{tabular}{@{}lllccc@{}}
 \toprule
@@ -655,6 +669,7 @@ Label-flip & 0.4 & IID & -- & 0.000 & 0.000 \\
 \end{table*}
 
 \begin{table*}[htbp]
+\centering
 \caption{CICIDS2018: ARMOR-FL detection statistics, every attack-fraction-$\alpha$ combination}\label{tab:appdetcicids2018}
 \begin{tabular}{@{}lllccc@{}}
 \toprule
@@ -677,6 +692,7 @@ Label-flip & 0.4 & IID & 0.000 & 0.000 & 0.167 \\
 \end{table*}
 
 \begin{table*}[htbp]
+\centering
 \caption{CICIoT2023: ARMOR-FL detection statistics, every attack-fraction-$\alpha$ combination}\label{tab:appdetciciot2023}
 \begin{tabular}{@{}lllccc@{}}
 \toprule
@@ -723,6 +739,7 @@ We now contrast this with the undetectable case discussed as the first limitatio
 Table~\ref{tab:notation} collects the symbols introduced across Sections~\ref{sec:prelim}--\ref{sec:method} for reference, since the method combines notation from anytime-valid testing, robust statistics, and standard federated learning.
 
 \begin{table*}[htbp]
+\centering
 \caption{Notation summary}\label{tab:notation}
 \begin{tabular}{@{}ll@{}}
 \toprule
