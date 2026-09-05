@@ -1,7 +1,12 @@
 # Project data / large binaries (never push raw datasets or copyrighted PDFs to git)
 data_raw/
 data_processed/
-results/
+results/*
+!results/master_robustness_table.csv
+!results/*/
+results/*/*
+!results/*/stability_summary.csv
+!results/*/summary.csv
 *.zip
 *.tar.gz
 *.pdf

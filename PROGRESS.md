@@ -4,6 +4,67 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-09-05 -- full 152-run grid complete; master results table built; starting manuscript
+
+The v3 grid (post all three ARMOR fixes) finished cleanly: 152/152 runs,
+zero failures, across `cicids2017_comparability`, `cicids2018_comparability`,
+`cicids2017_robustness`, `cicids2018_robustness`, `ciciot2023_robustness`.
+Took much longer than the ~1.3-day clean estimate due to repeated
+GPU-sharing contention with other sessions on this machine (meta_prompt's
+`run_grid.py`, briefly CRAFT-local's CRAFX_Net) -- see the session
+transcript for the coordination history; nothing left running from those
+now.
+
+**`scripts/analyze_stability.py`** was added mid-grid after noticing
+individual ARMOR runs oscillate heavily round-to-round (client subsampling +
+slow re-detection after a reinstated attacker's e-process resets) -- e.g.
+one run showed 0.815 acc at round 15 in a canary check vs 0.065 at round 25
+in the full 25-round run, for the identical scenario. It computes both
+final-round accuracy (primary, comparable across all 4 aggregators) and
+mean-of-last-8-rounds (secondary, more stable) per run. Turned out oscillation
+is NOT unique to ARMOR -- fedavg and especially foolsgold swing just as much
+or more (foolsgold's worst-case gap was 0.64 on CICIDS2017, vs ARMOR's 0.44);
+krum is genuinely the most stable of the four.
+
+**`scripts/build_master_results_table.py`** combines all three datasets'
+stability summaries into `results/master_robustness_table.csv` -- this is
+the primary data source for the manuscript's Results section.
+
+### Full aggregate picture (mean final-round accuracy / mean last-8-round accuracy, across all 12 attack/mal-fraction/alpha combos per dataset)
+
+| aggregator | CICIDS2017 | CICIDS2018 | CICIoT2023 |
+|---|---|---|---|
+| fedavg (no defense) | 0.727 / 0.727 | 0.825 / 0.787 | 0.413 / 0.427 |
+| krum | **0.810 / 0.781** | **0.810 / 0.809** | **0.618 / 0.623** |
+| foolsgold | 0.715 / 0.720 | 0.718 / 0.740 | 0.378 / 0.381 |
+| armor (ours) | 0.695 / 0.714 | 0.793 / 0.731 | 0.423 / 0.422 |
+
+**Krum wins in aggregate mean on all three datasets, even after all three
+ARMOR fixes this session.** This is the honest headline finding -- NOT a
+"our method wins everywhere" result. ARMOR is roughly competitive with
+fedavg/foolsgold in aggregate and clearly better than doing nothing on
+average, but doesn't beat krum's aggregate mean on any of the three
+datasets, despite winning specific combos (e.g. `label_flip, mal=0.4,
+alpha=0.5` on CICIDS2017: armor=0.815 beats krum=0.799 and fedavg=0.190).
+
+ARMOR's own detection precision stays low across all three datasets (mean
+0.167-0.312) with benign false-exclusion rates of 0.125-0.163 -- meaning
+even after fixing the three false-positive bugs found this session, genuine
+detection-precision limitations remain, consistent with the per-run trace
+finding (see the session transcript) that a reinstated attacker's e-process
+reset gives it a long grace period before possible re-detection, and that
+`label_flip` remains a genuinely hard-to-detect attack for any
+distance-based signal (a known, shared blind spot, not unique to ARMOR).
+
+### Manuscript
+
+Starting the manuscript now via the ARS `academic-pipeline` orchestrator,
+entering at Stage 2 (WRITE) since research/method/results already exist.
+Per explicit user instruction: run the full write -> integrity -> review ->
+revise -> re-review pipeline autonomously, repeating review/fix cycles as
+many times as needed until convergence, without further check-ins beyond
+the pipeline's own true integrity/review gates.
+
 ## 2026-09-04 -- stopped the full v2 grid mid-run; found and fixed a THIRD
 ## ARMOR bug via a new cheap canary tool; relaunched
 

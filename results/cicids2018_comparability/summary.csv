@@ -1,0 +1,5 @@
+run_id,aggregator,attack_type,malicious_fraction,non_iid_alpha,final_accuracy,final_f1,wall_clock_seconds,det_detection_precision,det_detection_recall,det_benign_false_exclusion_rate
+fedavg__atk=None__mal=0.0__alpha=None,fedavg,,0.0,,0.7352101685866239,0.7581533637004668,621.5079605579376,,,0.0
+fedavg__atk=None__mal=0.0__alpha=1.0,fedavg,,0.0,1.0,0.8306946754553481,0.7538708153594529,556.3770568370819,,,0.0
+fedavg__atk=None__mal=0.0__alpha=0.5,fedavg,,0.0,0.5,0.9118462391424875,0.8932378053738641,691.8565719127655,,,0.0
+fedavg__atk=None__mal=0.0__alpha=0.1,fedavg,,0.0,0.1,0.09591572722232489,0.046813542592440895,143.73692727088928,,,0.0
