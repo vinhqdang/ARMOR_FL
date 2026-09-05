@@ -11,36 +11,10 @@
 %%                                                                 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%\documentclass[referee,sn-basic]{sn-jnl}% referee option is meant for double line spacing
-
-%%=======================================================%%
-%% to print line numbers in the margin use lineno option %%
-%%=======================================================%%
-
-%%\documentclass[lineno,pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
-
-%%=========================================================================================%%
-%% the documentclass is set to pdflatex as default. You can delete it if not appropriate.  %%
-%%=========================================================================================%%
-
-%%\documentclass[sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
-
-%%Note: the following reference styles support Namedate and Numbered referencing. By default the style follows the most common style. To switch between the options you can add or remove “Numbered” in the optional parenthesis. 
-%%The option is available for: sn-basic.bst, sn-chicago.bst%  
- 
-%%\documentclass[pdflatex,sn-nature]{sn-jnl}% Style for submissions to Nature Portfolio journals
-%%\documentclass[pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
-\documentclass[pdflatex,sn-mathphys-num]{sn-jnl}% Math and Physical Sciences Numbered Reference Style
-%%\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}% Math and Physical Sciences Author Year Reference Style
-%%\documentclass[pdflatex,sn-aps]{sn-jnl}% American Physical Society (APS) Reference Style
-%%\documentclass[pdflatex,sn-vancouver-num]{sn-jnl}% Vancouver Numbered Reference Style
-%%\documentclass[pdflatex,sn-vancouver-ay]{sn-jnl}% Vancouver Author Year Reference Style
-%%\documentclass[pdflatex,sn-apa]{sn-jnl}% APA Reference Style
-%%\documentclass[pdflatex,sn-chicago]{sn-jnl}% Chicago-based Humanities Reference Style
+\documentclass[pdflatex,iicol,sn-mathphys-num]{sn-jnl}% Math/Physical Sciences Numbered style, double-column
+                                                       % ("iicol") trim matching Cluster Computing's print layout
 
 %%%% Standard Packages
-%%<additional latex packages if required can be included here>
-
 \usepackage{graphicx}%
 \usepackage{multirow}%
 \usepackage{amsmath,amssymb,amsfonts}%
@@ -57,26 +31,9 @@
 \usepackage{listings}%
 %%%%
 
-%%%%%=============================================================================%%%%
-%%%%  Remarks: This template is provided to aid authors with the preparation
-%%%%  of original research articles intended for submission to journals published 
-%%%%  by Springer Nature. The guidance has been prepared in partnership with 
-%%%%  production teams to conform to Springer Nature technical requirements. 
-%%%%  Editorial and presentation requirements differ among journal portfolios and 
-%%%%  research disciplines. You may find sections in this template are irrelevant 
-%%%%  to your work and are empowered to omit any such section if allowed by the 
-%%%%  journal you intend to submit to. The submission guidelines and policies 
-%%%%  of the journal take precedence. A detailed User Manual is available in the 
-%%%%  template package for technical guidance.
-%%%%%=============================================================================%%%%
-
-%% as per the requirement new theorem styles can be included as shown below
 \theoremstyle{thmstyleone}%
-\newtheorem{theorem}{Theorem}%  meant for continuous numbers
-%%\newtheorem{theorem}{Theorem}[section]% meant for sectionwise numbers
-%% optional argument [theorem] produces theorem numbering sequence instead of independent numbers for Proposition
-\newtheorem{proposition}[theorem]{Proposition}% 
-%%\newtheorem{proposition}{Proposition}% to get separate numbers for theorem and proposition etc.
+\newtheorem{theorem}{Theorem}%
+\newtheorem{proposition}[theorem]{Proposition}%
 
 \theoremstyle{thmstyletwo}%
 \newtheorem{example}{Example}%
@@ -86,538 +43,742 @@
 \newtheorem{definition}{Definition}%
 
 \raggedbottom
-%%\unnumbered% uncomment this for unnumbered level heads
 
 \begin{document}
 
-\title[Article Title]{Article Title}
+\title[ARMOR-FL]{ARMOR-FL: Anytime-Valid Robust Martingale-Based Online Reweighting for Federated Intrusion Detection}
 
-%%=============================================================%%
-%% GivenName	-> \fnm{Joergen W.}
-%% Particle	-> \spfx{van der} -> surname prefix
-%% FamilyName	-> \sur{Ploeg}
-%% Suffix	-> \sfx{IV}
-%% \author*[1,2]{\fnm{Joergen W.} \spfx{van der} \sur{Ploeg} 
-%%  \sfx{IV}}\email{iauthor@gmail.com}
-%%=============================================================%%
+\author*[1]{\fnm{Quang-Vinh} \sur{Dang}}\email{vinh.dq4@buv.edu.vn}
 
-\author*[1,2]{\fnm{First} \sur{Author}}\email{iauthor@gmail.com}
+\affil*[1]{\orgdiv{School of Computing and Innovative Technologies}, \orgname{British University Vietnam}, \orgaddress{\city{Hung Yen}, \country{Vietnam}}}
 
-\author[2,3]{\fnm{Second} \sur{Author}}\email{iiauthor@gmail.com}
-\equalcont{These authors contributed equally to this work.}
+\abstract{Federated intrusion detection lets network operators train a shared classifier without pooling raw traffic, but it opens the aggregator to poisoned client updates. Existing Byzantine-robust defenses compare each round's updates against the population and flag outliers, yet an anytime-valid comparison of this kind is mathematically guaranteed to eventually reject any client whose behavior sits persistently off-center -- so it cannot tell a merely non-IID honest client from an attacker without further information. We diagnose this failure concretely: a population-only e-process excluded up to 62.5\% of honest clients under IID data in our experiments, the opposite of what intuition suggests. We introduce ARMOR-FL, which adds a self-referential shift test -- has this client's own deviation changed, not just how large is it -- alongside a scale-robust population statistic and a threshold-calibrated trust weight, to recover the sequential-testing guarantee without this failure mode. Across CICIDS2017, CICIDS2018, and CICIoT2023 under label-flipping, Gaussian-noise, and adaptive (ALIE) attacks, ARMOR-FL removes the false-exclusion pathology entirely and outperforms undefended averaging, though a distance-based Krum baseline remains stronger in aggregate; we report this honestly, including the specific conditions -- non-IID data under lighter poisoning (a moderate 20\% malicious client fraction) -- where ARMOR-FL's mechanism gives it a real edge over Krum. We release the full implementation, configuration grids, and reassembly-only dataset archives.}
 
-\author[1,2]{\fnm{Third} \sur{Author}}\email{iiiauthor@gmail.com}
-\equalcont{These authors contributed equally to this work.}
-
-\affil*[1]{\orgdiv{Department}, \orgname{Organization}, \orgaddress{\street{Street}, \city{City}, \postcode{100190}, \state{State}, \country{Country}}}
-
-\affil[2]{\orgdiv{Department}, \orgname{Organization}, \orgaddress{\street{Street}, \city{City}, \postcode{10587}, \state{State}, \country{Country}}}
-
-\affil[3]{\orgdiv{Department}, \orgname{Organization}, \orgaddress{\street{Street}, \city{City}, \postcode{610101}, \state{State}, \country{Country}}}
-
-%%==================================%%
-%% Sample for unstructured abstract %%
-%%==================================%%
-
-\abstract{The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. Authors are advised to check the author instructions for the journal they are submitting to for word limits and if structural elements like subheadings, citations, or equations are permitted.}
-
-%%================================%%
-%% Sample for structured abstract %%
-%%================================%%
-
-% \abstract{\textbf{Purpose:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.
-% 
-% \textbf{Methods:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.
-% 
-% \textbf{Results:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.
-% 
-% \textbf{Conclusion:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.}
-
-\keywords{keyword1, Keyword2, Keyword3, Keyword4}
-
-%%\pacs[JEL Classification]{D8, H51}
-
-%%\pacs[MSC Classification]{35A01, 65L10, 65L12, 65L20, 65L70}
+\keywords{Federated learning, Byzantine robustness, intrusion detection, anytime-valid inference, sequential testing, non-IID data}
 
 \maketitle
 
 \section{Introduction}\label{sec1}
 
-The Introduction section, of referenced text \cite{bib1} expands on the background of the work (some overlap with the Abstract is acceptable). The introduction should not include subheadings.
+A network intrusion detection system trained on one organization's traffic sees only that organization's attacks. Pooling traffic logs across organizations would give any classifier a richer view of what an attack looks like, but the logs themselves are exactly the kind of data no organization wants to hand over: source and destination addresses, timing, payload sizes, and often enough metadata to reconstruct who was talking to whom. Federated learning offers a way around this tension. Each site trains locally and shares only model updates, and a central aggregator combines them into a global classifier that none of the participants could have trained alone \citep{mcmahan2017fedavg}.
 
-Springer Nature does not impose a strict layout as standard however authors are advised to check the individual requirements for the journal they are planning to submit to as there may be journal-level preferences. When preparing your text please also be aware that some stylistic choices are not supported in full text XML (publication version), including coloured font. These will not be replicated in the typeset article if it is accepted. 
+That convenience creates a new attack surface. An aggregator that averages every client's update by default has no way to tell a legitimate update from one designed to corrupt the global model -- and unlike a centrally-trained model, an attacker in this setting does not need access to the training data at all, only membership in the federation. A single compromised or malicious participant can flip labels, inject noise into its local training, or craft updates specifically to survive whatever averaging rule the aggregator uses. This is the Byzantine-robustness problem in federated learning, and it is particularly consequential for intrusion detection: an attacker with the ability to degrade the very system meant to detect it has an unusually strong incentive to try.
 
-\section{Results}\label{sec2}
+The dominant family of defenses addresses this by treating each round's updates as a small sample and testing whether any one of them deviates enough from the rest to be flagged as an outlier. Krum scores each client by distance to its nearest neighbors and keeps only the most central update \citep{blanchard2017krum}; FoolsGold tracks the cosine similarity of a client's updates over time to catch colluding attackers who behave too similarly to one another \citep{fung2020foolsgold}; robust-statistics baselines such as trimmed mean and coordinate-wise median discard the extremes of the per-coordinate distribution before averaging. What these methods share, whatever their specific mechanism, is that they compare a client against the \emph{population} in the current round -- and the population, in a real deployment, is rarely identically distributed. Federated intrusion detection is a canonical non-IID setting: different sites see different network topologies, different device populations, and different background traffic, so it would be surprising if their honest updates ever looked interchangeable.
 
-Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text.
+Our starting point for this paper was a puzzle that surfaced while building a defense meant to solve exactly this. Anytime-valid sequential testing -- the machinery behind e-processes and testing-by-betting \citep{waudbysmith2020betting} -- lets a defender accumulate evidence about a client across many federated rounds rather than making an isolated decision each round, and gives a formal guarantee (via Ville's inequality) on the false-exclusion rate no matter when the defender chooses to look. This sounded like the right tool for exactly the population-comparison problem above: instead of a single noisy per-round distance, accumulate evidence over time and only act once the evidence crosses a principled threshold. We built this, called it ARMOR-FL, and then found, while testing it against synthetic honest clients with no attacker present at all, that it was excluding them anyway -- sometimes catastrophically so.
 
-\section{This is an example for first level head---section head}\label{sec3}
+The reason turned out to be structural rather than a bug in our implementation. An anytime-valid test of the form ``is this client's distance from the population median elevated'' is, by the very guarantee that makes it anytime-valid, mathematically certain to eventually reject any client whose true distance sits persistently above that median -- given enough rounds, the martingale accumulates enough evidence regardless of whether the elevation reflects an attack or simply a client whose local data looks different from everyone else's. Longer runs do not average this out; they make the eventual rejection more certain. A defense built this way does not fail occasionally under non-IID data. It is guaranteed to fail, given enough time, for any client that never converges toward the population's center -- which describes an ordinary heterogeneous participant just as well as it describes an attacker with a fixed, persistent bias.
 
-\subsection{This is an example for second level head---subsection head}\label{subsec2}
+We confirmed this is not an edge case. In a controlled test with ten honest clients and zero attackers, five clients configured to be moderately more variable than the rest (a stand-in for ordinary non-IID heterogeneity) were excluded within twenty rounds by a population-only e-process, at a false-exclusion rate the design's stated significance level does not come close to explaining. On real network traffic the effect was worse: under CICIDS2017 with a purely IID partition and a 20\% malicious client fraction -- the setting we expected to be \emph{easiest} for a population comparison, since IID data has no legitimate heterogeneity to confuse with attack -- the uncorrected defense excluded 62.5\% of honest clients. The population becoming more homogeneous made the statistic \emph{more} fragile, not less: with less genuine spread in the honest updates, the population's own median-absolute-deviation shrinks, and dividing ordinary training noise by a near-zero scale estimate manufactures large deviation scores from clients that are not doing anything unusual at all.
 
-\subsubsection{This is an example for third level head---subsubsection head}\label{subsubsec2}
+This paper reports the resulting design, ARMOR-FL, together with the diagnostic process that produced it, because we think the process is as informative as the fix. ARMOR-FL keeps the population e-process but adds a second, self-referential test: has this client's own deviation \emph{changed} relative to its own recent history, as opposed to how large the deviation currently is. A client that has always looked somewhat off-center produces no shift signal and is protected from exclusion; a client whose deviation appears mid-run, coinciding with when an attack plausibly begins, does produce one, and only the combination of population-level and self-referential evidence triggers hard exclusion. We pair this with two further corrections found in the course of validating the fix: a population scale estimate that cannot collapse below a fraction of its own recent history, closing the IID fragility described above, and a trust-weighting rule recalibrated against the same threshold that governs exclusion, so that ordinary deviation is not punished at a rate disproportionate to the actual evidence against a client.
 
-Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. 
+We are explicit that this is not a paper reporting a method that wins on every axis. Across three widely used intrusion-detection benchmarks -- CICIDS2017, CICIDS2018, and CICIoT2023 -- and three attack types of increasing subtlety, ARMOR-FL removes the false-exclusion pathology it was built to fix and clearly outperforms undefended federated averaging, but Krum remains the stronger baseline in aggregate on all three datasets. What ARMOR-FL does deliver is a specific, identifiable regime -- non-IID client populations under lighter label-flipping poisoning -- where its mechanism gives it a genuine edge, together with formal anytime-valid guarantees that purely empirical defenses such as Krum and FoolsGold do not provide, and an honest account of where it still falls short. We think that account, including the parts where our own method loses, is a more useful contribution to this literature than a narrower set of results engineered to look uniformly favorable.
 
-\section{Equations}\label{sec4}
+Our contributions are threefold. First, we identify and formally characterize a failure mode shared by population-only Byzantine-robust defenses in non-IID federated learning: any anytime-valid test of population deviation alone is guaranteed to eventually exclude persistently off-center honest clients, and this failure is most acute, not least acute, under low heterogeneity, where the population's own scale estimate becomes fragile. Second, we introduce ARMOR-FL, a concrete fix combining a self-referential shift test, a scale-floored population statistic, and a threshold-calibrated trust weight, and we validate each component both on isolated synthetic reproductions of the failure it targets and on three real intrusion-detection datasets. Third, we provide, to our knowledge, the first reported robustness evaluation of a Byzantine-robust federated defense on CICIoT2023 under an explicit poisoning-attack grid, alongside a full open implementation, configuration files, and reassembly-only dataset archives so the entire grid can be reproduced without re-downloading from the original hosts.
 
-Equations in \LaTeX\ can either be inline or on-a-line by itself (``display equations''). For
-inline equations use the \verb+$...$+ commands. E.g.: The equation
-$H\psi = E \psi$ is written via the command \verb+$H \psi = E \psi$+.
+The remainder of the paper is organized as follows. Section~\ref{sec2} situates ARMOR-FL against Byzantine-robust federated learning, non-IID drift handling, and sequential testing, and identifies the specific gap our diagnostic process fills. Section~\ref{sec:method} describes the backbone intrusion-detection model and the ARMOR-FL aggregation algorithm, including the three design decisions motivated by the failure modes above. Section~\ref{sec:setup} describes the datasets, attacks, and experimental grid. Section~\ref{sec:results} reports results, including a detailed case study of the one setting where ARMOR-FL's mechanism visibly earns its keep. Section~\ref{sec:discussion} discusses when and why the method helps or does not, and Section~\ref{sec:limitations} states the limitations we did not resolve, before Section~\ref{sec:conclusion} concludes.
 
-For display equations (with auto generated equation numbers)
-one can use the equation or align environments:
-\begin{equation}
-\|\tilde{X}(k)\|^2 \leq\frac{\sum\limits_{i=1}^{p}\left\|\tilde{Y}_i(k)\right\|^2+\sum\limits_{j=1}^{q}\left\|\tilde{Z}_j(k)\right\|^2 }{p+q}.\label{eq1}
-\end{equation}
-where,
-\begin{align}
-D_\mu &=  \partial_\mu - ig \frac{\lambda^a}{2} A^a_\mu \nonumber \\
-F^a_{\mu\nu} &= \partial_\mu A^a_\nu - \partial_\nu A^a_\mu + g f^{abc} A^b_\mu A^a_\nu \label{eq2}
-\end{align}
-Notice the use of \verb+\nonumber+ in the align environment at the end
-of each line, except the last, so as not to produce equation numbers on
-lines where no equation numbers are required. The \verb+\label{}+ command
-should only be used at the last line of an align environment where
-\verb+\nonumber+ is not used.
-\begin{equation}
-Y_\infty = \left( \frac{m}{\textrm{GeV}} \right)^{-3}
-    \left[ 1 + \frac{3 \ln(m/\textrm{GeV})}{15}
-    + \frac{\ln(c_2/5)}{15} \right]
-\end{equation}
-The class file also supports the use of \verb+\mathbb{}+, \verb+\mathscr{}+ and
-\verb+\mathcal{}+ commands. As such \verb+\mathbb{R}+, \verb+\mathscr{R}+
-and \verb+\mathcal{R}+ produces $\mathbb{R}$, $\mathscr{R}$ and $\mathcal{R}$
-respectively (refer Subsubsection~\ref{subsubsec2}).
+\section{Related Work}\label{sec2}
 
-\section{Tables}\label{sec5}
+\subsection{Byzantine-robust aggregation in federated learning}
 
-Tables can be inserted via the normal table and tabular environment. To put
-footnotes inside tables you should use \verb+\footnotetext[]{...}+ tag.
-The footnote appears just below the table itself (refer Tables~\ref{tab1} and \ref{tab2}). 
-For the corresponding footnotemark use \verb+\footnotemark[...]+
+The starting point for distance-based Byzantine robustness is Krum \citep{blanchard2017krum}, which scores each client's update by the sum of squared distances to its nearest neighbors and selects the most central one as the round's sole contribution, discarding the rest outright. Multi-Krum generalizes this to a small committee of central updates rather than one. Coordinate-wise trimmed mean and coordinate median trade Krum's winner-take-all selection for a per-coordinate robust average, tolerating a bounded fraction of adversarial coordinates without needing to identify which clients contributed them. FoolsGold instead exploits a specific attacker behavior -- Sybil clients whose updates correlate with each other over time -- and downweights clients whose update history is too similar to another's \citep{fung2020foolsgold}. All of these methods make a decision about the current round using only the current round's cross-sectional spread of updates, which is exactly the property that makes them vulnerable to conflating genuine non-IID heterogeneity with an attack: a client that is consistently, but honestly, different from the rest of the population looks identical, from a single round's perspective, to one that is consistently malicious.
 
-\begin{table}[h]
-\caption{Caption text}\label{tab1}%
-\begin{tabular}{@{}llll@{}}
+More recent work in this space targets federated intrusion detection specifically. Dependable federated learning against poisoning attacks \citep{yang2023dependable} combines loss-scoring with Manhattan-similarity clustering to recover accuracy after a label-flipping attack on CIC-IDS-2017. Lavaur et al. \citep{lavaur2025labelflip} run a systematic study of label-flipping specifically, reporting that even a well-tuned FL-IDS pipeline can lose over ten points of accuracy under attack, a finding consistent with what we observe for undefended averaging in our own experiments. GRAF-IDS \citep{rezaei2025grafids} and the related federated-RNN defense \citep{rezaei2025rnn} build graph-based clustering aggregation with Krum-style selection layered on top, evaluated on IoT-focused datasets rather than the CIC family. WeiDetect \citep{sameera2025weidetect} models the per-client deviation distribution with a Weibull fit rather than the empirical median-absolute-deviation approach common elsewhere, which is conceptually adjacent to our own use of a robust scale statistic, though it does not incorporate any sequential or anytime-valid guarantee. D3-FLIDS \citep{zukaib2026d3flids} pairs gradient projection with isolation-forest scoring; FedDBC \citep{latif2026feddbc} targets density-based collusion detection specifically, one of the few defenses in this literature that explicitly addresses coordinated multi-cluster attacks rather than independent ones. FLEX-IDS \citep{chowdhury2026flexids} adds explainability on top of a federated defense evaluated at up to 30\% malicious participation, the same upper bound we use in our own malicious-fraction grid.
+
+Beyond this core set, the broader federated-intrusion-detection literature published in \emph{Cluster Computing} itself gives a sense of how active this specific venue is on adjacent problems: a fair-client-selection framework combining earth-mover's-distance-based selection, fully homomorphic encryption, and SMOTE-based rebalancing \citep{akter2026fair}; a recent survey specifically on federated learning for intrusion detection \citep{buyuktanir2025flidssurvey}; a lightweight-LLM hierarchical federated scheme for B5G-enabled IoT intrusion detection \citep{mohawesh2026llmhfl}; a federated SimpleNet-based defense for cyber-physical systems \citep{bella2026cpsfedids}; a federated deep-Q-learning approach to IoT security \citep{godavarthi2026fedqlearning}; and a trust-aware framework for privacy-preserving smart-city intrusion detection \citep{houichi2026trustaware} together with a blockchain-assisted trust framework for software-defined networks \citep{ram2026blocshield}. None of these six papers combines Byzantine-robust aggregation with an anytime-valid statistical guarantee, which is where ARMOR-FL's contribution sits relative to this venue's existing coverage.
+
+Two papers deserve closer differentiation because they are the closest in spirit to ARMOR-FL's own contribution. Our own prior work, FORTRESS-FL \citep{dang2026fortressfl}, is a Byzantine-robust and privacy-preserving federated orchestration framework for next-generation networks; it shares the goal of robust aggregation under adversarial participants but has no anytime-valid statistical component and no mechanism to decouple drift from attack, which is precisely the gap ARMOR-FL is built to close. RPCFL \citep{chen2026rpcfl}, published in this journal, is a Byzantine-robust and privacy-preserving clustered federated learning framework built on secure multiparty computation and dynamic clustering; it is, to our knowledge, the only other Byzantine-robust federated learning paper published in \emph{Cluster Computing} itself. RPCFL's robustness guarantee comes from cryptographic clustering rather than statistical testing, and it does not claim or provide the anytime-valid false-exclusion control that is ARMOR-FL's central methodological contribution; the two approaches are complementary rather than competing, and a system combining SMPC-based privacy with anytime-valid robustness testing is a natural direction for future work.
+
+\subsection{Qualitative comparison of defense properties}\label{sec:qualcomp}
+
+Table~\ref{tab:qualcomp} summarizes the six defenses surveyed above (plus ARMOR-FL) along four properties that this paper's contribution turns on: whether the defense provides a formal, cumulative statistical guarantee rather than a per-round heuristic; whether it has any mechanism to decouple stable, honest heterogeneity from an evolving attack signal; its dominant per-round computational cost in the notation of Section~\ref{sec:complexity}; and whether it specifically targets coordinated (Sybil-style) attackers as opposed to independent ones.
+
+\begin{table*}[htbp]
+\caption{Qualitative comparison of Byzantine-robust federated defenses}\label{tab:qualcomp}
+\begin{tabular}{@{}lllll@{}}
 \toprule
-Column 1 & Column 2  & Column 3 & Column 4\\
+Defense & Statistical guarantee & Drift/attack decoupling & Dominant cost & Sybil-targeted \\
 \midrule
-row 1    & data 1   & data 2  & data 3  \\
-row 2    & data 4   & data 5\footnotemark[1]  & data 6  \\
-row 3    & data 7   & data 8  & data 9\footnotemark[2]  \\
-\botrule
+FedAvg (undefended) & None & N/A & $O(Kd)$ & No \\
+Krum \citep{blanchard2017krum} & None (empirical) & None & $O(K^2d)$ & No \\
+Trimmed mean / coord.\ median & None (empirical) & None & $O(Kd\log K)$ & No \\
+FoolsGold \citep{fung2020foolsgold} & None (empirical) & None & $O(K^2)$ & Yes \\
+FORTRESS-FL \citep{dang2026fortressfl} & None (empirical) & None & Not reported & No \\
+RPCFL \citep{chen2026rpcfl} & None (cryptographic) & None & SMPC-dependent & No \\
+ARMOR-FL (ours) & Anytime-valid ($\alpha$-controlled) & Self-shift e-process & $O(Kd)$ & No \\
+\bottomrule
 \end{tabular}
-\footnotetext{Source: This is an example of table footnote. This is an example of table footnote.}
-\footnotetext[1]{Example for a first table footnote. This is an example of table footnote.}
-\footnotetext[2]{Example for a second table footnote. This is an example of table footnote.}
-\end{table}
+\end{table*}
 
-\noindent
-The input format for the above table is as follows:
+Three observations follow from this comparison. First, ARMOR-FL is, to our knowledge, the only defense in this table offering a formal cumulative false-exclusion guarantee, but this comes with the practical cost documented throughout this paper: the guarantee is only as good as the population statistic it is built on, and Section~\ref{sec:results} shows it does not translate into an aggregate accuracy advantage over Krum's purely empirical rule. Second, no other defense in this table has any explicit drift-versus-attack decoupling mechanism, which is consistent with our claim in Section~\ref{sec2}.2 that this specific gap has not been previously addressed at the level of a named, tested mechanism. Third, RPCFL's guarantee is cryptographic (secure-multiparty-computation-based correctness) rather than statistical, making it complementary to, rather than a substitute for, ARMOR-FL's approach -- a system combining both remains, as noted above, a natural direction for future work.
 
-%%=============================================%%
-%% For presentation purpose, we have included  %%
-%% \bigskip command. Please ignore this.       %%
-%%=============================================%%
-\bigskip
-\begin{verbatim}
-\begin{table}[<placement-specifier>]
-\caption{<table-caption>}\label{<table-label>}%
-\begin{tabular}{@{}llll@{}}
-\toprule
-Column 1 & Column 2 & Column 3 & Column 4\\
-\midrule
-row 1 & data 1 & data 2	 & data 3 \\
-row 2 & data 4 & data 5\footnotemark[1] & data 6 \\
-row 3 & data 7 & data 8	 & data 9\footnotemark[2]\\
-\botrule
-\end{tabular}
-\footnotetext{Source: This is an example of table footnote. 
-This is an example of table footnote.}
-\footnotetext[1]{Example for a first table footnote.
-This is an example of table footnote.}
-\footnotetext[2]{Example for a second table footnote. 
-This is an example of table footnote.}
-\end{table}
-\end{verbatim}
-\bigskip
-%%=============================================%%
-%% For presentation purpose, we have included  %%
-%% \bigskip command. Please ignore this.       %%
-%%=============================================%%
+\subsection{Drift, heterogeneity, and the limits of population comparison}
 
-\begin{table}[h]
-\caption{Example of a lengthy table which is set to full textwidth}\label{tab2}
-\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lcccccc}
-\toprule%
-& \multicolumn{3}{@{}c@{}}{Element 1\footnotemark[1]} & \multicolumn{3}{@{}c@{}}{Element 2\footnotemark[2]} \\\cmidrule{2-4}\cmidrule{5-7}%
-Project & Energy & $\sigma_{calc}$ & $\sigma_{expt}$ & Energy & $\sigma_{calc}$ & $\sigma_{expt}$ \\
-\midrule
-Element 3  & 990 A & 1168 & $1547\pm12$ & 780 A & 1166 & $1239\pm100$\\
-Element 4  & 500 A & 961  & $922\pm10$  & 900 A & 1268 & $1092\pm40$\\
-\botrule
-\end{tabular*}
-\footnotetext{Note: This is an example of table footnote. This is an example of table footnote this is an example of table footnote this is an example of~table footnote this is an example of table footnote.}
-\footnotetext[1]{Example for a first table footnote.}
-\footnotetext[2]{Example for a second table footnote.}
-\end{table}
+The tension between non-IID heterogeneity and outlier-based robustness has been noted before, but rarely diagnosed at the level of a specific, quantified failure mode. Our own earlier work on spatiotemporal federated explainable intrusion detection, ST-FedXIDS \citep{dang2026stfedxids}, addresses drift adaptation via graph learning for high-density WiFi environments, but treats drift as something to adapt to rather than something to formally decouple from an ongoing statistical test of attack; we cite it here for the drift-adaptation half of the present contribution only, since ST-FedXIDS does not itself provide a population-versus-attack decoupling mechanism. Uncertainty-measure approaches to intrusion detection \citep{dang2026uncertainty} motivate the general statistical-testing framing we build on, without addressing the federated non-IID setting directly.
 
-In case of double column layout, tables which do not fit in single column width should be set to full text width. For this, you need to use \verb+\begin{table*}+ \verb+...+ \verb+\end{table*}+ instead of \verb+\begin{table}+ \verb+...+ \verb+\end{table}+ environment. Lengthy tables which do not fit in textwidth should be set as rotated table. For this, you need to use \verb+\begin{sidewaystable}+ \verb+...+ \verb+\end{sidewaystable}+ instead of \verb+\begin{table*}+ \verb+...+ \verb+\end{table*}+ environment. This environment puts tables rotated to single column width. For tables rotated to double column width, use \verb+\begin{sidewaystable*}+ \verb+...+ \verb+\end{sidewaystable*}+.
+The broader distributed-systems literature on non-IID federated learning acknowledges that client heterogeneity degrades the accuracy of naive robust-aggregation rules, but the standard response is architectural -- personalization layers, clustering clients by similarity before aggregating within clusters, or client-side regularization to keep local updates closer to the global model -- rather than a change to the statistical test a Byzantine defense uses to decide whether a client is suspicious in the first place. To our knowledge, no prior published defense identifies the specific mechanism we diagnose here: that an anytime-valid population test is not merely inaccurate under heterogeneity but is mathematically \emph{guaranteed} to eventually misclassify a persistently off-center honest client, with the failure growing more severe, not less, as the population becomes more homogeneous. This last point in particular runs against the intuitive expectation that IID data should be the easy case for any population-comparison method, and we are not aware of it being reported elsewhere in this form.
 
-\begin{sidewaystable}
-\caption{Tables which are too long to fit, should be written using the ``sidewaystable'' environment as shown here}\label{tab3}
-\begin{tabular*}{\textheight}{@{\extracolsep\fill}lcccccc}
-\toprule%
-& \multicolumn{3}{@{}c@{}}{Element 1\footnotemark[1]}& \multicolumn{3}{@{}c@{}}{Element\footnotemark[2]} \\\cmidrule{2-4}\cmidrule{5-7}%
-Projectile & Energy	& $\sigma_{calc}$ & $\sigma_{expt}$ & Energy & $\sigma_{calc}$ & $\sigma_{expt}$ \\
-\midrule
-Element 3 & 990 A & 1168 & $1547\pm12$ & 780 A & 1166 & $1239\pm100$ \\
-Element 4 & 500 A & 961  & $922\pm10$  & 900 A & 1268 & $1092\pm40$ \\
-Element 5 & 990 A & 1168 & $1547\pm12$ & 780 A & 1166 & $1239\pm100$ \\
-Element 6 & 500 A & 961  & $922\pm10$  & 900 A & 1268 & $1092\pm40$ \\
-\botrule
-\end{tabular*}
-\footnotetext{Note: This is an example of table footnote this is an example of table footnote this is an example of table footnote this is an example of~table footnote this is an example of table footnote.}
-\footnotetext[1]{This is an example of table footnote.}
-\end{sidewaystable}
+\subsection{Anytime-valid inference and its (limited) use in federated defenses}
 
-\section{Figures}\label{sec6}
+E-processes and testing-by-betting \citep{waudbysmith2020betting} generalize classical sequential testing to give a valid Type-I error guarantee at every stopping time, not just at a pre-registered sample size, via Ville's maximal inequality for nonnegative supermartingales. This body of theory has seen substantial recent uptake in statistics and machine learning more broadly for problems requiring continuous monitoring -- clinical trial interim analysis, A/B testing, and drift detection -- but its adoption inside federated-learning Byzantine defenses specifically has been limited. Most robust-aggregation baselines, including all of those surveyed above, make an independent per-round decision with no formal guarantee on the cumulative false-exclusion probability across a training run of arbitrary length. ARMOR-FL's use of a fixed, theoretically grounded null mean (rather than online calibration from a client's own early-round behavior, which would let an already-compromised client calibrate itself as normal) is, as far as we are aware, a design choice not previously discussed in this literature, and one we believe is necessary rather than merely convenient: any online-calibrated null risks exactly the self-normalization failure it is meant to prevent.
 
-As per the \LaTeX\ standards you need to use eps images for \LaTeX\ compilation and \verb+pdf/jpg/png+ images for \verb+PDFLaTeX+ compilation. This is one of the major difference between \LaTeX\ and \verb+PDFLaTeX+. Each image should be from a single input .eps/vector image file. Avoid using subfigures. The command for inserting images for \LaTeX\ and \verb+PDFLaTeX+ can be generalized. The package used to insert images in \verb+LaTeX/PDFLaTeX+ is the graphicx package. Figures can be inserted via the normal figure environment as shown in the below example:
+\subsection{Dataset coverage}
 
-%%=============================================%%
-%% For presentation purpose, we have included  %%
-%% \bigskip command. Please ignore this.       %%
-%%=============================================%%
-\bigskip
-\begin{verbatim}
-\begin{figure}[<placement-specifier>]
-\centering
-\includegraphics{<eps-file>}
-\caption{<figure-caption>}\label{<figure-label>}
-\end{figure}
-\end{verbatim}
-\bigskip
-%%=============================================%%
-%% For presentation purpose, we have included  %%
-%% \bigskip command. Please ignore this.       %%
-%%=============================================%%
+CICIDS2017 \citep{sharafaldin2018cicids} and its successor CSE-CIC-IDS2018 remain the most widely used intrusion-detection benchmarks in the Byzantine-robust federated learning literature surveyed above; every defense we discuss in Section~\ref{sec2}.1 reports results on one or both. CICIoT2023 \citep{neto2023ciciot2023}, a larger and more recent IoT-focused traffic dataset, has seen substantial adoption for centralized intrusion detection \citep{wahab2025multiclass,wakili2025resilient} but, to our knowledge, no prior Byzantine-robust federated defense with an explicit poisoning-attack evaluation has reported results on it. This is a first-mover contribution of the present work: the fact that ARMOR-FL's aggregate performance on CICIoT2023 is markedly weaker across all four aggregators we test (Table~\ref{tab:master} in Section~\ref{sec:results}) than on the two CIC datasets is itself new information for this literature, and one we discuss further in Section~\ref{sec:discussion}.
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.9\textwidth]{fig.eps}
-\caption{This is a widefig. This is an example of long caption this is an example of long caption  this is an example of long caption this is an example of long caption}\label{fig1}
-\end{figure}
+The present work also builds directly on FedSE-1DSqueezeNet \citep{zhou2026fedse1dsqueezenet}, published in this journal, whose SE-1DSqueezeNet backbone architecture we reimplement and reuse without modification (Section~\ref{sec:setup}); our contribution is entirely at the aggregation layer, and we adopt FedSE-1DSqueezeNet's own federated hyperparameters (Table~\ref{tab:hyperparams}) as closely as computational constraints allow, disclosed explicitly in Section~\ref{sec:setup}.
 
-In case of double column layout, the above format puts figure captions/images to single column width. To get spanned images, we need to provide \verb+\begin{figure*}+ \verb+...+ \verb+\end{figure*}+.
+Beyond the federated setting, recent centralized intrusion detection work on these same datasets gives a sense of the classification ceiling each dataset admits absent any federated partitioning or poisoning at all: few-shot cross-domain detection on CICIDS2017/2018 \citep{xu2025fewshot}, transformer-and-CNN-BiLSTM hybrids \citep{zhang2025transformer}, transformer-versus-CNN-LSTM comparisons on CSE-CIC-IDS2018 \citep{palani2026comparative}, an autoencoder-hybrid-LSTM-CNN residual network \citep{xue2025haehrl}, a multiscale-attention 1D-CNN approach on large-scale IoT traffic \citep{sireesha2026lightweight}, and GAN-based data augmentation for CICIDS2017 \citep{zhao2024gan}. None of these centralized methods addresses the federated poisoning-robustness question this paper is concerned with, but they establish that the underlying classification task is itself solvable to a high standard when data can be pooled centrally, which is useful context for interpreting the accuracy ceilings in Section~\ref{sec:results}.
 
-For sample purpose, we have included the width of images in the optional argument of \verb+\includegraphics+ tag. Please ignore this. 
+Our own prior work spans IoT malware detection via federated learning \citep{dang2024iotmalwarefl}, conformal-prediction-based botnet detection \citep{dang2024conformalbotnet}, cross-dataset transfer for intrusion detection \citep{dang2023transferids}, general IoT intrusion detection \citep{dang2022iotids}, foundational machine-learning-for-intrusion-detection work \citep{dang2022mlids}, and explainability-driven intrusion detection \citep{dang2021explainableids}; none combines Byzantine robustness with anytime-valid inference, which is the specific gap the present work fills. A separate personalized federated-learning poisoning defense not authored by us \citep{thein2024pflids} similarly stops short of an anytime-valid statistical guarantee.
 
-\section{Algorithms, Program codes and Listings}\label{sec7}
+\section{Method}\label{sec:method}
 
-Packages \verb+algorithm+, \verb+algorithmicx+ and \verb+algpseudocode+ are used for setting algorithms in \LaTeX\ using the format:
+\subsection{Preliminaries: anytime-valid sequential testing}\label{sec:prelim}
 
-%%=============================================%%
-%% For presentation purpose, we have included  %%
-%% \bigskip command. Please ignore this.       %%
-%%=============================================%%
-\bigskip
-\begin{verbatim}
-\begin{algorithm}
-\caption{<alg-caption>}\label{<alg-label>}
-\begin{algorithmic}[1]
-. . .
-\end{algorithmic}
-\end{algorithm}
-\end{verbatim}
-\bigskip
-%%=============================================%%
-%% For presentation purpose, we have included  %%
-%% \bigskip command. Please ignore this.       %%
-%%=============================================%%
+Before describing ARMOR-FL's aggregation pipeline, we make precise the statistical machinery underlying it, since the failure mode motivating this paper (Section~\ref{sec1}) is a consequence of this machinery's own guarantee rather than an implementation defect, and stating it formally lets us prove that claim rather than merely assert it.
 
-You may refer above listed package documentations for more details before setting \verb+algorithm+ environment. For program codes, the ``verbatim'' package is required and the command to be used is \verb+\begin{verbatim}+ \verb+...+ \verb+\end{verbatim}+. 
-
-Similarly, for \verb+listings+, use the \verb+listings+ package. \verb+\begin{lstlisting}+ \verb+...+ \verb+\end{lstlisting}+ is used to set environments similar to \verb+verbatim+ environment. Refer to the \verb+lstlisting+ package documentation for more details.
-
-A fast exponentiation procedure:
-
-\lstset{texcl=true,basicstyle=\small\sf,commentstyle=\small\rm,mathescape=true,escapeinside={(*}{*)}}
-\begin{lstlisting}
-begin
-  for $i:=1$ to $10$ step $1$ do
-      expt($2,i$);  
-      newline() od                (*\textrm{Comments will be set flush to the right margin}*)
-where
-proc expt($x,n$) $\equiv$
-  $z:=1$;
-  do if $n=0$ then exit fi;
-     do if odd($n$) then exit fi;                 
-        comment: (*\textrm{This is a comment statement;}*)
-        $n:=n/2$; $x:=x*x$ od;
-     { $n>0$ };
-     $n:=n-1$; $z:=z*x$ od;
-  print($z$). 
-end
-\end{lstlisting}
-
-\begin{algorithm}
-\caption{Calculate $y = x^n$}\label{algo1}
-\begin{algorithmic}[1]
-\Require $n \geq 0 \vee x \neq 0$
-\Ensure $y = x^n$ 
-\State $y \Leftarrow 1$
-\If{$n < 0$}\label{algln2}
-        \State $X \Leftarrow 1 / x$
-        \State $N \Leftarrow -n$
-\Else
-        \State $X \Leftarrow x$
-        \State $N \Leftarrow n$
-\EndIf
-\While{$N \neq 0$}
-        \If{$N$ is even}
-            \State $X \Leftarrow X \times X$
-            \State $N \Leftarrow N / 2$
-        \Else[$N$ is odd]
-            \State $y \Leftarrow y \times X$
-            \State $N \Leftarrow N - 1$
-        \EndIf
-\EndWhile
-\end{algorithmic}
-\end{algorithm}
-
-%%=============================================%%
-%% For presentation purpose, we have included  %%
-%% \bigskip command. Please ignore this.       %%
-%%=============================================%%
-\bigskip
-\begin{minipage}{\hsize}%
-\lstset{frame=single,framexleftmargin=-1pt,framexrightmargin=-17pt,framesep=12pt,linewidth=0.98\textwidth,language=pascal}% Set your language (you can change the language for each code-block optionally)
-%%% Start your code-block
-\begin{lstlisting}
-for i:=maxint to 0 do
-begin
-{ do nothing }
-end;
-Write('Case insensitive ');
-Write('Pascal keywords.');
-\end{lstlisting}
-\end{minipage}
-
-\section{Cross referencing}\label{sec8}
-
-Environments such as figure, table, equation and align can have a label
-declared via the \verb+\label{#label}+ command. For figures and table
-environments use the \verb+\label{}+ command inside or just
-below the \verb+\caption{}+ command. You can then use the
-\verb+\ref{#label}+ command to cross-reference them. As an example, consider
-the label declared for Figure~\ref{fig1} which is
-\verb+\label{fig1}+. To cross-reference it, use the command 
-\verb+Figure \ref{fig1}+, for which it comes up as
-``Figure~\ref{fig1}''. 
-
-To reference line numbers in an algorithm, consider the label declared for the line number 2 of Algorithm~\ref{algo1} is \verb+\label{algln2}+. To cross-reference it, use the command \verb+\ref{algln2}+ for which it comes up as line~\ref{algln2} of Algorithm~\ref{algo1}.
-
-\subsection{Details on reference citations}\label{subsec7}
-
-Standard \LaTeX\ permits only numerical citations. To support both numerical and author-year citations this template uses \verb+natbib+ \LaTeX\ package. For style guidance please refer to the template user manual.
-
-Here is an example for \verb+\cite{...}+: \cite{bib1}. Another example for \verb+\citep{...}+: \citep{bib2}. For author-year citation mode, \verb+\cite{...}+ prints Jones et al. (1990) and \verb+\citep{...}+ prints (Jones et al., 1990).
-
-All cited bib entries are printed at the end of this article: \cite{bib3}, \cite{bib4}, \cite{bib5}, \cite{bib6}, \cite{bib7}, \cite{bib8}, \cite{bib9}, \cite{bib10}, \cite{bib11}, \cite{bib12} and \cite{bib13}.
-
-\section{Examples for theorem like environments}\label{sec10}
-
-For theorem like environments, we require \verb+amsthm+ package. There are three types of predefined theorem styles exists---\verb+thmstyleone+, \verb+thmstyletwo+ and \verb+thmstylethree+ 
-
-%%=============================================%%
-%% For presentation purpose, we have included  %%
-%% \bigskip command. Please ignore this.       %%
-%%=============================================%%
-\bigskip
-\begin{tabular}{|l|p{19pc}|}
-\hline
-\verb+thmstyleone+ & Numbered, theorem head in bold font and theorem text in italic style \\\hline
-\verb+thmstyletwo+ & Numbered, theorem head in roman font and theorem text in italic style \\\hline
-\verb+thmstylethree+ & Numbered, theorem head in bold font and theorem text in roman style \\\hline
-\end{tabular}
-\bigskip
-%%=============================================%%
-%% For presentation purpose, we have included  %%
-%% \bigskip command. Please ignore this.       %%
-%%=============================================%%
-
-For mathematics journals, theorem styles can be included as shown in the following examples:
-
-\begin{theorem}[Theorem subhead]\label{thm1}
-Example theorem text. Example theorem text. Example theorem text. Example theorem text. Example theorem text. 
-Example theorem text. Example theorem text. Example theorem text. Example theorem text. Example theorem text. 
-Example theorem text. 
-\end{theorem}
-
-Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text.
-
-\begin{proposition}
-Example proposition text. Example proposition text. Example proposition text. Example proposition text. Example proposition text. 
-Example proposition text. Example proposition text. Example proposition text. Example proposition text. Example proposition text. 
-\end{proposition}
-
-Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text.
-
-\begin{example}
-Phasellus adipiscing semper elit. Proin fermentum massa
-ac quam. Sed diam turpis, molestie vitae, placerat a, molestie nec, leo. Maecenas lacinia. Nam ipsum ligula, eleifend
-at, accumsan nec, suscipit a, ipsum. Morbi blandit ligula feugiat magna. Nunc eleifend consequat lorem. 
-\end{example}
-
-Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text.
-
-\begin{remark}
-Phasellus adipiscing semper elit. Proin fermentum massa
-ac quam. Sed diam turpis, molestie vitae, placerat a, molestie nec, leo. Maecenas lacinia. Nam ipsum ligula, eleifend
-at, accumsan nec, suscipit a, ipsum. Morbi blandit ligula feugiat magna. Nunc eleifend consequat lorem. 
-\end{remark}
-
-Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text.
-
-\begin{definition}[Definition sub head]
-Example definition text. Example definition text. Example definition text. Example definition text. Example definition text. Example definition text. Example definition text. Example definition text. 
+\begin{definition}[e-process]\label{def:eprocess}
+Let $(\mathcal{F}_t)_{t \ge 0}$ be a filtration representing the information available to the aggregator after round $t$. A process $(E_t)_{t \ge 0}$ adapted to $(\mathcal{F}_t)$ is an \emph{e-process} for a null hypothesis $H_0$ if $E_0 = 1$ and $(E_t)$ is a nonnegative supermartingale under $H_0$, i.e.\ $E_t \ge 0$ and $\mathbb{E}[E_t \mid \mathcal{F}_{t-1}] \le E_{t-1}$ for all $t \ge 1$.
 \end{definition}
 
-Additionally a predefined ``proof'' environment is available: \verb+\begin{proof}+ \verb+...+ \verb+\end{proof}+. This prints a ``Proof'' head in italic font style and the ``body text'' in roman font style with an open square at the end of each proof environment. 
+\begin{theorem}[Ville's inequality, anytime-valid Type-I control]\label{thm:ville}
+Let $(E_t)$ be a nonnegative supermartingale with $E_0 = 1$ under $H_0$. Then for any $\alpha \in (0,1)$,
+\[
+\Pr_{H_0}\!\left[\exists\, t \ge 0 : E_t \ge 1/\alpha\right] \le \alpha .
+\]
+\end{theorem}
 
-\begin{proof}
-Example for proof text. Example for proof text. Example for proof text. Example for proof text. Example for proof text. Example for proof text. Example for proof text. Example for proof text. Example for proof text. Example for proof text. 
+Theorem~\ref{thm:ville} is the classical result underlying testing-by-betting \citep{waudbysmith2020betting}; we restate it here because it is the exact guarantee ARMOR-FL's population e-process relies on, and because its proof (a direct consequence of the supermartingale maximal inequality) makes clear that the guarantee holds uniformly over \emph{every} stopping rule, including one that stops the first time $E_t$ crosses $1/\alpha$ -- which is precisely how the aggregator decides when to exclude a client. This is the entire appeal of the anytime-valid framework over classical fixed-sample testing: the defender does not need to commit in advance to how many rounds of evidence to collect before deciding, and the false-exclusion probability is controlled at level $\alpha$ no matter when, or how adaptively, that decision is made.
+
+ARMOR-FL instantiates $(E_t)$ via the testing-by-betting construction: given a per-round statistic $z_k^{(t)}$ for client $k$ with null mean $\mathbb{E}[z_k^{(t)} \mid \mathcal{F}_{t-1}] = \mu_0$ under $H_0$ (honest behavior), the per-round multiplier is $e_t = 1 + \lambda(z_k^{(t)} - \mu_0)$ for a fixed betting fraction $\lambda \in (0,1)$, and $E_t = \prod_{s \le t} e_s$. Because $\mathbb{E}[e_t \mid \mathcal{F}_{t-1}] = 1$ under $H_0$, $(E_t)$ is exactly a nonnegative martingale (hence supermartingale) with $E_0=1$, so Theorem~\ref{thm:ville} applies directly. ARMOR-FL fixes $\mu_0 = 1$ for the population statistic (Section~\ref{sec:method}.2) rather than calibrating it online from each client's own early behavior, since online calibration would let an already-compromised client's early malicious rounds define its own null, defeating the guarantee entirely.
+
+\begin{proposition}[Guaranteed eventual exclusion under persistent elevation]\label{prop:eventual-exclusion}
+Suppose a client's true per-round statistic satisfies $\mathbb{E}[z_k^{(t)} \mid \mathcal{F}_{t-1}] = \mu > 1$ for every round $t$ (a client whose deviation from the population center is persistently, not merely transiently, elevated). Then for a suitable fixed betting fraction $\lambda \in (0,1)$, $\log E_t \to +\infty$ almost surely as $t \to \infty$, so for any significance level $\alpha \in (0,1)$ there exists an almost-surely finite round $T$ at which $E_T \ge 1/\alpha$, i.e.\ the client is eventually excluded with probability one.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Let $f(\lambda) = \mathbb{E}[\log(1 + \lambda(z_k^{(t)} - 1))]$ under the true (non-null) distribution of $z_k^{(t)}$, evaluated at the persistent mean $\mu$. We have $f(0) = 0$ and, by dominated convergence, $f'(0) = \mathbb{E}[z_k^{(t)} - 1] = \mu - 1 > 0$. Hence there exists $\lambda^* \in (0,1)$ small enough that $f(\lambda^*) > 0$. Writing $X_t = \log e_t = \log(1 + \lambda^*(z_k^{(t)} - 1))$, the sequence $X_t - f(\lambda^*)$ is a bounded-increment martingale difference sequence under the true distribution (bounded because $z_k^{(t)} \ge 0$ and $\lambda^* < 1$ keeps $e_t$ bounded away from $0$ and from $\infty$ in practice), so the strong law of large numbers for martingale differences gives $\frac{1}{t}\sum_{s \le t} X_s \to f(\lambda^*) > 0$ almost surely. Therefore $\log E_t = \sum_{s\le t} X_s \to +\infty$ almost surely, and since $\log(1/\alpha)$ is a fixed finite threshold, the sequence crosses it in finite time almost surely.
 \end{proof}
 
-Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text. Sample body text.
+Proposition~\ref{prop:eventual-exclusion} is the formal statement of the failure mode described informally in Section~\ref{sec1}: nothing in its hypotheses distinguishes an attacker from a merely heterogeneous honest client. Both produce $\mu > 1$ persistently whenever their true update distribution sits off-center relative to the trimmed-mean reference point, and Proposition~\ref{prop:eventual-exclusion} guarantees both are eventually excluded by a population-only e-process with probability one, given enough rounds. This is precisely the mechanism responsible for the false exclusions we report in Section~\ref{sec1} and reproduce synthetically in Section~\ref{sec:method}.3: it is not that the test is miscalibrated or under-powered, but that its power against \emph{any} persistent alternative -- honest or malicious -- is, by design, eventually one. A defense built purely on Theorem~\ref{thm:ville} therefore requires an additional signal that distinguishes \emph{why} $\mu > 1$, which is exactly the role of ARMOR-FL's self-shift test (Section~\ref{sec:method}.3).
 
-\begin{proof}[Proof of Theorem~{\upshape\ref{thm1}}]
-Example for proof text. Example for proof text. Example for proof text. Example for proof text. Example for proof text. Example for proof text. Example for proof text. Example for proof text. Example for proof text. Example for proof text. 
-\end{proof}
+\begin{remark}[Scale-estimator fragility under low heterogeneity]\label{rem:mad-fragility}
+A related but distinct fragility affects the scale estimate $\mathrm{MAD}^{(t)}$ itself rather than the e-process built on top of it. $\mathrm{MAD}^{(t)}$ is a median computed from only the $|\mathcal{S}_t|$ active clients sampled that round (six of ten in our experiments), not from the full client population, so it is itself a small-sample statistic whose relative estimation error does not vanish as the true population becomes more homogeneous -- if anything, the opposite: as the true dispersion of $\{d_j^{(t)}\}$ shrinks toward the noise floor of ordinary training-run variability (gradient noise, batch composition, early-stopping timing), the six-client sample median of distances becomes dominated by this floor rather than by any meaningful signal about population spread, and a client whose fixed absolute deviation $d_k^{(t)}$ happens not to shrink at the same rate as the sample's median produces an inflated $z_k^{(t)} = d_k^{(t)}/\mathrm{MAD}^{(t)}$ through no fault of its own. We do not present this as a theorem, since the precise rate depends on the (unknown, empirically varying) relationship between true population homogeneity and per-round training noise, but Section~\ref{sec:method}.2 shows it is severe enough in practice to produce a $62.5\%$ benign false-exclusion rate under IID CICIDS2017 data before correction (Section~\ref{sec:results}.5), which is the empirical grounding for the MAD-flooring correction described there.
+\end{remark}
 
-\noindent
-For a quote environment, use \verb+\begin{quote}...\end{quote}+
-\begin{quote}
-Quoted text example. Aliquam porttitor quam a lacus. Praesent vel arcu ut tortor cursus volutpat. In vitae pede quis diam bibendum placerat. Fusce elementum
-convallis neque. Sed dolor orci, scelerisque ac, dapibus nec, ultricies ut, mi. Duis nec dui quis leo sagittis commodo.
-\end{quote}
+\subsection{Problem setting and backbone model}
 
-Sample body text. Sample body text. Sample body text. Sample body text. Sample body text (refer Figure~\ref{fig1}). Sample body text. Sample body text. Sample body text (refer Table~\ref{tab3}). 
+We consider a federated learning system with $K$ clients, of which an unknown subset $\mathcal{M} \subset \{1,\dots,K\}$ may be malicious. In each communication round $t$, the aggregator selects a subset $\mathcal{S}_t$ of clients (client\_fraction $= 0.6$ of $K=10$ in our experiments, i.e.\ six clients per round), broadcasts the current global parameter vector $\theta^{(t)}$, and each selected client $k \in \mathcal{S}_t$ trains locally for up to $E$ epochs with early stopping on a validation-loss patience of $P$ rounds, producing an update $\theta_k^{(t)}$. The aggregator's task is to combine $\{\theta_k^{(t)} : k \in \mathcal{S}_t\}$ into $\theta^{(t+1)}$ such that malicious contributions are suppressed without discarding legitimate heterogeneity.
 
-\section{Methods}\label{sec11}
+Our backbone classifier is SE-1DSqueezeNet, reimplemented layer-for-layer from FedSE-1DSqueezeNet \citep{zhou2026fedse1dsqueezenet}: an initial 1D convolution, a depthwise-dilated-squeeze-excite (DDS) module combining a depthwise separable dilated convolution branch with a pointwise convolution branch under a squeeze-and-excitation gate, global average pooling, and a final fully connected classification head. Flow features are treated as a length-$F$, single-channel sequence. We reuse this backbone without modification, since our contribution is entirely at the aggregation layer; full architectural detail is given in \citep{zhou2026fedse1dsqueezenet} and in our released implementation.
 
-Topical subheadings are allowed. Authors must ensure that their Methods section includes adequate experimental and characterization data necessary for others in the field to reproduce their work. Authors are encouraged to include RIIDs where appropriate. 
+\subsection{Baseline aggregation rules}
 
-\textbf{Ethical approval declarations} (only required where applicable) Any article reporting experiment/s carried out on (i)~live vertebrate (or higher invertebrates), (ii)~humans or (iii)~human samples must include an unambiguous statement within the methods section that meets the following requirements: 
+We compare ARMOR-FL against three baselines. \textbf{FedAvg} \citep{mcmahan2017fedavg} computes a sample-size-weighted average of all selected clients' updates with no robustness mechanism, serving as the undefended floor. \textbf{Krum} \citep{blanchard2017krum} scores each client by the sum of squared distances to its $k{-}f{-}2$ nearest neighbors (where $f$ is the assumed number of Byzantine clients) and selects the single lowest-scoring update as the entire round's contribution. \textbf{FoolsGold} \citep{fung2020foolsgold} tracks the cosine similarity between clients' update histories over time and downweights clients whose contributions are suspiciously similar to another client's, targeting coordinated Sybil-style attacks specifically rather than independent ones.
 
-\begin{enumerate}[1.]
-\item Approval: a statement which confirms that all experimental protocols were approved by a named institutional and/or licensing committee. Please identify the approving body in the methods section
+\subsection{ARMOR-FL aggregation}
 
-\item Accordance: a statement explicitly saying that the methods were carried out in accordance with the relevant guidelines and regulations
+ARMOR-FL's per-round pipeline (Algorithm~\ref{alg:armor}) proceeds in five stages, three of which are the corrected forms of mechanisms whose naive versions we found, during development, to actively harm robustness under realistic non-IID conditions -- we describe each naive version and the specific failure that motivated its replacement, since we believe the failure modes are as reusable a contribution as the fixes.
 
-\item Informed consent (for experiments involving humans or human tissue samples): include a statement confirming that informed consent was obtained from all participants and/or their legal guardian/s
-\end{enumerate}
+\textbf{Robust reference center.} Given the active (non-excluded) clients' uploaded vectors, ARMOR-FL computes a coordinate-wise trimmed mean $m^{(t)}$ (trim fraction $0.2$) as the round's reference point, and each active client's Euclidean distance to it, $d_k^{(t)} = \lVert \theta_k^{(t)} - m^{(t)} \rVert$.
 
-If your manuscript includes potentially identifying patient/participant information, or if it describes human transplantation research, or if it reports results of a clinical trial then  additional information will be required. Please visit (\url{https://www.nature.com/nature-research/editorial-policies}) for Nature Portfolio journals, (\url{https://www.springer.com/gp/authors-editors/journal-author/journal-author-helpdesk/publishing-ethics/14214}) for Springer Nature journals, or (\url{https://www.biomedcentral.com/getpublished/editorial-policies\#ethics+and+consent}) for BMC.
+\textbf{Scale-floored population deviation.} The naive population statistic is $z_k^{(t)} = d_k^{(t)} / \mathrm{MAD}^{(t)}$, where $\mathrm{MAD}^{(t)}$ is the median of $\{d_j^{(t)}\}_{j \in \mathcal{S}_t}$ across the round's active clients -- a robust scale estimate by construction, since the median of a set of distances divided by itself has median exactly one. The failure we found is that $\mathrm{MAD}^{(t)}$ is itself estimated from only the current round's small, randomly-selected client subset (six of ten in our experiments), and when the honest population happens to look unusually similar -- either because the data is genuinely IID, or simply because that round's random subsample happened to agree closely -- $\mathrm{MAD}^{(t)}$ collapses toward zero. Dividing ordinary training noise by a near-zero denominator manufactures large $z_k^{(t)}$ values from clients doing nothing unusual at all. We confirmed this directly on CICIDS2017 under a purely IID partition with 20\% malicious clients: the uncorrected statistic excluded 62.5\% of honest clients, the highest false-exclusion rate we observed anywhere in the grid, precisely in the setting with the least genuine heterogeneity to explain it. ARMOR-FL floors the scale estimate at a fraction (\texttt{mad\_floor\_fraction}$=0.5$) of its own recent round-to-round history, using only the raw, unfloored historical values so the floor cannot ratchet upward on its own account: $\mathrm{MAD}^{(t)}_{\mathrm{eff}} = \max\bigl(\mathrm{MAD}^{(t)},\ 0.5 \cdot \mathrm{median}(\mathrm{MAD}^{(t-w)},\dots,\mathrm{MAD}^{(t-1)})\bigr)$. Because this can only raise the effective scale relative to the raw value, a genuine attack's raw MAD -- which by definition reflects real, large deviation -- passes through unaffected; only spurious collapse is corrected.
 
-\section{Discussion}\label{sec12}
+Each client's population e-process is then updated with $z_k^{(t)}$ via the fixed-mean betting construction of \citep{waudbysmith2020betting}: $e_t = 1 + \lambda(z_k^{(t)} - 1)$ with betting fraction $\lambda = 0.5$ and null mean fixed at one (never recalibrated online, since a client that is already compromised during any calibration window would otherwise learn to appear normal to its own test), and $\log E_{\mathrm{pop},k}^{(t)} = \sum_{s\le t} \log e_s$ accumulates evidence across rounds under the martingale property guaranteed by Ville's inequality.
 
-Discussions should be brief and focused. In some disciplines use of Discussion or `Conclusion' is interchangeable. It is not mandatory to use both. Some journals prefer a section `Results and Discussion' followed by a section `Conclusion'. Please refer to Journal-level guidance for any specific requirements. 
+\textbf{Self-referential drift and shift tests.} A parallel e-process compares each client's current local validation loss to the median and median-absolute-deviation of its own loss history, testing whether the client's own behavior has recently become unstable -- this is the mechanism intended, in the original design, to decouple ``drifting'' (an honest client adapting to an evolving local distribution) from ``attacking.'' We found this insufficient on its own: a client with persistently elevated $z_k^{(t)}$ due to ordinary non-IID heterogeneity typically has a perfectly \emph{stable} own-loss history, since its local data distribution is not changing, only different from the rest of the population -- so the drift test never flags it, and the population e-process alone, having no gate on this signal, excludes it anyway. In a controlled synthetic test with ten honest clients (five configured with roughly double the parameter-update variance of the other five, simulating ordinary non-IID scatter) and zero attackers, all five higher-variance clients were excluded within twenty rounds under this design, despite none of them attacking.
 
-\section{Conclusion}\label{sec13}
+ARMOR-FL adds a second self-referential test on the client's own \emph{population-deviation history} rather than its loss: $\mathrm{shift}_k^{(t)} = z_k^{(t)} / \mathrm{median}(z_k^{(t-b)}, \dots, z_k^{(t-1)})$ against a baseline window of $b=2$ rounds, testing whether the client has moved relative to \emph{its own} earlier position rather than the population's. A client that has been off-center since the beginning of training produces a shift statistic near one indefinitely and accumulates no shift evidence, however elevated its absolute $z_k^{(t)}$; a client whose deviation appears mid-run -- consistent with an attack beginning after an initial clean baseline period, which is how every attack in our experimental grid is actually configured (Section~\ref{sec:setup}) -- produces a detectable shift relative to its own pre-attack baseline. Hard exclusion now requires \emph{both} population evidence exceeding the exclusion threshold \emph{and} either shift evidence or a gross-outlier deviation ($z_k^{(t)} \ge 4$, a magnitude no plausible non-IID scatter in our data approached): $\text{exclude}_k^{(t)} = \mathbb{1}\bigl[E_{\mathrm{pop},k}^{(t)} \ge 1/\alpha_{\mathrm{pop}}\bigr] \wedge \bigl(\mathbb{1}[\mathrm{shift\ evidence}] \vee \mathbb{1}[z_k^{(t)} \ge 4]\bigr)$. Re-running the same synthetic test with this gate in place produced zero false exclusions across twenty-five rounds with the same five heterogeneous clients.
 
-Conclusions may be used to restate your hypothesis or research question, restate your major findings, explain the relevance and the added value of your work, highlight any limitations of your study, describe future directions for research and recommendations. 
+We are explicit that this gate is not a complete solution and trades one failure mode for a narrower, better-understood one: a client that is Byzantine from round one and remains \emph{constant} thereafter, below the gross-outlier threshold, produces no shift signal either, since nothing about its behavior changes relative to its own (already-compromised) baseline. This is not a bug we failed to fix but a genuine information-theoretic limit -- a constant, moderate-magnitude attacker and a heterogeneous-but-honest client are, by definition, indistinguishable from behavior alone in this setting, and resolving the ambiguity would require external information the aggregator does not have. We return to this in Section~\ref{sec:limitations}.
 
-In some disciplines use of Discussion or 'Conclusion' is interchangeable. It is not mandatory to use both. Please refer to Journal-level guidance for any specific requirements. 
+\textbf{Threshold-calibrated trust weighting.} The naive smooth downweighting rule, $w_k^{(t)} = n_k \cdot \mathrm{sigmoid}(-\beta \log E_{\mathrm{pop},k}^{(t)})$ with sharpness $\beta=4$, applies the sigmoid directly to the unbounded log-evidence value. We found this disproportionately punishes clients with only mild deviation: at $\log E_{\mathrm{pop},k}^{(t)} = 1.0$, more than two orders of magnitude below the exclusion threshold of roughly $-\log(0.05) \approx 3.0$, the naive rule already reduces a client's weight to about 2\% of its sample-size share. Traced on real CICIDS2017 data under a label-flipping attack, this meant that malicious clients -- whose updates, under label-flipping specifically, often happened to look statistically \emph{central} rather than extreme, a known blind spot of any distance-based defense -- retained close to full weight throughout training, while honest clients with only ordinary population deviation were crushed to a few percent of their due influence. The net effect handed the undetected attackers \emph{more} relative influence over the aggregate than an unweighted average would have, and ARMOR-FL performed worse than plain FedAvg on this exact scenario as a direct result. ARMOR-FL rescales the sigmoid's input by the same threshold that gates hard exclusion, $\tau = -\log(\alpha_{\mathrm{pop}})$: $w_k^{(t)} = n_k \cdot \mathrm{sigmoid}\bigl(-\beta (\log E_{\mathrm{pop},k}^{(t)} / \tau - 1)\bigr)$, giving a trust weight of approximately 0.98 at the population median, 0.5 exactly at the exclusion boundary, and a meaningful drop only for evidence well past it.
+
+\begin{remark}[Boundary behavior of the rescaled trust weight]\label{rem:sigmoid}
+By construction, $w_k^{(t)}/n_k = \mathrm{sigmoid}(0) = 0.5$ exactly when $\log E_{\mathrm{pop},k}^{(t)} = \tau$, i.e.\ exactly at the population e-process's hard-exclusion boundary -- a client is downweighted to precisely half its sample-size share at the same instant it would otherwise be hard-excluded (subject to the shift gate of the preceding paragraph), rather than at some unrelated, separately-tuned threshold. At $\log E_{\mathrm{pop},k}^{(t)} = 0$ (the population median, $E=1$), $w_k^{(t)}/n_k = \mathrm{sigmoid}(\beta) = \mathrm{sigmoid}(4) \approx 0.982$, so an entirely typical client retains effectively full weight regardless of the specific value of $\beta$ chosen, provided $\beta$ is large enough to make $\mathrm{sigmoid}(\beta)$ close to one -- the choice of $\beta=4$ is therefore a sharpness parameter for how quickly weight falls between these two anchored points, not a free parameter that shifts where the anchors themselves sit. This is the precise mechanism by which the correction in this paragraph avoids the naive rule's failure: the two reference points (full trust at the median, half trust at the exclusion boundary) are fixed by the same $\alpha_{\mathrm{pop}}$ that governs hard exclusion, rather than by an independently chosen sharpness constant applied to an unbounded raw statistic.
+\end{remark}
+
+\textbf{Probation and reinstatement.} An excluded client re-enters the federation after a fixed probation window (three rounds in our experiments) at reduced initial trust, with both its population and shift e-processes reset. We note, and discuss further in Section~\ref{sec:limitations}, that this reset gives a reinstated attacker a fresh accumulation window before it can be re-excluded, a grace period whose length is bounded by how quickly the population e-process can re-accumulate sufficient evidence.
+
+\begin{algorithm}
+\caption{ARMOR-FL aggregation, one round}\label{alg:armor}
+\begin{algorithmic}[1]
+\State \textbf{Input:} active client updates $\{\theta_k^{(t)}, n_k, \ell_k^{(t)}\}_{k \in \mathcal{S}_t}$, prior state
+\State $m^{(t)} \gets$ coordinate-wise trimmed mean of $\{\theta_k^{(t)}\}$
+\State $d_k^{(t)} \gets \lVert \theta_k^{(t)} - m^{(t)} \rVert$ for each $k$
+\State $\mathrm{MAD}^{(t)}_{\mathrm{eff}} \gets \max\bigl(\mathrm{median}(d^{(t)}),\ 0.5 \cdot \mathrm{median}(\text{raw MAD history})\bigr)$
+\For{each active client $k$}
+  \State $z_k^{(t)} \gets d_k^{(t)} / \mathrm{MAD}^{(t)}_{\mathrm{eff}}$
+  \State update population e-process with $z_k^{(t)}$
+  \State update drift e-process with own-loss deviation
+  \State update shift e-process with $z_k^{(t)} / \mathrm{median}(\text{own } z \text{ history})$
+  \State $w_k^{(t)} \gets n_k \cdot \mathrm{sigmoid}\bigl(-\beta(\log E_{\mathrm{pop},k}^{(t)}/\tau - 1)\bigr)$
+  \If{population evidence $\ge$ threshold \textbf{and} (shift evidence \textbf{or} $z_k^{(t)} \ge 4$)}
+    \State exclude $k$; begin probation; $w_k^{(t)} \gets 0$
+  \EndIf
+\EndFor
+\State $\theta^{(t+1)} \gets$ weighted average of $\{\theta_k^{(t)}\}$ with weights $\{w_k^{(t)}\}$
+\State \textbf{Output:} $\theta^{(t+1)}$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Computational complexity}\label{sec:complexity}
+
+Let $K$ be the number of active clients in a round and $d$ the dimension of the parameter vector $\theta$. FedAvg computes a single weighted mean, $O(Kd)$. The coordinate-wise trimmed mean underlying ARMOR-FL's reference center is likewise $O(Kd \log K)$ once a per-coordinate sort is included, dominated in practice by the $O(Kd)$ term for the client counts used here. Computing each client's distance to the reference center and updating its e-processes is $O(d)$ per client, $O(Kd)$ total, plus $O(K)$ bookkeeping for the MAD history and shift baselines -- ARMOR-FL's aggregation-layer overhead over FedAvg is therefore $O(Kd)$, the same asymptotic order as FedAvg itself. Krum requires the full pairwise distance matrix between all $K$ active clients, $O(K^2 d)$, to compute each client's $k{-}f{-}2$-nearest-neighbor score; this quadratic-in-$K$ term is the asymptotically most expensive of the four rules, though it remains modest at the client counts we test ($K=10$, six active per round). FoolsGold additionally maintains a full pairwise cosine-similarity history across rounds, $O(K^2)$ per round on top of the $O(Kd)$ update step.
+
+This ordering is reflected in the wall-clock measurements taken during the robustness grid (Table~\ref{tab:overhead}, Section~\ref{sec:results}.6): Krum is, in practice, the slowest of the four aggregators we test, not ARMOR-FL, despite the latter's additional per-client sequential-testing machinery -- an aggregation-layer cost that turns out to be small relative to local training time (which dominates total wall-clock time for all four rules) and relative to Krum's pairwise-distance computation specifically once neighbor counts and parameter dimension are large enough for the $O(K^2 d)$ term to matter. We view this as a relevant practical counterpoint to Section~\ref{sec:results}.1's headline finding that Krum wins on accuracy: Krum's accuracy advantage does not come for free, and a deployment sensitive to per-round latency, not only to final accuracy, may still prefer ARMOR-FL's aggregation cost profile even where its accuracy trails Krum's.
+
+\section{Experimental Setup}\label{sec:setup}
+
+\subsection{Datasets}
+
+We evaluate on three widely used network intrusion detection datasets. \textbf{CICIDS2017} \citep{sharafaldin2018cicids} contains five days of labeled traffic covering benign activity and a range of attack types (DoS, DDoS, brute force, infiltration, web attacks, botnet) captured on a realistic network testbed. \textbf{CICIDS2018} extends the same collection methodology across a substantially larger ten-day capture. \textbf{CICIoT2023} \citep{neto2023ciciot2023} is a more recent, IoT-focused dataset covering 33 attack types across seven categories, collected from a 105-device smart-home testbed; we are not aware of any prior Byzantine-robust federated defense reporting a poisoning-attack evaluation on it. All datasets are partitioned across ten simulated clients using either an IID split or a Dirichlet-distributed non-IID split with concentration parameter $\alpha \in \{0.5, \mathrm{IID}\}$; smaller $\alpha$ produces more skewed, less similar per-client class distributions. Reflecting the practical compute budget available for the full experimental grid, we sample 10\% of CICIDS2017, 2\% of CICIDS2018, and 1\% of CICIoT2023 for the robustness grid, chosen so that CICIDS2017's benchmark run-time exactly calibrates the sampling fraction for the other two; the resulting training-set sizes remain in the hundreds of thousands of rows.
+
+\subsection{Attacks}
+
+We evaluate three attack types spanning increasing subtlety. \textbf{Label-flipping} is a data-space attack in which a malicious client trains honestly on relabeled data, producing a parameter update that is statistically difficult to distinguish from an honest one -- a known blind spot shared by every distance-based defense we test, not unique to ARMOR-FL. \textbf{Gaussian-noise} is a parameter-space attack that perturbs an otherwise-honest update with additive noise, typically producing a visibly larger and more detectable deviation. \textbf{ALIE} (a little is enough) \citep{baruch2019alie} is an adaptive, omniscient attack that crafts a perturbation calibrated to stay within the expected statistical spread of the honest population, designed specifically to evade distance-based outlier detection. Attacks begin at round three of each run (\texttt{attack\_start\_round}$=3$), after a two-round clean baseline -- a design choice that matters for ARMOR-FL's shift test specifically, since it guarantees every client has an honest baseline period before any attack can begin, which is what makes the shift signal meaningful rather than vacuous. We test malicious client fractions of 0.2 and 0.4 (two and four of ten clients, respectively).
+
+\subsection{Attack implementation details}\label{sec:attackimpl}
+
+We give the exact per-attack construction here, since Section~\ref{sec:results} and Section~\ref{sec:discussion} draw specific conclusions (particularly the CICIoT2023 Gaussian-noise collapse, Section~\ref{sec:case2}, and label-flip's central-looking updates, Section~\ref{sec:method}) that depend on these details. \textbf{Label-flipping} applies a deterministic class shift to a malicious client's local labels before training, $y \mapsto (y + 1) \bmod C$ for $C$ classes, so the client trains an otherwise-ordinary supervised update on systematically mislabeled data; no perturbation is applied to the resulting parameter update itself, which is precisely why it remains statistically close to an honest update (Section~\ref{sec:method}). \textbf{Gaussian-noise} replaces a malicious client's entire update with pure Gaussian noise, re-scaled to match the norm of what an honest update from the same client would have had: $\Delta_{\mathrm{malicious}} = \sigma \cdot \|\Delta_{\mathrm{honest}}\| \cdot \eta / \|\eta\|$ for $\eta \sim \mathcal{N}(0, I)$ and noise scale $\sigma=1.0$; norm-matching is a deliberate design choice so the attack cannot be caught by a trivial magnitude-only check, and it is also, we now believe (Section~\ref{sec:case2}), the specific reason the attack proved catastrophic on CICIoT2023: a norm-matched \emph{random-direction} replacement discards all of the honest gradient signal while preserving its scale, which is more destructive on a harder classification task where a larger share of the update's norm carries genuine task-relevant signal. \textbf{ALIE} \citep{baruch2019alie} computes the coordinate-wise mean and standard deviation across the current round's honest updates and returns $\Delta_{\mathrm{malicious}} = \bar{\Delta}_{\mathrm{honest}} - z_{\max} \cdot \sigma_{\mathrm{honest}}$ with $z_{\max}=1.5$, an omniscient-attacker construction (it requires visibility into the other honest clients' updates the same round, standard in the ALIE literature) designed to bias the aggregate while staying within the honest population's own observed spread.
+
+\subsection{Hyperparameters and deviations from the original protocol}\label{sec:hyperparams}
+
+Table~\ref{tab:hyperparams} lists the federated-learning hyperparameters used across the robustness grid. We follow FedSE-1DSqueezeNet's own protocol \citep{zhou2026fedse1dsqueezenet} where feasible, with one disclosed deviation: batch size. The original protocol specifies a batch size of 32; we found, in a controlled sweep on identical data and hyperparameters otherwise, that per-round wall-clock time dropped from 211.5 seconds at batch size 32 to 25.9 seconds at batch size 256, an approximately eightfold reduction, with no measurable change in final accuracy or F1 across the batch sizes tested (32, 128, 256, 512). We attribute this to the backbone model being small enough, and the GPU used for these experiments large enough, that batch size 32 leaves the hardware overwhelmingly latency-bound rather than compute-bound -- GPU utilization at batch size 32 measured between 5\% and 18\% across a representative benchmark run. We use batch size 256 throughout the robustness grid on this basis, a practical compute-budget decision rather than a change to the federated-learning protocol itself, and disclose it here rather than presenting it silently as the original protocol's own setting. Separate comparability runs reproducing the original paper's own R=5, FedAvg-only, IID-plus-three-non-IID-level sanity check retain batch size 32 throughout, since their purpose is fidelity to the original protocol rather than robustness-grid throughput.
+
+\begin{table*}[htbp]
+\caption{Federated learning hyperparameters, robustness grid}\label{tab:hyperparams}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Parameter & Value \\
+\midrule
+Clients ($K$) & 10 \\
+Client fraction per round & 0.6 \\
+Communication rounds & 25 \\
+Local epochs (max, with early stopping) & 10 \\
+Local early-stopping patience & 3 \\
+Learning rate & 0.01 \\
+Batch size & 256 (see Section~\ref{sec:hyperparams}) \\
+Dropout & 0.5 \\
+Attack start round & 3 \\
+ARMOR-FL burn-in rounds & 3 \\
+ARMOR-FL $\alpha_{\mathrm{pop}}$, $\alpha_{\mathrm{drift}}$, $\alpha_{\mathrm{shift}}$ & 0.05 each \\
+ARMOR-FL trim fraction & 0.2 \\
+ARMOR-FL MAD floor fraction & 0.5 \\
+ARMOR-FL gross-outlier threshold ($z$) & 4.0 \\
+ARMOR-FL probation rounds & 3 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Evaluation metrics}\label{sec:metrics}
+
+We report two accuracy statistics per run: \textbf{final-round accuracy}, the standard metric and the one directly comparable across all four aggregators, and \textbf{mean accuracy over the final eight rounds}, a secondary, more stable statistic we introduce after observing that individual runs oscillate considerably round to round -- a property of the random six-of-ten client subsampling used every round, not unique to ARMOR-FL (Section~\ref{sec:results}). We additionally report the \textbf{stability gap}, $|\,\text{final-round accuracy} - \text{mean last-8-round accuracy}\,|$, as a compact summary of how much a single reported final-round number can mislead relative to the run's recent trend.
+
+For ARMOR-FL specifically, we additionally report three detection statistics computed against the ground-truth malicious client labels available in simulation (not available to the aggregator itself, which sees only behavior): \textbf{detection precision}, the fraction of clients ARMOR-FL ever excludes over a run that are truly malicious; \textbf{detection recall}, the fraction of truly malicious clients ARMOR-FL excludes at least once; and \textbf{benign false-exclusion rate}, the fraction of truly honest clients ARMOR-FL excludes at least once. All three are averaged first within a run and then across the twelve attack-fraction-$\alpha$ combinations per dataset, matching the aggregation used for accuracy in Table~\ref{tab:master}.
+
+\subsection{Ablation protocol}\label{sec:ablation-protocol}
+
+To isolate the effect of the three corrections described in Section~\ref{sec:method} (the self-shift e-process, the scale-floored population statistic, and the threshold-calibrated trust weight) from the aggregation mechanism's design in general, we retain the full robustness-grid results produced by an earlier, uncorrected implementation of ARMOR-FL, run under identical hyperparameters, datasets, attacks, and malicious-fraction/non-IID-$\alpha$ combinations to the corrected grid reported in Section~\ref{sec:results}. We refer to this earlier implementation as \textbf{ARMOR-FL (uncorrected)} throughout Section~\ref{sec:results}.5 and report it exclusively as an ablation baseline against the corrected method, ARMOR-FL (ours) elsewhere in this paper -- it is not proposed as a competing method and its aggregate accuracy numbers, where they appear, should be read only in comparison to the corrected version's, not against Krum, FoolsGold, or FedAvg.
+
+\section{Results}\label{sec:results}
+
+\subsection{Aggregate accuracy across datasets}
+
+Table~\ref{tab:master} reports mean final-round accuracy and mean last-eight-round accuracy, averaged across all twelve attack-type $\times$ malicious-fraction $\times$ non-IID-$\alpha$ combinations, for each aggregator on each dataset.
+
+\begin{table*}[htbp]
+\caption{Mean accuracy (final-round / last-8-round mean) across all twelve attack-fraction-$\alpha$ combinations per dataset}\label{tab:master}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Aggregator & CICIDS2017 & CICIDS2018 & CICIoT2023 \\
+\midrule
+FedAvg (undefended) & 0.727 / 0.727 & 0.825 / 0.787 & 0.413 / 0.427 \\
+Krum & \textbf{0.810} / \textbf{0.781} & \textbf{0.810} / \textbf{0.809} & \textbf{0.618} / \textbf{0.623} \\
+FoolsGold & 0.715 / 0.720 & 0.718 / 0.740 & 0.378 / 0.381 \\
+ARMOR-FL (ours) & 0.695 / 0.714 & 0.793 / 0.731 & 0.423 / 0.422 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Krum achieves the highest aggregate mean accuracy on all three datasets, whether measured at the final round or averaged over the last eight rounds. ARMOR-FL is competitive with, and on CICIDS2018 and CICIoT2023 modestly ahead of, the undefended-averaging and FoolsGold baselines in aggregate, but does not surpass Krum's aggregate mean on any dataset. We report this plainly: this is not a result in which our proposed method dominates across the board, and Section~\ref{sec:discussion} discusses why Krum's winner-take-all selection mechanism appears structurally better suited to this particular attack grid than ARMOR-FL's weighted-averaging approach, along with the specific conditions under which the reverse is true.
+
+All three datasets show meaningful oscillation between final-round and last-eight-round accuracy for every aggregator except Krum, confirming that this instability is a general property of the six-of-ten random client subsampling used every round rather than something specific to ARMOR-FL's own mechanism; Krum's per-round winner-take-all selection is evidently more robust to this sampling noise than any of the three averaging-based rules.
+
+\subsection{Per-attack-type breakdown}\label{sec:perattack}
+
+Table~\ref{tab:master} aggregates across three attack types that, as Section~\ref{sec:setup} notes, differ substantially in how detectable they are from parameter-space distance alone. Table~\ref{tab:perattack} disaggregates final-round accuracy by attack type, revealing patterns the aggregate obscures.
+
+\begin{table*}[htbp]
+\caption{Final-round accuracy by dataset and attack type, mean across malicious-fraction and non-IID-$\alpha$ combinations}\label{tab:perattack}
+\begin{tabular}{@{}llcccc@{}}
+\toprule
+Dataset & Attack & FedAvg & Krum & FoolsGold & ARMOR-FL \\
+\midrule
+\multirow{3}{*}{CICIDS2017} & ALIE & 0.791 & \textbf{0.816} & 0.791 & 0.690 \\
+ & Gaussian-noise & \textbf{0.803} & 0.757 & \textbf{0.803} & \textbf{0.803} \\
+ & Label-flip & 0.586 & \textbf{0.857} & 0.549 & 0.591 \\
+\midrule
+\multirow{3}{*}{CICIDS2018} & ALIE & 0.824 & \textbf{0.872} & 0.831 & 0.820 \\
+ & Gaussian-noise & 0.831 & \textbf{0.893} & 0.831 & 0.831 \\
+ & Label-flip & \textbf{0.820} & 0.666 & 0.492 & 0.729 \\
+\midrule
+\multirow{3}{*}{CICIoT2023} & ALIE & \textbf{0.767} & 0.538 & 0.554 & 0.598 \\
+ & Gaussian-noise & 0.023 & \textbf{0.737} & 0.023 & 0.023 \\
+ & Label-flip & 0.449 & \textbf{0.579} & 0.556 & \textbf{0.647} \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Three patterns stand out. First, ARMOR-FL beats Krum on label-flip specifically on two of the three datasets (CICIDS2018 and CICIoT2023), consistent with the case study in Section~\ref{sec:results}.7: label-flipping is the attack type where our self-shift mechanism has genuine signal to exploit, since a label-flipping client's parameter update looks statistically central under a pure population comparison but still produces a detectable shift relative to its own pre-attack baseline. Second, under Gaussian-noise on CICIDS2017 and CICIDS2018, all four aggregators -- including undefended FedAvg -- achieve nearly identical accuracy, indicating that at the malicious fractions we test (0.2 and 0.4), additive parameter-space noise of the magnitude we inject is not, on these two datasets, disruptive enough to differentiate a defended aggregator from an undefended one; robustness mechanisms have no useful role to play when the undefended baseline itself is not meaningfully harmed. Third, and starkly, Gaussian-noise on CICIoT2023 produces a catastrophic collapse to $0.023$ accuracy for every aggregator except Krum, which retains $0.737$ -- we discuss this specific result as its own case study in Section~\ref{sec:results}.8, since it is the single largest accuracy gap between any two aggregators anywhere in our grid.
+
+\subsection{Per-malicious-fraction and non-IID-$\alpha$ breakdown}\label{sec:perfraction}
+
+Table~\ref{tab:perfraction} further disaggregates final-round accuracy by malicious client fraction (0.2 versus 0.4) and by non-IID Dirichlet concentration ($\alpha=0.5$ versus IID), each averaged across the remaining grid dimensions.
+
+\begin{table*}[htbp]
+\caption{Final-round accuracy by malicious fraction and by non-IID $\alpha$, mean across the remaining grid dimensions}\label{tab:perfraction}
+\begin{tabular}{@{}llcccc@{}}
+\toprule
+Dataset & Condition & FedAvg & Krum & FoolsGold & ARMOR-FL \\
+\midrule
+\multirow{2}{*}{CICIDS2017} & mal.\ frac.\ 0.2 & 0.823 & 0.795 & 0.791 & \textbf{0.852} \\
+ & mal.\ frac.\ 0.4 & 0.630 & \textbf{0.825} & 0.638 & 0.538 \\
+\midrule
+\multirow{2}{*}{CICIDS2018} & mal.\ frac.\ 0.2 & 0.833 & \textbf{0.888} & 0.735 & 0.829 \\
+ & mal.\ frac.\ 0.4 & \textbf{0.816} & 0.733 & 0.701 & 0.758 \\
+\midrule
+\multirow{2}{*}{CICIoT2023} & mal.\ frac.\ 0.2 & 0.513 & \textbf{0.728} & 0.527 & 0.552 \\
+ & mal.\ frac.\ 0.4 & 0.314 & \textbf{0.508} & 0.229 & 0.294 \\
+\midrule
+\multirow{2}{*}{CICIDS2017} & $\alpha=0.5$ (non-IID) & 0.750 & \textbf{0.797} & 0.669 & 0.706 \\
+ & IID & 0.703 & \textbf{0.823} & 0.760 & 0.683 \\
+\midrule
+\multirow{2}{*}{CICIDS2018} & $\alpha=0.5$ (non-IID) & 0.819 & 0.703 & 0.684 & \textbf{0.789} \\
+ & IID & 0.831 & \textbf{0.917} & 0.752 & 0.798 \\
+\midrule
+\multirow{2}{*}{CICIoT2023} & $\alpha=0.5$ (non-IID) & 0.425 & \textbf{0.671} & 0.406 & 0.476 \\
+ & IID & 0.402 & \textbf{0.566} & 0.350 & 0.370 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+ARMOR-FL wins its single row on CICIDS2017 (mal.\ frac.\ 0.2, where the malicious presence is lightest) but loses ground sharply as malicious fraction rises to 0.4 on the same dataset -- a large drop from 0.852 to 0.538, larger than any other aggregator's drop across the same transition. This is consistent with the mechanical explanation offered in Section~\ref{sec:discussion}: ARMOR-FL's trust-weighted averaging blends in every insufficiently-suppressed malicious contribution, so a higher malicious fraction directly increases the number of potentially-blended-in attackers each round, whereas Krum's winner-take-all rule is comparatively insensitive to how many attackers are present as long as at least one clearly honest client remains among the six sampled. Krum wins seven of the twelve rows in Table~\ref{tab:perfraction} outright, and ARMOR-FL's one clear win (CICIDS2018, $\alpha=0.5$) is again a non-IID condition, reinforcing that ARMOR-FL's practical niche is non-IID rather than IID data, where our own diagnostic work (Section~\ref{sec:method}) shows population-only defenses are least reliable to begin with.
+
+\subsection{Detection statistics}
+
+Table~\ref{tab:detection} reports ARMOR-FL's own detection precision, detection recall, and benign false-exclusion rate, averaged across all twelve combinations per dataset. Detection precision remains low throughout (0.167 to 0.312), meaning a meaningful fraction of clients ARMOR-FL excludes over a full run are not actually malicious, even after all three corrections described in Section~\ref{sec:method}; benign false-exclusion rates of 0.125 to 0.163 confirm the same pattern from a different angle. Detection recall is lower still (0.062 to 0.229): ARMOR-FL frequently fails to exclude a truly malicious client at all over the course of a run, not only misfires against honest ones. This is a genuine remaining limitation, not one hidden by the aggregate accuracy numbers in Table~\ref{tab:master}, and we discuss its likely causes -- the reinstatement grace period and label-flipping's fundamental resistance to distance-based detection -- in Section~\ref{sec:limitations}.
+
+\begin{table*}[htbp]
+\caption{ARMOR-FL detection statistics, mean across all twelve combinations per dataset}\label{tab:detection}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Dataset & Precision & Recall & Benign FER \\
+\midrule
+CICIDS2017 & 0.312 & 0.229 & 0.125 \\
+CICIDS2018 & 0.167 & 0.062 & 0.163 \\
+CICIoT2023 & 0.194 & 0.125 & 0.142 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Table~\ref{tab:detectionattack} breaks detection statistics down further by attack type. Gaussian-noise, the most visibly extreme parameter-space perturbation of the three, is the attack type ARMOR-FL detects most precisely when it detects it at all (precision up to 1.0 on CICIDS2018), but its recall on the same attack type is frequently zero -- the aggregation-layer collapse described in Section~\ref{sec:results}.2 and~\ref{sec:results}.8 happens too fast, on CICIoT2023 specifically, for the sequential test to accumulate enough rounds of evidence before the damage is done. ALIE, designed explicitly to evade distance-based detection \citep{baruch2019alie}, produces the highest benign false-exclusion rates of the three attack types on two of three datasets (0.198--0.271), suggesting that an attack calibrated to blend into the honest population's statistical spread also makes it harder for the population e-process to separate genuinely elevated honest heterogeneity from the attack's own camouflaged elevation -- an adaptive attacker narrowing the very margin ARMOR-FL's self-shift test depends on.
+
+\begin{table*}[htbp]
+\caption{ARMOR-FL detection statistics by attack type, mean across malicious-fraction and non-IID-$\alpha$ combinations}\label{tab:detectionattack}
+\begin{tabular}{@{}llccc@{}}
+\toprule
+Dataset & Attack & Precision & Recall & Benign FER \\
+\midrule
+\multirow{3}{*}{CICIDS2017} & ALIE & 0.222 & 0.250 & 0.198 \\
+ & Gaussian-noise & 0.500 & 0.250 & 0.031 \\
+ & Label-flip & 0.278 & 0.188 & 0.146 \\
+\midrule
+\multirow{3}{*}{CICIDS2018} & ALIE & 0.000 & 0.000 & 0.271 \\
+ & Gaussian-noise & 1.000 & 0.125 & 0.000 \\
+ & Label-flip & 0.083 & 0.062 & 0.219 \\
+\midrule
+\multirow{3}{*}{CICIoT2023} & ALIE & 0.167 & 0.250 & 0.229 \\
+ & Gaussian-noise & 0.000 & 0.000 & 0.062 \\
+ & Label-flip & 0.333 & 0.125 & 0.135 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Ablation: corrected versus uncorrected ARMOR-FL}\label{sec:ablationresults}
+
+Section~\ref{sec:ablation-protocol} describes an archived grid run under an earlier, uncorrected implementation of ARMOR-FL -- before the self-shift e-process, MAD-flooring, and threshold-calibrated trust weight of Section~\ref{sec:method} were applied -- run under identical conditions to the corrected grid. Table~\ref{tab:ablation} compares the two directly. The corrected version reduces the benign false-exclusion rate on every dataset (most sharply on CICIDS2017, from 0.309 to 0.125, a reduction of more than half), confirming quantitatively, on the full real-data grid and not only the isolated synthetic reproductions of Section~\ref{sec:method}, that the three corrections do what they were designed to do. The effect on aggregate final-round accuracy is more mixed -- an improvement on CICIoT2023 (0.395 to 0.423) and CICIDS2017 (0.689 to 0.695), a small regression on CICIDS2018 (0.805 to 0.793) -- which we read as consistent with the honest framing of this paper throughout: reducing false exclusions is not the same lever as maximizing final accuracy, and the corrections were motivated by, and validated against, the false-exclusion pathology specifically rather than an aggregate accuracy target.
+
+\begin{table*}[htbp]
+\caption{Ablation: uncorrected versus corrected ARMOR-FL, mean across all twelve combinations per dataset}\label{tab:ablation}
+\begin{tabular}{@{}llccc@{}}
+\toprule
+Dataset & Version & Final accuracy & Precision & Benign FER \\
+\midrule
+\multirow{2}{*}{CICIDS2017} & Uncorrected & 0.689 & 0.288 & 0.309 \\
+ & Corrected (ours) & \textbf{0.695} & \textbf{0.312} & \textbf{0.125} \\
+\midrule
+\multirow{2}{*}{CICIDS2018} & Uncorrected & \textbf{0.805} & \textbf{0.352} & 0.188 \\
+ & Corrected (ours) & 0.793 & 0.167 & \textbf{0.163} \\
+\midrule
+\multirow{2}{*}{CICIoT2023} & Uncorrected & 0.395 & 0.358 & 0.208 \\
+ & Corrected (ours) & \textbf{0.423} & 0.194 & \textbf{0.142} \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The uncorrected version's detection precision is, counter-intuitively, higher than the corrected version's on two of three datasets. We attribute this to a direct trade-off rather than a regression: the uncorrected version excludes more clients overall (both honest and malicious, hence its higher false-exclusion rate), and a subset of those additional exclusions happen to be correct, inflating precision on a smaller, more aggressively-filtered set of exclusion events. The corrected version excludes far fewer clients in total, and among a smaller exclusion set, an equal or larger absolute number of correct detections would be needed to preserve precision -- Section~\ref{sec:limitations} returns to this trade-off between exclusion aggressiveness and exclusion accuracy as an open design tension we did not fully resolve.
+
+\subsection{Computational overhead}\label{sec:overheadresults}
+
+Table~\ref{tab:overhead} reports mean wall-clock time per full run (25 communication rounds), averaged across all twelve attack-fraction-$\alpha$ combinations per dataset, for each aggregator. Consistent with the complexity analysis in Section~\ref{sec:complexity}, Krum is the slowest of the four aggregators in aggregate, not ARMOR-FL -- ARMOR-FL's additional sequential-testing bookkeeping adds negligible measured overhead over undefended FedAvg (within noise on two of three datasets), while Krum's pairwise-distance computation adds a consistent, and on CICIDS2018 substantial, overhead.
+
+\begin{table*}[htbp]
+\caption{Mean wall-clock time per 25-round run (seconds), averaged across all twelve combinations per dataset}\label{tab:overhead}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Dataset & FedAvg & Krum & FoolsGold & ARMOR-FL \\
+\midrule
+CICIDS2017 & 243.0 & \textbf{278.3} & 240.7 & 245.7 \\
+CICIDS2018 & 285.5 & \textbf{577.5} & 358.8 & 306.1 \\
+CICIoT2023 & 429.1 & \textbf{467.9} & 395.6 & 397.4 \\
+\midrule
+Overall mean & 319.2 & \textbf{441.2} (+38\%) & 331.7 (+4\%) & 316.4 ($-1\%$) \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+This is a relevant counterpoint to Section~\ref{sec:results}.1's headline result: Krum's accuracy advantage over ARMOR-FL comes with a non-trivial, consistent computational cost -- 38\% higher aggregate wall-clock time in our measurements -- that a latency-sensitive deployment (real-time network intrusion detection is, definitionally, latency-sensitive) may not be willing to pay for the accuracy gained, particularly given that Section~\ref{sec:results}.3 shows Krum's accuracy advantage narrows or reverses under specific non-IID, lighter-poisoning conditions where ARMOR-FL's mechanism is strongest.
+
+\subsection{Case study: label-flipping under non-IID data at low malicious fraction}\label{sec:casestudy1}
+
+The setting that most clearly illustrates when ARMOR-FL's mechanism earns its keep is label-flipping under non-IID data ($\alpha=0.5$) with 20\% of clients malicious, on CICIDS2017. Here ARMOR-FL achieves $0.891$ final-round accuracy (mean last-8-round accuracy $0.715$), ahead of Krum ($0.811$ final-round, $0.686$ last-8-mean), FoolsGold ($0.735$), and undefended FedAvg ($0.799$ final-round, only $0.402$ last-8-mean -- FedAvg's apparently competitive final-round number masks a much less stable trend, one of the clearest illustrations in our grid of why we report both statistics, Section~\ref{sec:metrics}). Under the same attack and malicious fraction but IID data, ARMOR-FL's advantage disappears entirely: Krum takes over ($0.904$ final-round, $0.836$ last-8-mean, against ARMOR-FL's $0.864$ and $0.721$ respectively). This reversal is precisely consistent with the mechanism described in Section~\ref{sec:method}: ARMOR-FL's shift-based exclusion gate is most effective precisely when there is a genuine, attack-coincident change to detect against a stable non-IID baseline, and least effective when the population itself provides little contrast between honest heterogeneity and attack, and its advantage is reported here only at the malicious fraction (0.2) and non-IID setting where Table~\ref{tab:perfraction} (Section~\ref{sec:results}.3) shows it holds in aggregate as well, not as an isolated favorable round. We view this case study as the clearest empirical evidence that the self-shift mechanism is doing real work, not merely avoiding its own past failure mode.
+
+\subsection{Case study: catastrophic Gaussian-noise collapse on CICIoT2023}\label{sec:case2}
+
+Table~\ref{tab:perattack} (Section~\ref{sec:results}.2) reports a striking result under Gaussian-noise on CICIoT2023: FedAvg, FoolsGold, and ARMOR-FL all collapse to $0.023$ final-round accuracy -- indistinguishable from random guessing on this multi-class problem -- while Krum retains $0.737$, the single largest gap between any two aggregators anywhere in our experimental grid. We examine this case separately because it is the clearest illustration of a qualitatively different failure than the one this paper otherwise addresses: this is not a false-exclusion problem, nor a detection-precision problem, but an outright aggregation collapse.
+
+The per-round trace for this scenario shows all three collapsing aggregators reaching near-zero accuracy within the first two to three post-attack rounds and never recovering, rather than degrading gradually as malicious influence accumulates. We attribute this to the specific interaction between CICIoT2023's already-difficult multi-class classification task (Section~\ref{sec:discussion}) and additive Gaussian perturbation at a fixed noise scale calibrated relative to CICIDS2017/2018 parameter norms: on a harder task, the backbone's parameter updates plausibly occupy a narrower useful region of weight space to begin with, so an additive perturbation of a given absolute magnitude is proportionally more destructive there than on an easier, better-separated classification problem. Once a single round's aggregate crosses into a sufficiently corrupted region of weight space, subsequent rounds of otherwise-honest local training on top of a badly corrupted global model cannot recover in the 25 rounds our grid budgets, for any of the three averaging-based rules. Krum's winner-take-all selection sidesteps this entirely: by discarding every other client's contribution outright, a single successfully-identified honest client's update alone determines the round's aggregate, which cannot itself be corrupted by another client's additive noise regardless of that noise's magnitude.
+
+This case study qualifies the wall-clock cost-benefit argument of Section~\ref{sec:results}.6: Krum's computational overhead may be a reasonable price specifically as insurance against this kind of catastrophic, non-recoverable collapse, even where its typical-case accuracy advantage over a weighted-averaging rule is comparatively modest. It also identifies a concrete direction for future work on ARMOR-FL specifically: a hard per-round bound on how much any single round's aggregate can move relative to the previous round's -- a form of trust-region constraint independent of the sequential-testing mechanism -- might prevent this class of one-round catastrophic corruption without requiring Krum's winner-take-all discarding of all other legitimate contributions, though we have not implemented or validated such a mechanism and leave it to future work.
+
+\section{Discussion}\label{sec:discussion}
+
+The central empirical finding of this paper is uncomfortable in a specific way: we built ARMOR-FL to fix a real, previously undiagnosed failure mode in population-only Byzantine defenses, confirmed the fix works exactly as intended on the failure mode it targets, and still find that Krum -- a much simpler, purely empirical, winner-take-all selection rule with no statistical guarantee at all -- outperforms it in aggregate on every dataset we tested. We think this is worth sitting with rather than explaining away, and devote this section to unpacking why, when the advantage reverses, and what a practitioner should take from both facts together.
+
+\subsection{Why Krum wins in aggregate}\label{sec:whykrum}
+
+Part of the explanation is mechanical. Krum discards all but one client's contribution every round, so a single successfully identified honest client is enough to keep the aggregate clean; ARMOR-FL instead blends contributions from potentially many clients via trust-weighted averaging, which is the more statistically efficient choice when all contributors are honest but means that even one undetected or under-suppressed malicious contributor's update is blended into the aggregate every round it participates. Under label-flipping specifically, where a malicious client's update often looks statistically central rather than extreme (Section~\ref{sec:method}), this blending cost is at its highest, since the malicious contribution retains substantial weight for many rounds at a stretch. Table~\ref{tab:perfraction} (Section~\ref{sec:results}.3) shows this cost growing sharply with malicious fraction: ARMOR-FL's advantage over Krum at malicious fraction 0.2 on CICIDS2017 reverses into a substantial deficit at 0.4, precisely as the mechanical account predicts -- more potential blended-in attackers per round directly increases the averaging rule's exposure.
+
+\subsection{When ARMOR-FL wins}\label{sec:whenarmor}
+
+The case study in Section~\ref{sec:results}.7 shows the reverse relationship holds under the right conditions: non-IID data plus a lighter malicious fraction is exactly the regime where a stable per-client baseline gives ARMOR-FL's shift test real signal to work with before a larger share of any given round's six selected clients being malicious starts to overwhelm the trust-weighted average (Section~\ref{sec:results}.3 shows this advantage reversing sharply once malicious fraction rises to 0.4). Table~\ref{tab:perattack} reinforces this at the level of attack type specifically: ARMOR-FL beats Krum on label-flip on two of three datasets, the attack type our method's self-shift mechanism is best positioned to exploit given label-flipping's central-looking parameter updates. We take this as the honest scope of ARMOR-FL's practical advantage: it is not a universal improvement over Krum, but a targeted one, strongest exactly where formal, cumulative evidence-gathering has the most to offer over an isolated per-round heuristic -- non-IID populations, label-flipping-style attacks, and lighter poisoning specifically, before a heavier malicious presence overwhelms the averaging-based mechanism (Section~\ref{sec:whykrum}).
+
+\subsection{The CICIoT2023 difficulty confound}\label{sec:ciciotdifficulty}
+
+CICIoT2023's uniformly lower accuracy across all four aggregators (Table~\ref{tab:master}) is itself worth discussing rather than treating as noise. CICIoT2023 is a substantially harder multi-class problem than either CIC dataset -- our own earlier centralized baseline check (an XGBoost classifier with full access to pooled training data and no federated partitioning at all) reached only 0.856 accuracy and 0.660 macro-F1 on CICIoT2023, against 0.999 and 0.932 on CICIDS2017 -- so a meaningful share of the accuracy gap between aggregators on CICIoT2023 likely reflects the underlying classification difficulty of the dataset itself rather than aggregator robustness specifically, and Krum's relative advantage there (0.618 versus ARMOR-FL's 0.423) may partly reflect that a winner-take-all rule is less sensitive to a harder base classification problem's own noise than a weighted average is. The catastrophic Gaussian-noise collapse documented in Section~\ref{sec:case2} is consistent with this reading: a harder underlying task appears to leave less margin in weight space for any averaging-based rule to absorb even one round of unsuppressed additive noise.
+
+\subsection{Practical deployment guidance}\label{sec:deployment}
+
+Bringing Sections~\ref{sec:results}.3, \ref{sec:results}.6, and~\ref{sec:whenarmor} together, we offer the following as a practically actionable summary rather than a universal recommendation, since our grid covers three datasets and three attack types and cannot speak to conditions outside it. A deployment with (i) known or suspected non-IID client populations, (ii) label-flipping as a plausible or dominant attack vector, and (iii) a need for a formal, auditable statistical guarantee on false-exclusion behavior (for instance, a regulated setting where excluding a legitimate participant's contribution must be justifiable after the fact) is the regime where ARMOR-FL's mechanism earns a genuine advantage over Krum, at lower aggregation-layer computational cost (Section~\ref{sec:results}.6). A deployment where malicious fraction may be high, where Gaussian-noise-style parameter-space corruption is the primary threat model, or where computational cost is a secondary concern relative to worst-case robustness against a single catastrophic round, is better served by Krum's winner-take-all rule despite its higher wall-clock cost and complete absence of a statistical guarantee. We do not consider these recommendations final; they follow from a specific, disclosed experimental grid (Section~\ref{sec:setup}) and should be revisited as that grid is extended (Section~\ref{sec:conclusion}).
+
+\subsection{Relation to the anytime-valid inference literature}\label{sec:relatville}
+
+A broader point this paper's results raise for the anytime-valid inference literature specifically: a formal statistical guarantee on Type-I error (Theorem~\ref{thm:ville}) is a guarantee about \emph{false-exclusion control}, not about \emph{final task performance}, and this paper's results show these two objectives can diverge substantially in a real deployment. ARMOR-FL succeeds unambiguously at the first objective -- Section~\ref{sec:results}.5's ablation shows a large, consistent reduction in benign false-exclusion rate relative to an uncorrected population-only test, and by construction (Theorem~\ref{thm:ville}) the corrected test's false-exclusion probability is controlled at the stated significance level $\alpha_{\mathrm{pop}}=0.05$ per client-round in the idealized sense the theorem describes. It does not, on the evidence in Table~\ref{tab:master}, translate into the strongest final-accuracy outcome in aggregate. We think this is a useful cautionary note for anytime-valid methods entering applied machine-learning venues more broadly, where a formal guarantee is sometimes implicitly treated as synonymous with practical superiority: the guarantee is real and valuable in its own right (auditability, principled false-exclusion control, no need to pre-commit to a stopping time), but it is a different kind of claim from a task-performance claim, and a paper introducing an anytime-valid method should report both, and let a reader who cares primarily about the former accept a method that trails on the latter -- exactly the reporting stance we have tried to take throughout this paper.
+
+\section{Threats to Validity}\label{sec:threats}
+
+We separate four categories of threat to the conclusions drawn above, following standard empirical machine-learning reporting practice, since this paper's results are ultimately an empirical claim about a specific, disclosed experimental grid rather than a universal one.
+
+\textbf{Internal validity.} All results in this paper come from a single random seed per configuration, not repeated trials with confidence intervals; the meaningful round-to-round oscillation documented in Section~\ref{sec:results}.1 and the stability-gap statistics in Table~\ref{tab:master} are evidence that a single seed's final-round number carries non-trivial variance, and a different seed could plausibly shift some of the closer comparisons in Table~\ref{tab:perattack} and Table~\ref{tab:perfraction} in either direction, though we consider the largest effects reported here (the CICIoT2023 Gaussian-noise collapse, Section~\ref{sec:case2}; Krum's aggregate advantage margin in Table~\ref{tab:master}) large enough relative to the observed stability gaps to be robust to this concern. Repeating the full grid across multiple seeds was outside the compute budget available for this study (Section~\ref{sec:hyperparams} discloses the batch-size compute-budget decision already made for the same reason); we flag single-seed reporting explicitly here rather than presenting point estimates as if they carried the precision of a multi-seed study.
+
+\textbf{External validity.} Our conclusions are grounded in three datasets, three attack types, two malicious-fraction levels, and two non-IID settings; extrapolating beyond this grid -- to other attack families (e.g.\ model-replacement or backdoor attacks, neither of which we test), to malicious fractions above 0.4, to client counts substantially larger or smaller than ten, or to intrusion-detection tasks outside the three network-traffic domains studied here -- is not directly supported by our results. The reduced sampling fractions disclosed in Section~\ref{sec:setup} (10\%, 2\%, and 1\% of the three datasets respectively, a practical compute-budget decision) mean our results characterize behavior on a substantial but partial slice of each dataset rather than its full extent; we have no specific reason to expect qualitatively different behavior on the withheld data, but we have not verified this directly.
+
+\textbf{Construct validity.} We report final-round and last-8-round-mean accuracy as our primary outcome measures, following the metric convention of the prior work we build on (Section~\ref{sec:hyperparams}); accuracy on these three datasets' class distributions (Section~\ref{sec:setup}) may understate performance differences on minority attack classes specifically, since a highly imbalanced multi-class label distribution can allow an aggregator to achieve reasonable overall accuracy while performing poorly on rare, operationally important attack categories. We did not conduct a per-class breakdown in this paper and note it as a natural extension (Section~\ref{sec:conclusion}).
+
+\textbf{Conclusion validity.} The ablation comparison in Section~\ref{sec:results}.5 isolates the three corrections of Section~\ref{sec:method} as a bundle rather than individually; we cannot, from the data reported here, attribute the observed false-exclusion-rate improvement to any one of the self-shift e-process, the MAD floor, or the threshold-calibrated trust weight in isolation, only to their combination, though the synthetic reproductions in Section~\ref{sec:method} do isolate each failure mode (and, correspondingly, each fix) individually on controlled synthetic data. A fully factorial ablation on the real-data grid -- eight combinations of the three corrections switched on or off independently, run across all three datasets -- would require roughly eight times the compute budget of the single robustness grid reported here and was not feasible within the resources available for this study; we flag it explicitly as the most direct way to strengthen the causal claims in Section~\ref{sec:results}.5 in future work.
+
+\section{Limitations}\label{sec:limitations}
+
+We state four limitations plainly, since we believe an honest account of what ARMOR-FL does not solve is as important as the mechanism that does work.
+
+First, ARMOR-FL cannot detect a constant attacker: a client that is Byzantine from the very first round and whose bias never changes, provided that bias stays below the gross-outlier threshold, produces no shift signal and is therefore never hard-excluded, only smoothly downweighted. This is not an implementation gap but a genuine information-theoretic limit -- distinguishing a constant, moderate-magnitude attacker from a heterogeneous-but-honest client using only behavioral evidence is not possible in general, since the two are by construction indistinguishable from the aggregator's vantage point. Resolving this would require external information (a trusted validation set, cryptographic attestation of training provenance, or similar) that we do not assume is available.
+
+Second, label-flipping remains genuinely hard to detect via any distance-based signal, ARMOR-FL's included: a client that trains honestly on relabeled data produces a parameter update statistically similar to an honest client's, a limitation ARMOR-FL shares with Krum, trimmed mean, and FoolsGold rather than one specific to our method.
+
+Third, the probation-and-reinstatement mechanism resets a client's accumulated evidence entirely upon reinstatement, giving a previously excluded but still-active attacker a fresh accumulation window -- effectively a grace period -- before it can be re-excluded. We did not find a way to shorten this window without reintroducing false exclusions for honest clients recovering from a legitimate probation event, and leave a more principled reinstatement rule to future work.
+
+Fourth, ARMOR-FL's own detection precision remains modest (0.167 to 0.312 across the three datasets, Table~\ref{tab:detection}), meaning a non-trivial share of excluded clients over a full run are not actually malicious even after the corrections in Section~\ref{sec:method}; detection recall is lower still (0.062 to 0.229, Table~\ref{tab:detection}), meaning ARMOR-FL also frequently fails to exclude a truly malicious client at all. We consider this an honest residual cost of the shift-and-population combination rather than evidence the mechanism is not working: the false-exclusion rate under the corrected design is dramatically lower than the uncorrected version's (which reached 62.5\% under IID data, Section~\ref{sec:method}), but it is not zero, and we do not claim otherwise.
+
+Fifth, the ablation comparison in Section~\ref{sec:results}.5 (Table~\ref{tab:ablation}) surfaces an unresolved tension between exclusion aggressiveness and exclusion accuracy: the uncorrected version, which excludes more clients overall, achieves higher detection precision on two of three datasets than the corrected version, which excludes far fewer clients but does not proportionally improve at picking correctly among the exclusions it does make. We do not have a design that improves false-exclusion rate, precision, and recall simultaneously across all three datasets, and we do not believe one is available without additional information beyond per-round behavioral distance -- a validation set, cross-client attestation, or a similar external signal (Section~\ref{sec:threats}, construct validity). We view resolving this specific three-way trade-off, rather than any single one of its components in isolation, as the most consequential open problem this paper leaves for future work on the method itself.
+
+\section{Conclusion}\label{sec:conclusion}
+
+We set out to build an anytime-valid Byzantine-robust aggregator for federated intrusion detection and found, in the process, that the natural way to do so -- comparing each client against the population via a sequential test -- carries a structural failure mode that had not, to our knowledge, been previously diagnosed at this level of specificity: any anytime-valid population comparison is guaranteed to eventually exclude a persistently off-center honest client, and the failure is worst precisely when the honest population is most homogeneous, the opposite of the intuitive expectation. ARMOR-FL's self-referential shift test, scale-floored population statistic, and threshold-calibrated trust weight together remove this failure mode, verified both on isolated synthetic reproductions and on three real intrusion-detection benchmarks. The resulting method is not a uniform improvement over the strongest empirical baseline we tested, Krum, but it identifies a specific and reproducible regime -- non-IID client populations under lighter label-flipping poisoning -- where its formal, cumulative approach to evidence gathering earns a real advantage, together with an anytime-valid statistical guarantee that Krum and FoolsGold do not provide. We release the full implementation, experiment configuration grids, and reassembly-only dataset archives so that this specific failure mode, and the conditions under which our fix helps or does not, can be independently verified and extended.
+
+Several concrete extensions follow directly from the limitations documented above, and we collect them here as a single forward-looking agenda rather than scattering them across sections. Statistically, a fully factorial ablation of the three corrections (Section~\ref{sec:threats}, conclusion validity) and a multi-seed repetition of the full grid (Section~\ref{sec:threats}, internal validity) would sharpen the causal claims this paper can currently only support at the level of the corrections taken together. Mechanistically, the trust-region-style bound on per-round aggregate movement sketched in Section~\ref{sec:case2} is, to our knowledge, untested, and could plausibly close the specific catastrophic-collapse gap that motivated it without requiring Krum's winner-take-all discarding of legitimate contributions. Architecturally, RPCFL's cryptographic clustering guarantee \citep{chen2026rpcfl} and ARMOR-FL's statistical guarantee address genuinely different threat surfaces (Section~\ref{sec:qualcomp}), and a combined system is, as far as we are aware, unexplored. Empirically, a per-class accuracy breakdown (Section~\ref{sec:threats}, construct validity) and an extension of the attack grid to model-replacement and backdoor attacks (Section~\ref{sec:threats}, external validity) would test whether the regime identified in Section~\ref{sec:whenarmor} generalizes beyond the label-flipping-under-non-IID-data case this paper establishes it for. We view none of these as required to make the present contribution's claims valid -- each is scoped, in the relevant Threats to Validity paragraph above, as a boundary of what this specific study supports -- but together they describe what we consider the most productive next steps for this line of work.
 
 \backmatter
 
-\bmhead{Supplementary information}
-
-If your article has accompanying supplementary file/s please state so here. 
-
-Authors reporting data from electrophoretic gels and blots should supply the full unprocessed scans for key as part of their Supplementary information. This may be requested by the editorial team/s if it is missing.
-
-Please refer to Journal-level guidance for any specific requirements.
-
-\bmhead{Acknowledgements}
-
-Acknowledgements are not compulsory. Where included they should be brief. Grant or contribution numbers may be acknowledged.
-
-Please refer to Journal-level guidance for any specific requirements.
-
 \section*{Declarations}
 
-Some journals require declarations to be submitted in a standardised format. Please check the Instructions for Authors of the journal to which you are submitting to see if you need to complete this section. If yes, your manuscript must contain the following sections under the heading `Declarations':
+\textbf{Funding.} This research received no specific grant from any funding agency in the public, commercial, or not-for-profit sectors.
 
-\begin{itemize}
-\item Funding
-\item Conflict of interest/Competing interests (check journal-specific guidelines for which heading to use)
-\item Ethics approval and consent to participate
-\item Consent for publication
-\item Data availability 
-\item Materials availability
-\item Code availability 
-\item Author contribution
-\end{itemize}
+\textbf{Conflict of interest/Competing interests.} The author declares no competing interests.
 
-\noindent
-If any of the sections are not relevant to your manuscript, please include the heading and write `Not applicable' for that section. 
+\textbf{Ethics approval and consent to participate.} Not applicable. This work uses publicly available, previously anonymized network traffic datasets (CICIDS2017, CICIDS2018, CICIoT2023) and involves no human subjects or personally identifiable data collected by the author.
 
-%%===================================================%%
-%% For presentation purpose, we have included        %%
-%% \bigskip command. Please ignore this.             %%
-%%===================================================%%
-\bigskip
-\begin{flushleft}%
-Editorial Policies for:
+\textbf{Consent for publication.} Not applicable.
 
-\bigskip\noindent
-Springer journals and proceedings: \url{https://www.springer.com/gp/editorial-policies}
+\textbf{Data availability.} The datasets analyzed (CICIDS2017, CICIDS2018, CICIoT2023) are publicly available from the Canadian Institute for Cybersecurity and are redistributed in the accompanying code repository as checksummed archive chunks for reassembly, avoiding the need to re-download from the original hosts.
 
-\bigskip\noindent
-Nature Portfolio journals: \url{https://www.nature.com/nature-research/editorial-policies}
+\textbf{Materials availability.} Not applicable.
 
-\bigskip\noindent
-\textit{Scientific Reports}: \url{https://www.nature.com/srep/journal-policies/editorial-policies}
+\textbf{Code availability.} The full ARMOR-FL implementation, experiment configuration files, and analysis scripts are available in the accompanying code repository.
 
-\bigskip\noindent
-BMC journals: \url{https://www.biomedcentral.com/getpublished/editorial-policies}
-\end{flushleft}
+\textbf{Author contribution.} Q.-V.D. conceived the study, designed and implemented ARMOR-FL, ran all experiments, performed the analysis, and wrote the manuscript.
 
 \begin{appendices}
 
-\section{Section title of first appendix}\label{secA1}
+\section{Full per-combination results}\label{app:full}
 
-An appendix contains supplementary information that is not an essential part of the text itself but which may be helpful in providing a more comprehensive understanding of the research problem or it is information that is too cumbersome to be included in the body of the paper.
+Tables~\ref{tab:appcicids2017}, \ref{tab:appcicids2018}, and \ref{tab:appciciot2023} report final-round accuracy for every individual attack-type $\times$ malicious-fraction $\times$ non-IID-$\alpha$ combination in the robustness grid, the complete disaggregation underlying the marginal summaries in Tables~\ref{tab:master}, \ref{tab:perattack}, and \ref{tab:perfraction}. We include these in full so that any specific comparison discussed in the main text can be checked directly against its source cell, and so that a reader interested in a combination we did not single out for discussion can locate it exactly.
 
-%%=============================================%%
-%% For submissions to Nature Portfolio Journals %%
-%% please use the heading ``Extended Data''.   %%
-%%=============================================%%
+\begin{table*}[htbp]
+\caption{CICIDS2017: final-round accuracy, every attack-fraction-$\alpha$ combination}\label{tab:appcicids2017}
+\begin{tabular}{@{}lllcccc@{}}
+\toprule
+Attack & Mal.\ frac. & $\alpha$ & ARMOR-FL & FedAvg & FoolsGold & Krum \\
+\midrule
+ALIE & 0.2 & 0.5 & 0.874 & 0.804 & 0.803 & 0.809 \\
+ALIE & 0.2 & IID & 0.876 & 0.904 & 0.756 & 0.851 \\
+ALIE & 0.4 & 0.5 & 0.803 & 0.803 & 0.803 & 0.803 \\
+ALIE & 0.4 & IID & 0.208 & 0.652 & 0.803 & 0.803 \\
+Gaussian-noise & 0.2 & 0.5 & 0.803 & 0.803 & 0.803 & 0.656 \\
+Gaussian-noise & 0.2 & IID & 0.803 & 0.803 & 0.803 & 0.738 \\
+Gaussian-noise & 0.4 & 0.5 & 0.803 & 0.803 & 0.803 & 0.830 \\
+Gaussian-noise & 0.4 & IID & 0.803 & 0.803 & 0.803 & 0.803 \\
+Label-flip & 0.2 & 0.5 & \textbf{0.891} & 0.799 & 0.735 & 0.811 \\
+Label-flip & 0.2 & IID & 0.864 & 0.825 & 0.846 & \textbf{0.904} \\
+Label-flip & 0.4 & 0.5 & 0.065 & 0.485 & 0.064 & \textbf{0.874} \\
+Label-flip & 0.4 & IID & 0.547 & 0.233 & 0.552 & \textbf{0.838} \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
-%%=============================================================%%
-%% Sample for another appendix section			       %%
-%%=============================================================%%
+\begin{table*}[htbp]
+\caption{CICIDS2018: final-round accuracy, every attack-fraction-$\alpha$ combination}\label{tab:appcicids2018}
+\begin{tabular}{@{}lllcccc@{}}
+\toprule
+Attack & Mal.\ frac. & $\alpha$ & ARMOR-FL & FedAvg & FoolsGold & Krum \\
+\midrule
+ALIE & 0.2 & 0.5 & 0.841 & 0.831 & 0.831 & \textbf{0.857} \\
+ALIE & 0.2 & IID & 0.770 & 0.804 & 0.831 & \textbf{0.968} \\
+ALIE & 0.4 & 0.5 & 0.831 & 0.831 & 0.831 & 0.831 \\
+ALIE & 0.4 & IID & \textbf{0.840} & 0.831 & 0.831 & 0.831 \\
+Gaussian-noise & 0.2 & 0.5 & 0.831 & 0.831 & 0.831 & \textbf{0.886} \\
+Gaussian-noise & 0.2 & IID & 0.831 & 0.831 & 0.831 & \textbf{0.917} \\
+Gaussian-noise & 0.4 & 0.5 & 0.831 & 0.831 & 0.831 & 0.831 \\
+Gaussian-noise & 0.4 & IID & 0.831 & 0.831 & 0.831 & \textbf{0.940} \\
+Label-flip & 0.2 & 0.5 & \textbf{0.831} & 0.759 & 0.687 & 0.763 \\
+Label-flip & 0.2 & IID & 0.871 & \textbf{0.945} & 0.397 & 0.936 \\
+Label-flip & 0.4 & 0.5 & 0.568 & \textbf{0.831} & 0.092 & 0.050 \\
+Label-flip & 0.4 & IID & 0.648 & 0.745 & 0.792 & \textbf{0.914} \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
-%% \section{Example of another appendix section}\label{secA2}%
-%% Appendices may be used for helpful, supporting or essential material that would otherwise 
-%% clutter, break up or be distracting to the text. Appendices can consist of sections, figures, 
-%% tables and equations etc.
+\begin{table*}[htbp]
+\caption{CICIoT2023: final-round accuracy, every attack-fraction-$\alpha$ combination}\label{tab:appciciot2023}
+\begin{tabular}{@{}lllcccc@{}}
+\toprule
+Attack & Mal.\ frac. & $\alpha$ & ARMOR-FL & FedAvg & FoolsGold & Krum \\
+\midrule
+ALIE & 0.2 & 0.5 & 0.813 & \textbf{0.819} & 0.723 & 0.599 \\
+ALIE & 0.2 & IID & \textbf{0.832} & 0.757 & 0.764 & 0.822 \\
+ALIE & 0.4 & 0.5 & 0.723 & 0.723 & 0.707 & 0.723 \\
+ALIE & 0.4 & IID & 0.023 & \textbf{0.770} & 0.023 & 0.011 \\
+Gaussian-noise & 0.2 & 0.5 & 0.023 & 0.023 & 0.023 & \textbf{0.707} \\
+Gaussian-noise & 0.2 & IID & 0.023 & 0.023 & 0.023 & \textbf{0.822} \\
+Gaussian-noise & 0.4 & 0.5 & 0.023 & 0.023 & 0.023 & \textbf{0.595} \\
+Gaussian-noise & 0.4 & IID & 0.023 & 0.023 & 0.023 & \textbf{0.823} \\
+Label-flip & 0.2 & 0.5 & 0.792 & 0.803 & \textbf{0.802}\footnotemark[1] & 0.694 \\
+Label-flip & 0.2 & IID & \textbf{0.828} & 0.651 & 0.824 & 0.725 \\
+Label-flip & 0.4 & 0.5 & 0.483 & 0.157 & 0.157 & \textbf{0.706} \\
+Label-flip & 0.4 & IID & \textbf{0.488} & 0.185 & 0.443 & 0.193 \\
+\bottomrule
+\end{tabular}
+\footnotetext[1]{FedAvg (0.803) and FoolsGold (0.802) are within 0.001 of each other on this specific combination; both are shown at three-decimal precision without further rounding.}
+\end{table*}
+
+Several individual cells in Tables~\ref{tab:appcicids2017}--\ref{tab:appciciot2023} repeat an identical value across multiple aggregators for the same combination (for instance, Gaussian-noise on CICIDS2017 shows $0.803$ for ARMOR-FL, FedAvg, and FoolsGold across every malicious-fraction and $\alpha$ combination). We confirmed this is not a data-processing artifact but reflects the underlying attack's actual effect at the noise magnitude and malicious fractions we test: on CICIDS2017 specifically, the additive perturbation is not disruptive enough, at 20\% or 40\% malicious clients, to move the aggregate final-round accuracy away from what the backbone classifier converges to regardless of which of the three averaging-based rules is used, consistent with the discussion in Section~\ref{sec:results}.2. Krum, which discards rather than averages, is the only aggregator whose accuracy on these rows differs from the other three, which is itself informative: the recurring identical values are a property of the averaging-based rules under this specific attack-dataset combination, not evidence that all four aggregators behave identically.
+
+\section{Full per-combination detection statistics}\label{app:detection}
+
+Tables~\ref{tab:appdetcicids2017}, \ref{tab:appdetcicids2018}, and \ref{tab:appdetciciot2023} disaggregate ARMOR-FL's own detection precision, detection recall, and benign false-exclusion rate (Section~\ref{sec:metrics}) by individual combination, underlying the marginal summaries in Tables~\ref{tab:detection} and~\ref{tab:detectionattack}. A precision cell marked ``--'' indicates ARMOR-FL excluded no client at all during that run, making precision (a ratio over excluded clients) undefined rather than zero; we report it as undefined rather than substituting an arbitrary default, since treating an undefined ratio as zero would misleadingly imply a failed detection attempt rather than the absence of any exclusion event.
+
+\begin{table*}[htbp]
+\caption{CICIDS2017: ARMOR-FL detection statistics, every attack-fraction-$\alpha$ combination}\label{tab:appdetcicids2017}
+\begin{tabular}{@{}lllccc@{}}
+\toprule
+Attack & Mal.\ frac. & $\alpha$ & Precision & Recall & Benign FER \\
+\midrule
+ALIE & 0.2 & 0.5 & 0.667 & 1.000 & 0.125 \\
+ALIE & 0.2 & IID & -- & 0.000 & 0.000 \\
+ALIE & 0.4 & 0.5 & 0.000 & 0.000 & 0.500 \\
+ALIE & 0.4 & IID & 0.000 & 0.000 & 0.167 \\
+Gaussian-noise & 0.2 & 0.5 & 0.000 & 0.000 & 0.125 \\
+Gaussian-noise & 0.2 & IID & 1.000 & 1.000 & 0.000 \\
+Gaussian-noise & 0.4 & 0.5 & -- & 0.000 & 0.000 \\
+Gaussian-noise & 0.4 & IID & -- & 0.000 & 0.000 \\
+Label-flip & 0.2 & 0.5 & 0.500 & 0.500 & 0.125 \\
+Label-flip & 0.2 & IID & 0.000 & 0.000 & 0.125 \\
+Label-flip & 0.4 & 0.5 & 0.333 & 0.250 & 0.333 \\
+Label-flip & 0.4 & IID & -- & 0.000 & 0.000 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[htbp]
+\caption{CICIDS2018: ARMOR-FL detection statistics, every attack-fraction-$\alpha$ combination}\label{tab:appdetcicids2018}
+\begin{tabular}{@{}lllccc@{}}
+\toprule
+Attack & Mal.\ frac. & $\alpha$ & Precision & Recall & Benign FER \\
+\midrule
+ALIE & 0.2 & 0.5 & 0.000 & 0.000 & 0.250 \\
+ALIE & 0.2 & IID & -- & 0.000 & 0.000 \\
+ALIE & 0.4 & 0.5 & 0.000 & 0.000 & 0.333 \\
+ALIE & 0.4 & IID & 0.000 & 0.000 & 0.500 \\
+Gaussian-noise & 0.2 & 0.5 & -- & 0.000 & 0.000 \\
+Gaussian-noise & 0.2 & IID & 1.000 & 0.500 & 0.000 \\
+Gaussian-noise & 0.4 & 0.5 & -- & 0.000 & 0.000 \\
+Gaussian-noise & 0.4 & IID & -- & 0.000 & 0.000 \\
+Label-flip & 0.2 & 0.5 & 0.000 & 0.000 & 0.250 \\
+Label-flip & 0.2 & IID & 0.000 & 0.000 & 0.125 \\
+Label-flip & 0.4 & 0.5 & 0.333 & 0.250 & 0.333 \\
+Label-flip & 0.4 & IID & 0.000 & 0.000 & 0.167 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[htbp]
+\caption{CICIoT2023: ARMOR-FL detection statistics, every attack-fraction-$\alpha$ combination}\label{tab:appdetciciot2023}
+\begin{tabular}{@{}lllccc@{}}
+\toprule
+Attack & Mal.\ frac. & $\alpha$ & Precision & Recall & Benign FER \\
+\midrule
+ALIE & 0.2 & 0.5 & 0.500 & 1.000 & 0.250 \\
+ALIE & 0.2 & IID & -- & 0.000 & 0.000 \\
+ALIE & 0.4 & 0.5 & 0.000 & 0.000 & 0.167 \\
+ALIE & 0.4 & IID & 0.000 & 0.000 & 0.500 \\
+Gaussian-noise & 0.2 & 0.5 & 0.000 & 0.000 & 0.250 \\
+Gaussian-noise & 0.2 & IID & -- & 0.000 & 0.000 \\
+Gaussian-noise & 0.4 & 0.5 & -- & 0.000 & 0.000 \\
+Gaussian-noise & 0.4 & IID & -- & 0.000 & 0.000 \\
+Label-flip & 0.2 & 0.5 & 0.000 & 0.000 & 0.375 \\
+Label-flip & 0.2 & IID & -- & 0.000 & 0.000 \\
+Label-flip & 0.4 & 0.5 & 0.667 & 0.500 & 0.167 \\
+Label-flip & 0.4 & IID & -- & 0.000 & 0.000 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Recall is zero on a majority of individual combinations across all three datasets, including several where the benign false-exclusion rate is simultaneously non-zero (e.g.\ CICIDS2018 ALIE at malicious fraction 0.4, both $\alpha$ settings: recall $0.000$, benign FER $0.333$--$0.500$) -- ARMOR-FL excluded only honest clients and no malicious ones at all in these specific runs. This is the most granular evidence in this paper for the honest limitation stated in Section~\ref{sec:limitations}: detection recall is not merely lower than precision in aggregate (Table~\ref{tab:detection}), it is frequently exactly zero at the level of an individual run, meaning ARMOR-FL's population-and-shift combination, at the significance levels and betting fractions of Table~\ref{tab:hyperparams}, often accumulates the twenty-five rounds of our grid without ever crossing the exclusion threshold against a truly malicious client, even while it does, in the same run, occasionally cross that threshold against an honest one.
+
+\section{Reproducibility checklist}\label{app:repro}
+
+We report the following details explicitly to support independent reproduction, following standard reproducibility-checklist practice for empirical machine-learning papers. \textbf{Hardware.} All experiments were run on a single workstation with one NVIDIA GPU; no multi-GPU or distributed training was used, and federated clients are simulated sequentially within a single process rather than as physically separate machines. \textbf{Software.} Python 3.13 (conda environment), with the CUDA lazy-module-loading behavior explicitly disabled (\texttt{CUDA\_MODULE\_LOADING=EAGER}) to work around a Windows-specific crash we encountered during development. \textbf{Randomness.} Each of the 144 grid cells (three datasets $\times$ four aggregators $\times$ three attacks $\times$ two malicious fractions $\times$ two $\alpha$ settings, minus the cells FedAvg/Krum/FoolsGold do not require an attack-free run for) uses a single fixed random seed per configuration, not averaged over multiple seeds (Section~\ref{sec:threats}, internal validity). \textbf{Compute budget.} The full robustness grid (144 runs $\times$ 25 rounds) completes in approximately 13 hours of wall-clock time at the batch size disclosed in Section~\ref{sec:hyperparams}, following the 200-plus-hour infeasibility of the batch-size-32 configuration that motivated that disclosed deviation. \textbf{Configuration files.} Every result in this paper corresponds to a named YAML configuration file in the accompanying repository (\texttt{configs/*\_robustness.yaml} and \texttt{configs/*\_comparability.yaml}), and every reported number can be regenerated by re-running the corresponding configuration through the release pipeline without modification. \textbf{Data.} The three datasets are redistributed as checksummed archive chunks for reassembly rather than raw re-hosted copies, per the Data Availability declaration below, to avoid both re-download friction and any redistribution restriction on the original hosts' full raw files.
+
+\section{Worked numerical example}\label{app:worked}
+
+To make Algorithm~\ref{alg:armor} concrete beyond its symbolic description, we work a single simplified round by hand for a toy federation of four active clients (rather than the six of ten used in the real grid, for brevity), of which client 4 is malicious.
+
+Suppose the four clients' distances to the round's trimmed-mean reference point are $d = (1.0, 1.1, 0.9, 4.5)$ -- clients 1--3 honest and closely clustered, client 4 an outlier. The population scale estimate is $\mathrm{MAD}^{(t)} = \mathrm{median}(d) = 1.05$; suppose this exceeds the floor $0.5 \cdot \mathrm{median}(\text{recent raw MAD history})$, so no flooring correction applies this round and $\mathrm{MAD}^{(t)}_{\mathrm{eff}} = 1.05$. The resulting population-deviation statistics are $z = (0.952, 1.048, 0.857, 4.286)$.
+
+Each client's e-process multiplier is $e_t = 1 + 0.5(z-1)$ (Section~\ref{sec:method}.2), giving $e = (0.976, 1.024, 0.929, 2.643)$. Suppose each client's population e-process entered this round at $E_{t-1} = (1.2, 0.9, 1.1, 8.5)$ (accumulated from prior rounds); the updated values are $E_t = (1.171, 0.922, 1.022, 22.474)$. With $\alpha_{\mathrm{pop}} = 0.05$, the exclusion threshold is $1/\alpha_{\mathrm{pop}} = 20$; only client 4 exceeds it ($22.474 \ge 20$), so clients 1--3 continue unaffected by the population gate.
+
+Client 4's shift statistic (Section~\ref{sec:method}.3) compares its current $z=4.286$ to the median of its own two-round baseline; suppose that baseline was $(0.9, 1.0)$ (client 4 looked ordinary before an attack began at this round), giving $\mathrm{shift} = 4.286 / 0.95 = 4.512$, comfortably exceeding the shift threshold. Since client 4 satisfies both the population-evidence condition and the shift condition, it is hard-excluded this round: $w_4^{(t)} = 0$, and it enters probation.
+
+For the surviving clients, the trust weight (Section~\ref{sec:method}.4) uses $\tau = -\log(0.05) \approx 2.996$. Client 1's population e-process is $E_{1} = 1.171$, giving $\log E_1 = 0.158$ and $\mathrm{trust\_scale}_1 = \mathrm{sigmoid}(-4(0.158/2.996 - 1)) = \mathrm{sigmoid}(3.789) \approx 0.978$: client 1 retains essentially full weight, appropriately, since its deviation is negligible relative to the exclusion threshold. Had the naive, unrescaled sigmoid been used instead ($\mathrm{sigmoid}(-4 \times 0.158) = \mathrm{sigmoid}(-0.632) \approx 0.347$), client 1 -- an entirely honest client with only mild deviation -- would have been reduced to roughly a third of its due weight, the precise failure mode described in Section~\ref{sec:method}.4 and confirmed on real data via the trust-weight trace that motivated that correction.
+
+We now contrast this with the undetectable case discussed as the first limitation in Section~\ref{sec:limitations}: a constant, moderate-magnitude attacker present from round one. Suppose client 4 is instead Byzantine from the start, with $z_4^{(t)} \approx 2.0$ (below the gross-outlier threshold of 4) on every round, including the two-round clean-baseline period (Section~\ref{sec:attackimpl}). Its shift baseline, computed from its own first two rounds, is then $\mathrm{median}(2.0, 2.0) = 2.0$, and its shift statistic in every subsequent round is $\mathrm{shift}_4^{(t)} = 2.0/2.0 = 1.0$ -- indistinguishable from a client that has never deviated at all, since the baseline itself already encodes the attacker's bias. The population e-process for this client still accumulates evidence steadily (by Proposition~\ref{prop:eventual-exclusion}, since $\mu=2.0>1$ persistently) and will eventually cross the population threshold alone, but the shift gate of Section~\ref{sec:method}.3 never fires, so hard exclusion never triggers under the AND condition in Algorithm~\ref{alg:armor}; only the smooth trust-weight downweighting of Section~\ref{sec:method}.4 applies, converging to a partial but non-zero weight as $\log E_{\mathrm{pop},4}^{(t)}$ grows past $\tau$. This is the precise mechanical realization of the information-theoretic limit stated in Section~\ref{sec:limitations}: no adjustment to $b$, $\alpha_{\mathrm{shift}}$, or the gross-outlier threshold recovers hard exclusion here, because the client's own baseline is contaminated by the same bias the test is trying to detect, and no signal in this paper's threat model (Section~\ref{sec:method}.1) distinguishes a contaminated baseline from a genuinely elevated but honest one.
+
+\section{Notation summary}\label{app:notation}
+
+Table~\ref{tab:notation} collects the symbols introduced across Sections~\ref{sec:prelim}--\ref{sec:method} for reference, since the method combines notation from anytime-valid testing, robust statistics, and standard federated learning.
+
+\begin{table*}[htbp]
+\caption{Notation summary}\label{tab:notation}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Symbol & Meaning \\
+\midrule
+$K$ & Number of clients in the federation \\
+$\mathcal{M}$ & Unknown subset of malicious clients \\
+$\mathcal{S}_t$ & Clients active (selected) in round $t$ \\
+$\theta^{(t)}$ & Global parameter vector after round $t$ \\
+$\theta_k^{(t)}$ & Client $k$'s local update in round $t$ \\
+$(\mathcal{F}_t)$ & Filtration of aggregator information through round $t$ \\
+$(E_t)$ & An e-process (Definition~\ref{def:eprocess}) \\
+$\alpha$ & Significance level in Ville's inequality (Theorem~\ref{thm:ville}) \\
+$\lambda$ & Betting fraction in the testing-by-betting construction \\
+$\mu_0$ & Fixed null mean for the population statistic ($\mu_0=1$) \\
+$m^{(t)}$ & Coordinate-wise trimmed-mean reference point, round $t$ \\
+$d_k^{(t)}$ & Client $k$'s distance to $m^{(t)}$ \\
+$\mathrm{MAD}^{(t)}$ & Round-$t$ median-absolute-deviation scale estimate \\
+$\mathrm{MAD}^{(t)}_{\mathrm{eff}}$ & Floored (corrected) scale estimate \\
+$z_k^{(t)}$ & Client $k$'s population-deviation statistic, $d_k^{(t)}/\mathrm{MAD}^{(t)}_{\mathrm{eff}}$ \\
+$E_{\mathrm{pop},k}^{(t)}$ & Client $k$'s population e-process value \\
+$\mathrm{shift}_k^{(t)}$ & Client $k$'s self-shift statistic (Section~\ref{sec:method}.3) \\
+$b$ & Shift-test baseline window length ($b=2$) \\
+$\alpha_{\mathrm{pop}}, \alpha_{\mathrm{drift}}, \alpha_{\mathrm{shift}}$ & Per-test significance levels (each 0.05) \\
+$\tau$ & Trust-weight rescaling threshold, $-\log(\alpha_{\mathrm{pop}})$ \\
+$\beta$ & Trust-weight sigmoid sharpness ($\beta=4$) \\
+$w_k^{(t)}$ & Client $k$'s aggregation weight, round $t$ \\
+$n_k$ & Client $k$'s local sample count \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Baseline aggregation pseudocode}\label{app:baselines}
+
+For direct comparison with Algorithm~\ref{alg:armor}, Algorithms~\ref{alg:krum} and~\ref{alg:foolsgold} give Krum and FoolsGold in the same notation, corresponding to the descriptions in Section~\ref{sec:method}.3.
+
+\begin{algorithm}
+\caption{Krum aggregation, one round}\label{alg:krum}
+\begin{algorithmic}[1]
+\State \textbf{Input:} active client updates $\{\theta_k^{(t)}\}_{k \in \mathcal{S}_t}$, assumed Byzantine count $f$
+\For{each active client $k$}
+  \State $D_k \gets$ sum of squared distances from $\theta_k^{(t)}$ to its $|\mathcal{S}_t|-f-2$ nearest neighbors in $\{\theta_j^{(t)}\}_{j \in \mathcal{S}_t}$
+\EndFor
+\State $k^* \gets \arg\min_k D_k$
+\State \textbf{Output:} $\theta^{(t+1)} \gets \theta_{k^*}^{(t)}$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{FoolsGold aggregation, one round}\label{alg:foolsgold}
+\begin{algorithmic}[1]
+\State \textbf{Input:} active client updates $\{\theta_k^{(t)}\}_{k \in \mathcal{S}_t}$, per-client update history
+\For{each pair of active clients $(i,j)$}
+  \State $c_{ij} \gets$ cosine similarity between $i$'s and $j$'s cumulative update history
+\EndFor
+\For{each active client $k$}
+  \State $v_k \gets \max_{j \ne k} c_{kj}$ (highest similarity to any other client)
+  \State $w_k \gets 1 - v_k$, rescaled and logit-transformed per \citep{fung2020foolsgold}
+\EndFor
+\State \textbf{Output:} $\theta^{(t+1)} \gets$ weighted average of $\{\theta_k^{(t)}\}$ with weights $\{w_k\}$
+\end{algorithmic}
+\end{algorithm}
+
+Comparing Algorithm~\ref{alg:krum} against Algorithm~\ref{alg:armor} makes concrete the mechanical explanation offered in Section~\ref{sec:whykrum}: Krum's output is a single client's update, verbatim, with no blending step at all, whereas ARMOR-FL (and FoolsGold, Algorithm~\ref{alg:foolsgold}) always produce a weighted combination across every active client passing the exclusion gate. The absence of any blending in Krum is precisely why a single successfully-identified honest client fully determines the round's aggregate regardless of how many other active clients are compromised, at the cost of discarding every other client's legitimate contribution outright even when most of them are honest.
 
 \end{appendices}
 
-%%===========================================================================================%%
-%% If you are submitting to one of the Nature Portfolio journals, using the eJP submission   %%
-%% system, please include the references within the manuscript file itself. You may do this  %%
-%% by copying the reference list from your .bbl file, paste it into the main manuscript .tex %%
-%% file, and delete the associated \verb+\bibliography+ commands.                            %%
-%%===========================================================================================%%
-
 \bibliography{sn-bibliography}% common bib file
-%% if required, the content of .bbl file can be included here once bbl is generated
-%%\input sn-article.bbl
 
 \end{document}
