@@ -4,6 +4,28 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-09-10 -- cover letter for technical-check resubmission; repo cleanup
+
+Rewrote `manuscript/cover_letter.tex` for the technical-check resubmission
+(the previous version was written for the original submission and no longer
+matched the current state): addressed to Kavya Kannan / Editorial Support,
+references the manuscript ID, and explicitly discloses the supplementary-
+material split and prose condensation done to hit the page limit, so the
+editor isn't surprised by a diff that goes beyond a literal column-count
+change. Recompiled to `cover_letter.pdf`. Also merged `claude/loving-goodall-
+iap545` straight into `main` (fast-forward, no conflicts) and pushed --
+that branch can be deleted.
+
+Cleaned up unused files in `manuscript/`: the `bst/` subdirectory (8 unused
+Springer bibliography styles -- only `sn-mathphys-num.bst`, kept at the top
+level, is actually used), `fig.eps` and `empty.eps` (template placeholder
+images never referenced via `\includegraphics`), and `user-manual.pdf` (the
+Springer Nature template's own documentation, not part of the submission).
+Also removed an empty `manuscript_scratch/` directory left over from this
+session. Updated `README.md`'s project-layout and journal-target sections to
+match the current single-column, 24-page, technical-check-in-progress state
+instead of the stale `[iicol]` mention.
+
 ## 2026-09-10 -- technical-check revision: single column, <=25 pages
 
 Springer's editorial technical check bounced the manuscript back with two

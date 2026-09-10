@@ -74,8 +74,12 @@ configs/       # experiment grid YAMLs (dataset x aggregator x attack x
                # malicious-fraction x non-IID-alpha)
 scripts/       # smoke tests, dataset reassembly, experiment runner
 tests/         # unit + statistical validation tests (pytest)
-manuscript/    # Springer Nature LaTeX template (sn-jnl.cls), extracted from
-               # the December 2024 template package
+manuscript/    # submission bundle: sn-article.tex (main manuscript),
+               # sn-article-supplementary.tex (Electronic Supplementary
+               # Material -- full per-combination tables, reproducibility
+               # checklist, worked example, notation summary, baseline
+               # pseudocode), cover_letter.tex, sn-jnl.cls / sn-mathphys-num.bst
+               # (Springer Nature template), sn-bibliography.bib
 ```
 
 ## Running things
@@ -100,7 +104,12 @@ python scripts/run_experiment.py --config configs/cicids2017_robustness.yaml
 ## Journal target
 
 *Cluster Computing* (Springer), single-blind review, LaTeX submission using
-the `sn-jnl.cls` template with the `[iicol]` option. Abstract 100-150 words,
-4-6 keywords, numbered `[N]`-style citations with DOIs, mandatory
-Declarations section (Funding / Competing Interests / Author Contributions /
-Data Availability) after the references.
+the `sn-jnl.cls` template in single-column mode (25-page limit). Abstract
+100-150 words, 4-6 keywords, numbered `[N]`-style citations with DOIs,
+mandatory Declarations section (Funding / Competing Interests / Author
+Contributions / Data Availability / Supplementary Information) after the
+references.
+
+**Status:** submitted; currently addressing an editorial technical check
+(single-column reformat + page-limit compliance, done -- manuscript now
+compiles to 24 pages). See `PROGRESS.md` for the full submission history.
