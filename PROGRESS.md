@@ -4,6 +4,39 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-09-10 -- correction: submission target is *Computing*, not *Cluster Computing*
+
+The user flagged that this whole project had conflated two distinct Springer
+journals: the actual submission target (per the editorial technical-check
+email, from Kavya Kannan at "Computing") is **Computing**
+(springer.com/journal/607, Springer-Verlag GmbH Austria -- autonomic/
+adaptive computing, parallel/cloud/green/internet computing, software
+evolution, network science), not **Cluster Computing** (a separate Springer
+Nature journal). Every earlier session, including this one until now, had
+assumed Cluster Computing based on a stale internal guideline note (see the
+"Journal / manuscript context gathered" section further down this file) --
+that assumption was never actually verified against the real target.
+
+This matters beyond naming: the manuscript's own Related Work section had
+built a venue-fit argument on the wrong journal -- it described RPCFL and
+the FedSE-1DSqueezeNet backbone as "published in this journal" and RPCFL as
+"the only other Byzantine-robust federated learning paper in *Cluster
+Computing*," phrasing that only makes sense if we were submitting there.
+Fixed both to state plainly that they were published in *Cluster Computing*
+(a fact, still true, and still relevant prior work) without implying that's
+our own venue. Updated `manuscript/cover_letter.tex` (dropped the "(Cluster
+Computing)" qualifier and the incorrect "Springer Nature" imprint --
+Computing's publisher is Springer-Verlag GmbH Austria) and `README.md`'s
+tagline and Journal-target section accordingly. Recompiled both the cover
+letter and `sn-article.pdf` -- manuscript is still 24 pages, single column,
+clean build. Did **not** rewrite older PROGRESS.md entries that reference
+Cluster Computing (e.g. the 2026-09-05 "manuscript submitted to Cluster
+Computing" entry) -- those are historical log entries, not live state, and
+their content is now understood to reflect the same stale assumption. The
+`[iicol]`/Cluster-Computing guideline note further down this file is
+similarly superseded; do not use it for anything without re-verifying
+against *Computing*'s own submission guidelines first.
+
 ## 2026-09-10 -- cover letter for technical-check resubmission; repo cleanup
 
 Rewrote `manuscript/cover_letter.tex` for the technical-check resubmission
