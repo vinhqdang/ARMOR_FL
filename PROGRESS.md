@@ -4,6 +4,47 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-09-10 -- technical-check revision: single column, <=25 pages
+
+Springer's editorial technical check bounced the manuscript back with two
+requirements: single-column format and a 25-page limit. The `[iicol]`
+double-column class option used since the original submission (see the
+2026-09-05 entry and the now-superseded guideline note further down this
+file) turned out not to be what the venue wants at this stage -- switched
+`sn-article.tex` to `\documentclass[pdflatex,sn-mathphys-num]{sn-jnl}`
+(single column). That alone pushed the compiled length from 33 to 44 pages,
+so getting under 25 required real content work, not just a class-option
+flip:
+- Moved the six appendices (full per-combination result/detection tables,
+  reproducibility checklist, worked example, notation summary, baseline
+  pseudocode) out to a new standalone `sn-article-supplementary.tex` /
+  `.pdf`, referenced from the main text as Electronic Supplementary
+  Material via a new Declarations entry. Nothing in the main body's prose
+  actually pointed into the appendix by number, so this was a clean move;
+  the supplementary file's own cross-references to main-text sections were
+  rewritten as plain-text pointers ("the main text's Method section") since
+  they can't resolve across separate compiled documents.
+- Condensed prose throughout every section (Introduction through
+  Conclusion) -- tightened citation-heavy Related Work paragraphs down to
+  compact multi-cite lists, shortened the proof sketch in Section 3.1
+  without dropping any logical step, merged a few closely related
+  subsections (the two Results case studies; Ablation and Computational
+  overhead; Discussion's "When ARMOR-FL wins" and the CICIoT2023 confound;
+  Setup's "Attacks" and "Attack implementation details") to save heading
+  overhead. No numbers, citations, or claims were altered -- only verbosity
+  cut.
+- Applied standard, content-neutral typographic tightening once prose cuts
+  alone weren't quite enough: `\footnotesize` on all data tables and the
+  ARMOR-FL algorithm listing, `\footnotesize` bibliography via
+  `\renewcommand{\bibfont}`, `\arraystretch=0.82`, and reduced float/caption
+  spacing.
+- Final compiled length: 24 pages, single column, clean `pdflatex`+`bibtex`
+  build with zero errors (installed a full TeX Live distribution in this
+  session to verify by actually compiling, not just editing blind).
+Recompiled and spot-checked rendered pages (title, a dense-math page, a
+table page, references) before calling it done. Not yet re-submitted through
+Springer's portal -- that's a manual step for the user.
+
 ## 2026-09-05 -- manuscript submitted to Cluster Computing
 
 The ARMOR-FL manuscript was expanded (16 -> 34 pages per the user's request),
