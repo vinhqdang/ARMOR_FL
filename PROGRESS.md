@@ -4,6 +4,21 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-09-12 -- dropped "ARMOR-FL" from the title itself
+
+The user's concern: keeping the method's name in the title is exactly the
+kind of thing that could get this recognized as the same manuscript
+Computing already rejected, if it ever crosses the same desk or database.
+Title is now "Self-Referential Anytime-Valid Byzantine-Robust Aggregation
+for Federated Intrusion Detection" -- no acronym. Left "ARMOR-FL" as the
+method's name everywhere it's actually used (abstract, algorithm caption,
+result tables, the codebase) since that's load-bearing content, not
+identifying metadata the way a title is; only the title field itself (and
+the short running-header title, and the two other places that echo the
+manuscript's title verbatim -- the supplementary file's title and the
+cover letter's opening line) were changed. Recompiled all three; still 18
+pages, double column, clean build.
+
 ## 2026-09-12 -- retitled and restructured (9 -> 6 sections); not a bare resubmission
 
 The user didn't want this to read as the same rejected file going out again
