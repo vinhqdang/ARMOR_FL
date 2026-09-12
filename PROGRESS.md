@@ -4,6 +4,46 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-09-12 -- retargeted to Cluster Computing after the Computing rejection
+
+Decided against a "why bother" reaction to the Computing rejection (see the
+prior entry): a scope-only desk rejection with zero reviewer comments means
+none of the actual science was evaluated, and the standard, low-effort
+response is to pick a genuinely better-fitting venue and retarget, not
+rewrite the paper or run new experiments. Verified this journal's real
+submission guidelines this time (fetched
+`link.springer.com/journal/10586`, journal 10586, Editor-in-Chief Yaser
+Jararweh, ISSN 1386-7857/1573-7543) rather than assuming, since the whole
+Computing/Cluster-Computing mixup earlier this week came from exactly that
+kind of unverified assumption:
+- `[iicol]` (double-column) is Cluster Computing's own stated template
+  option -- so the single-column reformat done for Computing's technical
+  check gets reverted here, not reused. No page limit is stated (unlike
+  Computing's 25-page cap), so no further length trimming was needed.
+- Reverted `sn-article.tex`'s documentclass to
+  `[pdflatex,iicol,sn-mathphys-num]` and recompiled: 18 pages, double
+  column, clean build.
+- Restored the "published in this journal" framing for RPCFL and
+  FedSE-1DSqueezeNet (both genuinely Cluster Computing papers) -- this was
+  factually wrong self-reference when the target was Computing, but is
+  accurate again now, and is a real, evidence-based fit signal rather than
+  a guess: the manuscript already cites 9 Cluster Computing papers,
+  including the two works it builds on/differentiates against most
+  directly.
+- Relabeled the Declarations' supplementary-material entry to "Online
+  Resource 1," matching this journal's own terminology.
+- Rewrote `cover_letter.tex` from scratch for this journal: addressed to
+  Yaser Jararweh, argues fit via the federated-learning-as-distributed-
+  computing framing plus the same precedent (RPCFL, FedSE-1DSqueezeNet)
+  used in the manuscript's own Related Work, and drops any reference to the
+  Computing episode entirely (a cover letter argues fit, it isn't a change
+  log -- learned that the hard way two sessions ago).
+- Updated `README.md`'s tagline and Journal-target section accordingly.
+
+**Not yet done:** the user has not asked to actually resubmit yet, this
+prepares the ground for that decision. Do not submit anywhere without
+explicit direction next session.
+
 ## 2026-09-12 -- rejected by Computing: out of scope
 
 Editor Schahram Dustdar rejected Manuscript ID

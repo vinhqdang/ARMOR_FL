@@ -2,10 +2,11 @@
 
 **A**nytime-valid **R**obust **M**artingale-based **O**nline **R**eweighting for
 **F**ederated **L**earning -- a Byzantine-robust, drift-aware aggregation layer
-for federated intrusion detection, targeting *Computing* (Springer).
+for federated intrusion detection, targeting *Cluster Computing* (Springer
+Nature).
 
-Builds on FedSE-1DSqueezeNet (Zhou, Mao & Chen, published in the separate
-journal *Cluster Computing* 2026,
+Builds on FedSE-1DSqueezeNet (Zhou, Mao & Chen, published in this same
+journal, *Cluster Computing* 2026,
 [10.1007/s10586-026-06482-2](https://doi.org/10.1007/s10586-026-06482-2)) as
 the lightweight backbone / architecture baseline. ARMOR-FL's own contribution
 is aggregation-layer, not backbone-layer: it replaces plain size-weighted
@@ -104,15 +105,18 @@ python scripts/run_experiment.py --config configs/cicids2017_robustness.yaml
 
 ## Journal target
 
-*Computing* (Springer) -- not to be confused with *Cluster Computing*
-(a separate Springer journal that several cited prior works, including the
-FedSE-1DSqueezeNet backbone and RPCFL, were published in). Single-blind
-review, LaTeX submission using the `sn-jnl.cls` template in single-column
-mode (25-page limit). Abstract 100-150 words, 4-6 keywords, numbered
+*Cluster Computing* (Springer Nature) -- not to be confused with *Computing*
+(a separate, general-scope Springer journal this manuscript was previously,
+and unsuccessfully, submitted to; see `PROGRESS.md`). Single-blind review,
+LaTeX submission using the `sn-jnl.cls` template with the `[iicol]`
+(double-column) option per this journal's own submission guidelines. No
+stated page limit. Abstract 100-150 words, 4-6 keywords, numbered
 `[N]`-style citations with DOIs, mandatory Declarations section (Funding /
 Competing Interests / Author Contributions / Data Availability /
-Supplementary Information) after the references.
+Supplementary Information -- referred to as "Online Resource" in this
+journal's own terminology) after the references.
 
-**Status:** submitted; currently addressing an editorial technical check
-(single-column reformat + page-limit compliance, done -- manuscript now
-compiles to 24 pages). See `PROGRESS.md` for the full submission history.
+**Status:** rejected by *Computing* (out of scope, no review); manuscript
+reformatted and cover letter rewritten for resubmission to *Cluster
+Computing* instead, not yet submitted. See `PROGRESS.md` for the full
+submission history.
