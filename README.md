@@ -1,8 +1,8 @@
 # ARMOR-FL
 
-**A**nytime-valid **R**obust **M**artingale-based **O**nline **R**eweighting for
-**F**ederated **L**earning -- a Byzantine-robust, drift-aware aggregation layer
-for federated intrusion detection, targeting *Cluster Computing* (Springer
+Self-Referential Anytime-Valid Byzantine-Robust Aggregation for Federated
+Intrusion Detection -- a Byzantine-robust, drift-aware aggregation layer for
+federated intrusion detection, targeting *Cluster Computing* (Springer
 Nature).
 
 Builds on FedSE-1DSqueezeNet (Zhou, Mao & Chen, published in this same

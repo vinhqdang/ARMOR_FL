@@ -4,6 +4,48 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-09-12 -- retitled and restructured (9 -> 6 sections); not a bare resubmission
+
+The user didn't want this to read as the same rejected file going out again
+unchanged, so beyond the Cluster Computing reformat two entries below, made
+two substantive editorial changes:
+
+- **Retitled** from "ARMOR-FL: Anytime-Valid Robust Martingale-Based Online
+  Reweighting for Federated Intrusion Detection" to "ARMOR-FL:
+  Self-Referential Anytime-Valid Byzantine-Robust Aggregation for Federated
+  Intrusion Detection" -- foregrounds the self-shift mechanism (the actual
+  novel piece) and standard Byzantine-robust terminology instead of the
+  more mechanism-jargon "Martingale-Based Online Reweighting" phrasing.
+  Note this breaks the old literal A-R-M-O-R-F-L letter mapping from the
+  original subtitle; treated "ARMOR-FL" as an established project name at
+  this point (it's load-bearing across the codebase -- the `armor_fl`
+  package, tests, results, this log) rather than re-deriving a strict
+  acronym. Updated the title everywhere it's echoed: `sn-article.tex`,
+  `sn-article-supplementary.tex`, `cover_letter.tex`, and README's tagline
+  (which also dropped its bolded-letters acronym spellout, since it no
+  longer maps to the new subtitle).
+- **Restructured from 9 top-level sections to 6**: merged Experimental
+  Setup and Results into one section (Setup's 5 subsections followed by
+  Results' 6, now 4.1-4.11), and folded Threats to Validity and
+  Limitations into Discussion as subsections 5.5 and 5.6 (was two more
+  top-level sections after it). No content was cut in this pass -- every
+  subsection moved, none were deleted. This did require hunting down and
+  fixing ~12 in-text cross-references that hardcode a subsection number as
+  a literal suffix after `\ref{sec:results}` (e.g. `Section~\ref{sec:results}.5`
+  to produce "Section 5.5") -- these don't auto-update like a bare `\ref`
+  does, so each had to be remapped by hand to the new subsection position.
+  While doing this, found and fixed several that were *already* stale from
+  an earlier editing pass (case studies had been merged into one
+  subsection a few sessions back, but two leftover hardcoded refs to the
+  old split-out ".7"/".8" positions were never updated) -- worth checking
+  for this class of bug after any future subsection reordering, since nothing
+  catches it at compile time.
+
+Recompiled all three documents (main manuscript, supplementary, cover
+letter) after both changes: 18 pages, double column, clean build, section
+numbering verified against the compiled `.aux` file position by position,
+not just assumed. Still not submitted -- awaiting the user's go-ahead.
+
 ## 2026-09-12 -- retargeted to Cluster Computing after the Computing rejection
 
 Decided against a "why bother" reaction to the Computing rejection (see the
