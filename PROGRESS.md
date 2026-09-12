@@ -4,6 +4,31 @@ Read this first when resuming on a new machine. Most-recent entry on top.
 See `README.md` for setup/run commands and `data_archive/README.md` for
 dataset provenance.
 
+## 2026-09-12 -- rejected by Computing: out of scope
+
+Editor Schahram Dustdar rejected Manuscript ID
+36fffcd3-31c3-4d49-8e4a-df0d92256555 outright, without external review: "the
+paper is out of scope for the editor we have." No reviewer comments were
+attached. This lands right after the 2026-09-10 correction that this
+project's actual submission target was *Computing*, not *Cluster
+Computing* -- and it's a plausible explanation for the mismatch that caused
+in the first place: the manuscript's content (federated learning,
+distributed-systems robustness, network intrusion detection) plus its two
+closest prior-work anchors (RPCFL, FedSE-1DSqueezeNet) all sit in *Cluster
+Computing*, not in *Computing*'s general autonomic/dependable/internet-
+computing remit. Whatever led an earlier session to assume Cluster
+Computing as the target in the first place may have been a correct scope
+read that got overwritten, not just a naming slip.
+
+**Not yet decided:** where to resubmit next. *Cluster Computing* is the
+obvious candidate given the above, but that's the user's call, not
+something to act on unprompted -- do not resubmit anywhere without
+explicit direction next session. If resubmitting to Cluster Computing:
+the manuscript is already in that class family (`sn-jnl.cls`), but the
+25-page/single-column limit was `Computing`-specific (from its own
+technical check) and should be re-verified against whatever journal is
+chosen next rather than assumed to carry over.
+
 ## 2026-09-10 -- correction: submission target is *Computing*, not *Cluster Computing*
 
 The user flagged that this whole project had conflated two distinct Springer
